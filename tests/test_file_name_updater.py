@@ -2,15 +2,22 @@ import string
 import unittest
 import pathlib
 import random
-import os
 from PlexFileOrganizer.file_name_updater import file_name_updater
+# TODO: Make the test check every file and presents a list of what passed and which failed.
 
 
-class FileExistTest(unittest.TestCase):
+class FileExistText(unittest.TestCase):
+
+    def file_exist(self, file_path):
+        """Test if file exist at location"""
+        self.assertTrue(pathlib.Path(file_path).resolve().is_file(), f'File does not exist: {file_path}')
+
+
+class FileNameUpdaterTest(FileExistText):
     """test the file_name_updater.py function"""
-    new_file_name_list = ['1 - apple.txt', '2 - sonic.txt', '3 - tails.txt']
 
-    def test_prep_work(self):
+    def test_file_name_updater(self):
+        new_file_name_list = ['1 - apple.txt', '2 - sonic.txt', '3 - tails.txt']
         old_file_name_list = []
         files_to_update = []
 
@@ -25,38 +32,17 @@ class FileExistTest(unittest.TestCase):
                 f.write('Test file 1')
 
         # print out the old to new file name for record while creating list of files to update
-        for old_file_name, new_file_name in zip(old_file_name_list, self.new_file_name_list):
+        for old_file_name, new_file_name in zip(old_file_name_list, new_file_name_list):
             print(f'Old file name: {old_file_name} -> new file name: {new_file_name}')
             files_to_update.append([old_file_name, new_file_name])
 
         file_name_updater(files_to_update, pathlib.Path().resolve())
 
-    def test_file_one(self):
-        file_one = ''.join([str(pathlib.Path().resolve()), '/', f'{self.new_file_name_list[0]}'])
-        self.assertTrue(pathlib.Path(file_one).resolve().is_file(), f'File does not exist: {file_one}')
-
-    def test_file_two(self):
-        file_two = ''.join([str(pathlib.Path().resolve()), '/', f'{self.new_file_name_list[1]}'])
-        self.assertTrue(pathlib.Path(file_two).resolve().is_file(), f'File does not exist: {file_two}')
-
-    def test_file_three(self):
-        file_three = ''.join([str(pathlib.Path().resolve()), '/', f'{self.new_file_name_list[2]}'])
-        self.assertTrue(pathlib.Path(file_three).resolve().is_file(), f'File does not exist: {file_three}')
-
-
-def suite():
-    # this forces the unittest to run the test in a specific order.
-    # This will make sure the files are always created first.
-    suite_order = unittest.TestSuite()
-    suite_order.addTest(FileExistTest('test_prep_work'))
-    suite_order.addTest(FileExistTest('test_file_one'))
-    suite_order.addTest(FileExistTest('test_file_two'))
-    suite_order.addTest(FileExistTest('test_file_three'))
-
-    return suite_order
+        # check files exist
+        for new_file_name in new_file_name_list:
+            file_to_test_path = ''.join([str(pathlib.Path().resolve()), '/', f'{new_file_name}'])
+            self.file_exist(file_to_test_path)
 
 
 if __name__ == '__main__':
-    runner = unittest.TextTestRunner()
-    runner.run(suite())
-
+    unittest.main()
