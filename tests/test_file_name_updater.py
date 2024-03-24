@@ -2,7 +2,7 @@ import string
 import unittest
 import pathlib
 import random
-from PlexFileOrganizer.file_name_updater import file_name_updater
+from PlexFileOrganizer.functions.file_name_updater import file_name_updater
 # TODO: Make the test check every file and presents a list of what passed and which failed.
 
 
