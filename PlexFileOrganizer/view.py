@@ -28,7 +28,7 @@ class View(qtw.QWidget):
 
         self.update_files_btn = qtw.QPushButton('Update File(s)', self)
         self.clear_list_btn = qtw.QPushButton('Clear List', self)
-        self.clear_list_btn.clicked.connect(self.media_list_view.clear())
+        self.clear_list_btn.clicked.connect(self.clear_screen)
 
         self.quit_app_btn = qtw.QPushButton('Quiet Application', self)
 
@@ -57,8 +57,15 @@ class View(qtw.QWidget):
             qtc.QDir.homePath()
         )
 
-        # start the process of creating a list of media file(s) in directory
         if directory:
+
+            # check to see if directory is for a movie or TV show
+            if 'season' in directory.lower():
+                self.media_label.setText('Media: TV Show')
+            else:
+                self.media_label.setText('Media: Movie')
+
+            # start the process of creating a list of media file(s) in directory
             self.media_files_directory = directory
             self.start_create_list_of_media_files_signal.emit(directory)
 
@@ -74,3 +81,14 @@ class View(qtw.QWidget):
 
         self.media_list_view.clear()
         self.media_list_view.addItems(media_files_list)
+
+    @qtc.Slot()
+    def clear_screen(self):
+        """
+        Clear the list, and reset media_label and show_title_label.
+
+        :return:
+        """
+        self.media_list_view.clear()
+        self.media_label.setText('Media: ')
+        self.show_title_label.setText('Title: ')
