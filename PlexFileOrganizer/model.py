@@ -1,14 +1,16 @@
 """
 The back-end of the Plex File Organizer
 """
+import os
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.update_file_names_thread import UpdateFileNamesThread
 
 
 class Model(qtc.QObject):
 
-    update_file_names_complete_signal = qtc.Signal(int, str)
+    create_list_of_media_files_complete_signal = qtc.Signal(object)
     status_update_signal = qtc.Signal(int, str)
+    update_file_names_complete_signal = qtc.Signal(int, str)
 
     def update_file_names(self, file_list, location):
         """
@@ -30,6 +32,7 @@ class Model(qtc.QObject):
         """
         self.update_file_names_complete_signal.emit(100, 'Update File Names Complete')
 
+    @qtc.Slot(int, str)
     def status_update(self, progress_bar_percentage, status_message):
         """
         Update the progress bar and status message on screen.
@@ -39,3 +42,20 @@ class Model(qtc.QObject):
         :return:
         """
         self.status_update_signal.emit(progress_bar_percentage, status_message)
+
+    @qtc.Slot(str)
+    def create_list_of_media_files(self, directory):
+        """
+        Creates a list of the media file(s) in the directory given
+
+        :param directory: Location of the media file(s)
+        :return:
+        """
+        media_file_list = []
+
+        # create a list of the media files in directory
+        for item in os.listdir(directory):
+            if any(item.endswith(extension) for extension in ['.mkv', '.mp4', '.avi']):
+                media_file_list.append(item)
+
+        self.create_list_of_media_files_complete_signal.emit(media_file_list)
