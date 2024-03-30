@@ -6,7 +6,7 @@ from PySide6 import QtCore as qtc
 
 
 class View(qtw.QWidget):
-    start_create_list_of_media_files_signal = qtc.Signal(str)
+    start_analyzing_media_folder_signal = qtc.Signal(str)
     start_update_file_names_thread = qtc.Signal(list, str)
 
     def __init__(self):
@@ -23,8 +23,8 @@ class View(qtw.QWidget):
         self.select_folder_btn = qtw.QPushButton('Select Folder', self)
         self.select_folder_btn.clicked.connect(self.select_folder)
 
-        self.media_label = qtw.QLabel('Media: ')
-        self.show_title_label = qtw.QLabel('Show Title: ')
+        self.media_label = qtw.QLabel('Media: ')    # if the media is a movie or TV show
+        self.show_title_label = qtw.QLabel('Show Title: ')  # title of the media; and if TV show, the season as well.
 
         self.update_files_btn = qtw.QPushButton('Update File(s)', self)
         self.clear_list_btn = qtw.QPushButton('Clear List', self)
@@ -58,29 +58,25 @@ class View(qtw.QWidget):
         )
 
         if directory:
-
-            # check to see if directory is for a movie or TV show
-            if 'season' in directory.lower():
-                self.media_label.setText('Media: TV Show')
-            else:
-                self.media_label.setText('Media: Movie')
-
-            # start the process of creating a list of media file(s) in directory
             self.media_files_directory = directory
-            self.start_create_list_of_media_files_signal.emit(directory)
+            self.start_analyzing_media_folder_signal.emit(directory)
 
     @qtc.Slot(object)
-    def update_media_list_view(self, media_files_list):
+    def update_media_information_view(self, media_information):
         """
-        Clear and update the media_list_view widget, and save the list to a variable.
+        Clear and update the media_list_view widget and save the list to a variable; and update the labels on screen
+        to inform user what the media type they have selected, the tile of the show and if a TV show the TV show's
+        season number.
 
-        :param media_files_list: The list of media file(s) found in directory.
+        :param media_information: A tuple with the following information (list of media file(s), media type,
+        title of media)
         :return:
         """
-        self.media_files_list = media_files_list
-
+        self.media_files_list = media_information[0]
+        self.media_label.setText('Media: ' + media_information[1])
+        self.show_title_label.setText('Show Title: ' + media_information[2])
         self.media_list_view.clear()
-        self.media_list_view.addItems(media_files_list)
+        self.media_list_view.addItems(media_information[0])
 
     @qtc.Slot()
     def clear_screen(self):
@@ -92,3 +88,17 @@ class View(qtw.QWidget):
         self.media_list_view.clear()
         self.media_label.setText('Media: ')
         self.show_title_label.setText('Title: ')
+
+    @qtc.Slot(str)
+    def error_message_popup(self, error_message):
+        """
+        Display an error message to the user.
+
+        :param error_message:
+        :return:
+        """
+        qtw.QMessageBox.critical(
+            self,
+            'Error Message!',
+            'The program ran into the following problem: ' + error_message
+        )

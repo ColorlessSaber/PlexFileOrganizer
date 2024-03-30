@@ -18,7 +18,9 @@ class MainWindow(qtw.QMainWindow):
 		self.setCentralWidget(self.view)
 
 		# connect signals to slots
-		self.view.start_create_list_of_media_files_signal.connect(self.model.create_list_of_media_files)
-		self.model.create_list_of_media_files_complete_signal.connect(self.view.update_media_list_view)
+		self.view.start_analyzing_media_folder_signal.connect(self.model.analyze_media_folder)
+
+		self.model.analyzation_of_media_folder_complete_signal.connect(self.view.update_media_information_view)
+		self.model.error_message_signal.connect(self.view.error_message_popup)
 
 		self.show()
