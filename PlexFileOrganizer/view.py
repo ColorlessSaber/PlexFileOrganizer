@@ -7,7 +7,7 @@ from PySide6 import QtCore as qtc
 
 class View(qtw.QWidget):
     start_analyzing_media_folder_signal = qtc.Signal(str)
-    start_update_file_names_thread = qtc.Signal(list, str)
+    start_update_file_names_thread_signal = qtc.Signal(list, str)
 
     def __init__(self):
         super().__init__()
@@ -27,6 +27,7 @@ class View(qtw.QWidget):
         self.show_title_label = qtw.QLabel('Show Title: ')  # title of the media; and if TV show, the season as well.
 
         self.update_files_btn = qtw.QPushButton('Update File(s)', self)
+        self.update_files_btn.clicked.connect(self.update_files)
         self.update_files_btn.setEnabled(False)
         self.clear_list_btn = qtw.QPushButton('Clear List', self)
         self.clear_list_btn.setEnabled(False)
@@ -85,12 +86,41 @@ class View(qtw.QWidget):
         self.clear_list_btn.setEnabled(True)
 
     @qtc.Slot()
+    def update_files(self):
+        """
+        Start the process of updating the media file(s)
+
+        :return:
+        """
+        self.start_update_file_names_thread_signal.emit(self.media_files_list, self.media_files_directory)
+
+    @qtc.Slot()
     def clear_screen(self):
         """
         Clear the list, reset media_label and show_title_label, and disable buttons.
 
         :return:
         """
+        self.media_list_view.clear()
+        self.media_label.setText('Media: ')
+        self.show_title_label.setText('Title: ')
+        self.update_files_btn.setEnabled(False)
+        self.clear_list_btn.setEnabled(False)
+
+    @qtc.Slot(str)
+    def completed_message_popup(self, completed_message):
+        """
+        Display a completed message when finished with updating file(s), then clear the list,
+        reset media_label and show_title_label, and disable buttons.
+
+        :param completed_message: message to display to user
+        :return:
+        """
+        qtw.QMessageBox.information(
+            self,
+            'Task Completed!',
+            completed_message
+        )
         self.media_list_view.clear()
         self.media_label.setText('Media: ')
         self.show_title_label.setText('Title: ')

@@ -8,10 +8,12 @@ from PlexFileOrganizer.update_tv_show_file_names_thread import UpdateTvShowFileN
 
 class Model(qtc.QObject):
 
+    thread_pool = qtc.QThreadPool()
+
     analyzation_of_media_folder_complete_signal = qtc.Signal(object)
     error_message_signal = qtc.Signal(str)
     status_update_signal = qtc.Signal(int, str)
-    update_file_names_complete_signal = qtc.Signal(int, str)
+    update_file_names_complete_signal = qtc.Signal(str)
 
     def update_file_names(self, media_file_list, directory):
         """
@@ -25,16 +27,18 @@ class Model(qtc.QObject):
             print('movie thread')
         else:   # TV show thread
             update_tv_show_file_names_thread = UpdateTvShowFileNamesThread(media_file_list, directory)
-            update_tv_show_file_names_thread.signals.progress(self.status_update)
-            update_tv_show_file_names_thread.signals.finish(self.complete_update_file_names)
+            update_tv_show_file_names_thread.signals.progress.connect(self.status_update)
+            update_tv_show_file_names_thread.signals.finish.connect(self.complete_update_file_names)
+            self.thread_pool.start(update_tv_show_file_names_thread)
 
-    def complete_update_file_names(self):
+    @qtc.Slot(str)
+    def complete_update_file_names(self, completed_message):
         """
         Signal for completion of the UpdateFileNamesThread
 
         :return:
         """
-        self.update_file_names_complete_signal.emit(100, 'Update File Names Complete')
+        self.update_file_names_complete_signal.emit(completed_message)
 
     @qtc.Slot(int, str)
     def status_update(self, progress_bar_percentage, status_message):
