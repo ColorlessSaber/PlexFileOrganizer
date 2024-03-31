@@ -31,6 +31,7 @@ class View(qtw.QWidget):
         self.clear_list_btn.clicked.connect(self.clear_screen)
 
         self.quit_app_btn = qtw.QPushButton('Quiet Application', self)
+        self.quit_app_btn.clicked.connect(qtc.QCoreApplication.instance().quit)
 
         # create layout
         grid_layout = qtw.QGridLayout()
