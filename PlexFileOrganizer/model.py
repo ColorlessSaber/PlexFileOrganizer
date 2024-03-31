@@ -3,7 +3,7 @@ The back-end of the Plex File Organizer
 """
 import os
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.update_file_names_thread import UpdateFileNamesThread
+from PlexFileOrganizer.update_tv_show_file_names_thread import UpdateTvShowFileNamesThread
 
 
 class Model(qtc.QObject):
@@ -13,17 +13,20 @@ class Model(qtc.QObject):
     status_update_signal = qtc.Signal(int, str)
     update_file_names_complete_signal = qtc.Signal(int, str)
 
-    def update_file_names(self, file_list, location):
+    def update_file_names(self, media_file_list, directory):
         """
-        Starts the thread to update the file(s) names.
+        Starts the appropriate thread based on if the media is a movie or TV show to update the file(s) names.
 
-        :param file_list: A list of file(s) with their old name to their new name.
-        :param location: Location of where the file(s) are located.
+        :param media_file_list: A list of file(s) that need their file name changed.
+        :param directory: Location of where the file(s) are located.
         :return:
         """
-        update_file_names_thread = UpdateFileNamesThread(file_list, location)
-        update_file_names_thread.signals.progress(self.status_update)
-        update_file_names_thread.signals.finish(self.complete_update_file_names)
+        if 'movies' in directory.lower():
+            print('movie thread')
+        else:   # TV show thread
+            update_tv_show_file_names_thread = UpdateTvShowFileNamesThread(media_file_list, directory)
+            update_tv_show_file_names_thread.signals.progress(self.status_update)
+            update_tv_show_file_names_thread.signals.finish(self.complete_update_file_names)
 
     def complete_update_file_names(self):
         """
