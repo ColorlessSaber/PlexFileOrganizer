@@ -27,7 +27,9 @@ class View(qtw.QWidget):
         self.show_title_label = qtw.QLabel('Show Title: ')  # title of the media; and if TV show, the season as well.
 
         self.update_files_btn = qtw.QPushButton('Update File(s)', self)
+        self.update_files_btn.setEnabled(False)
         self.clear_list_btn = qtw.QPushButton('Clear List', self)
+        self.clear_list_btn.setEnabled(False)
         self.clear_list_btn.clicked.connect(self.clear_screen)
 
         self.quit_app_btn = qtw.QPushButton('Quiet Application', self)
@@ -68,6 +70,7 @@ class View(qtw.QWidget):
         Clear and update the media_list_view widget and save the list to a variable; and update the labels on screen
         to inform user what the media type they have selected, the tile of the show and if a TV show the TV show's
         season number.
+        Also enable buttons
 
         :param media_information: A tuple with the following information (list of media file(s), media type,
         title of media)
@@ -78,17 +81,21 @@ class View(qtw.QWidget):
         self.show_title_label.setText('Show Title: ' + media_information[2])
         self.media_list_view.clear()
         self.media_list_view.addItems(media_information[0])
+        self.update_files_btn.setEnabled(True)
+        self.clear_list_btn.setEnabled(True)
 
     @qtc.Slot()
     def clear_screen(self):
         """
-        Clear the list, and reset media_label and show_title_label.
+        Clear the list, reset media_label and show_title_label, and disable buttons.
 
         :return:
         """
         self.media_list_view.clear()
         self.media_label.setText('Media: ')
         self.show_title_label.setText('Title: ')
+        self.update_files_btn.setEnabled(False)
+        self.clear_list_btn.setEnabled(False)
 
     @qtc.Slot(str)
     def error_message_popup(self, error_message):
