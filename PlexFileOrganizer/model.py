@@ -61,6 +61,7 @@ class Model(qtc.QObject):
         :param directory: Location of the media file(s)
         :return: a tuple with the following information (list of media file(s), media type, title of show)
         """
+        # TODO Check to see if files are already been updated to match show name.
         media_file_list = []
 
         # determine if directory is a media folder

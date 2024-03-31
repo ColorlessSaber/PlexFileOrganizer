@@ -35,14 +35,17 @@ class UpdateTvShowFileNamesThread(qtc.QRunnable):
 
         # create the new file names
         show_title = self.directory.split('/')[-2]
-        season_number = self.directory.split('Season')[-1]
+        season_number = self.directory.split('Season')[-1] if int(self.directory.split('Season')[-1]) > 10 else ('0' + self.directory.split('Season')[-1])  # if season is less than 10, have it formatted to 0#
 
-        for old_file_name, ep_num in zip(self.media_file_list, range(0, len(self.media_file_list))):
-            # last entry is grabbing the file extension
+        for old_file_name, ep_num in zip(self.media_file_list, range(1, len(self.media_file_list)+1)):
+
+            ep_num = ep_num if ep_num > 10 else ('0' + str(ep_num))  # if number less than 10, have it formatted to 0#
+
+            # last entry in string is for grabbing the file extension
             new_file_name = f"{show_title} - s{season_number.replace(' ', '')}e{ep_num}.{old_file_name.split('.')[-1]}"
             file_list.append([old_file_name, new_file_name])
 
-        print(file_list)    # for testing for-loop above
+        # print(file_list)    # for testing for-loop above
 
         file_name_updater(file_list, self.directory)
 
