@@ -9,6 +9,7 @@ class ThreadSignals(qtc.QObject):
     """
     The signals for the thread
     """
+    error = qtc.Signal(str)
     finish = qtc.Signal(str)
     progress = qtc.Signal(int, str)
 
@@ -47,8 +48,10 @@ class UpdateTvShowFileNamesThread(qtc.QRunnable):
 
         # print(file_list)    # for testing for-loop above
 
-        file_name_updater(file_list, self.directory)
-
-        self.signals.finish.emit(
-            'Show ' + show_title + ', ' + self.directory.split('/')[-1] + ' files have been renamed!'
-        )
+        error_message = file_name_updater(file_list, self.directory)
+        if error_message:
+            self.signals.error.emit(str(error_message))
+        else:
+            self.signals.finish.emit(
+                'Show ' + show_title + ', ' + self.directory.split('/')[-1] + ' files have been renamed!'
+            )

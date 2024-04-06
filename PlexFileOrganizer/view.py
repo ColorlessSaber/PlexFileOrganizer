@@ -138,5 +138,5 @@ class View(qtw.QWidget):
         qtw.QMessageBox.critical(
             self,
             'Error Message!',
-            'The program ran into the following problem: ' + error_message
+            error_message
         )

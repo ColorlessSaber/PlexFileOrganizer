@@ -28,11 +28,13 @@ class Model(qtc.QObject):
             update_movie_file_name_thread = UpdateMovieFileNameThread(media_file_list, directory)
             update_movie_file_name_thread.signals.progress.connect(self.status_update)
             update_movie_file_name_thread.signals.finish.connect(self.complete_update_file_names)
+            update_movie_file_name_thread.signals.error.connect(self.error_detected)
             self.thread_pool.start(update_movie_file_name_thread)
         else:   # TV show thread
             update_tv_show_file_names_thread = UpdateTvShowFileNamesThread(media_file_list, directory)
             update_tv_show_file_names_thread.signals.progress.connect(self.status_update)
             update_tv_show_file_names_thread.signals.finish.connect(self.complete_update_file_names)
+            update_tv_show_file_names_thread.signals.error.connect(self.error_detected)
             self.thread_pool.start(update_tv_show_file_names_thread)
 
     @qtc.Slot(str)
@@ -56,6 +58,17 @@ class Model(qtc.QObject):
         self.status_update_signal.emit(progress_bar_percentage, status_message)
 
     @qtc.Slot(str)
+    def error_detected(self, error_message):
+        """
+        Signal when ran into error
+
+        :param error_message: error message string
+        :return:
+        """
+
+        self.error_message_signal.emit(error_message)
+
+    @qtc.Slot(str)
     def analyze_media_folder(self, directory):
         """
         Checks the directory to see if it's a media folder for a movie or TV show. If it passes: creates a list of the
@@ -65,7 +78,6 @@ class Model(qtc.QObject):
         :param directory: Location of the media file(s)
         :return: a tuple with the following information (list of media file(s), media type, title of show)
         """
-        # TODO Check to see if files are already been updated to match show name. If so, inform user.
         media_file_list = []
 
         # determine if directory is a media folder
@@ -77,22 +89,27 @@ class Model(qtc.QObject):
                     media_file_list.append(item)
 
             if media_file_list:
-                # see if the directory is for a movie or TV show
-                if 'season' in directory.lower():
-                    media_type = 'TV Show'
 
-                    # grab the show title and season number
-                    show_title = directory.split('/')[-2] + ', ' + directory.split('/')[-1]
+                # Check to see if media file(s) have already been updated
+                if media_file_list[0].split('.')[0] not in directory:
 
+                    # see if the directory is for a movie or TV show
+                    if 'season' in directory.lower():
+                        media_type = 'TV Show'
+
+                        # grab the show title and season number
+                        show_title = directory.split('/')[-2] + ', ' + directory.split('/')[-1]
+
+                    else:
+                        media_type = 'Movie'
+
+                        # grab the movie title
+                        show_title = directory.split('/')[-1]
+
+                    self.analyzation_of_media_folder_complete_signal.emit((media_file_list, media_type, show_title))
                 else:
-                    media_type = 'Movie'
-
-                    # grab the movie title
-                    show_title = directory.split('/')[-1]
-
-                self.analyzation_of_media_folder_complete_signal.emit((media_file_list, media_type, show_title))
+                    self.error_message_signal.emit('Files in directory are already updated: ' + directory)
             else:
                 self.error_message_signal.emit('No media was found in folder: ' + directory)
-
         else:
             self.error_message_signal.emit('Folder selected is not a media folder. ' + directory)

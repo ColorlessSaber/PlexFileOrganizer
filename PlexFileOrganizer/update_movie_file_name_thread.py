@@ -9,6 +9,7 @@ class ThreadSignals(qtc.QObject):
     """
     The signals for the thread
     """
+    error = qtc.Signal(str)
     finish = qtc.Signal(str)
     progress = qtc.Signal(int, str)
 
@@ -31,8 +32,11 @@ class UpdateMovieFileNameThread(qtc.QRunnable):
         """
         movie_title = self.directory.split('/')[-1]
         new_file_name = f"{movie_title}.{self.media_file_list[0].split('.')[-1]}"   # last entry in string is for grabbing the file extension
-        file_name_updater([[self.media_file_list[0], new_file_name]], self.directory)
+        error_message = file_name_updater([[self.media_file_list[0], new_file_name]], self.directory)
 
-        self.signals.finish.emit(
-            'Movie ' + movie_title + ' file have been renamed!'
-        )
+        if error_message:
+            self.signals.error.emit(str(error_message))
+        else:
+            self.signals.finish.emit(
+                'Movie ' + movie_title + ' file have been renamed!'
+            )
