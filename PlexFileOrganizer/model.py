@@ -4,6 +4,7 @@ The back-end of the Plex File Organizer
 import os
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.update_tv_show_file_names_thread import UpdateTvShowFileNamesThread
+from PlexFileOrganizer.update_movie_file_name_thread import UpdateMovieFileNameThread
 
 
 class Model(qtc.QObject):
@@ -24,7 +25,10 @@ class Model(qtc.QObject):
         :return:
         """
         if 'movies' in directory.lower():
-            print('movie thread')
+            update_movie_file_name_thread = UpdateMovieFileNameThread(media_file_list, directory)
+            update_movie_file_name_thread.signals.progress.connect(self.status_update)
+            update_movie_file_name_thread.signals.finish.connect(self.complete_update_file_names)
+            self.thread_pool.start(update_movie_file_name_thread)
         else:   # TV show thread
             update_tv_show_file_names_thread = UpdateTvShowFileNamesThread(media_file_list, directory)
             update_tv_show_file_names_thread.signals.progress.connect(self.status_update)
@@ -34,7 +38,7 @@ class Model(qtc.QObject):
     @qtc.Slot(str)
     def complete_update_file_names(self, completed_message):
         """
-        Signal for completion of the UpdateFileNamesThread
+        Signal for completion of either UpdateTvShowFileNamesThread or UpdateMovieFileNameThread
 
         :return:
         """
@@ -61,7 +65,7 @@ class Model(qtc.QObject):
         :param directory: Location of the media file(s)
         :return: a tuple with the following information (list of media file(s), media type, title of show)
         """
-        # TODO Check to see if files are already been updated to match show name.
+        # TODO Check to see if files are already been updated to match show name. If so, inform user.
         media_file_list = []
 
         # determine if directory is a media folder
