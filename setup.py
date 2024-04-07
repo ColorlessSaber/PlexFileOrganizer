@@ -1,14 +1,18 @@
 """
 setup file
 """
+import os
 import sys
 from PlexFileOrganizer import MainWindow
 from PySide6 import QtWidgets as qtw
+from PySide6 import QtGui as qtg
 
+basedir = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     if (sys.version_info.major >= 3) and (sys.version_info.minor >= 12):
         app = qtw.QApplication(sys.argv)
+        app.setWindowIcon(qtg.QIcon(os.path.join(basedir, 'Plex Media Organizer Icon.png')))
         mw = MainWindow()
         sys.exit(app.exec())    # doing this will pass appropriate exit codes to the OS, if the program crashes
     else:
