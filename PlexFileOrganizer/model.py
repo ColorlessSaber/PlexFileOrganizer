@@ -91,6 +91,7 @@ class Model(qtc.QObject):
             if media_file_list:
 
                 # Check to see if media file(s) have already been updated
+                # TODO check this if statement to a Switch-Case, using the new media_file_check function
                 if media_file_list[0].split('.')[0] not in directory:
 
                     # see if the directory is for a movie or TV show

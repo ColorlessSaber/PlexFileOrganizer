@@ -5,11 +5,11 @@ def media_file_check(media_file_list, directory):
 
     :param media_file_list: The list of media file(s) in the directory
     :param directory: Location of the media files
-    :return: Bool - False for media files not updated; True for media files have been updated
+    :return: results: A string that holds the results
     """
-    media_files_in_directory_updated = False
+    results = ''
 
     print('hi')
 
-    return media_files_in_directory_updated
+    return results
 
