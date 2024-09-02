@@ -1,3 +1,5 @@
+import re
+
 
 def media_file_check(media_file_list, directory):
     """
@@ -7,9 +9,14 @@ def media_file_check(media_file_list, directory):
     :param directory: Location of the media files
     :return: results: A string that holds the results
     """
-    results = ''
+    results = 'Files Not Updated'
 
-    print('hi')
+    # Check to see if media file(s) match tv show/movie title.
+    if 'season' in directory.lower():
+        if all(re.split(r"\s-\ss\d+e\d+.\w+", item)[0] in directory for item in media_file_list):
+            results = 'Files Updated'
+    else:
+        if re.split(r".\w+", media_file_list[0])[0] in directory:
+            results = 'Files Updated'
 
     return results
-
