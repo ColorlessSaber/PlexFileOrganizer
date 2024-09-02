@@ -5,6 +5,7 @@ import os
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.update_tv_show_file_names_thread import UpdateTvShowFileNamesThread
 from PlexFileOrganizer.update_movie_file_name_thread import UpdateMovieFileNameThread
+from PlexFileOrganizer.functions import media_file_check
 
 
 class Model(qtc.QObject):
@@ -91,25 +92,25 @@ class Model(qtc.QObject):
             if media_file_list:
 
                 # Check to see if media file(s) have already been updated
-                # TODO check this if statement to a Switch-Case, using the new media_file_check function
-                if media_file_list[0].split('.')[0] not in directory:
+                results = media_file_check(media_file_list, directory)
+                match results:
+                    case 'Files Not Updated':
+                        # see if the directory is for a movie or TV show
+                        if 'season' in directory.lower():
+                            media_type = 'TV Show'
 
-                    # see if the directory is for a movie or TV show
-                    if 'season' in directory.lower():
-                        media_type = 'TV Show'
+                            # grab the show title and season number
+                            show_title = directory.split('/')[-2] + ', ' + directory.split('/')[-1]
 
-                        # grab the show title and season number
-                        show_title = directory.split('/')[-2] + ', ' + directory.split('/')[-1]
+                        else:
+                            media_type = 'Movie'
 
-                    else:
-                        media_type = 'Movie'
+                            # grab the movie title
+                            show_title = directory.split('/')[-1]
 
-                        # grab the movie title
-                        show_title = directory.split('/')[-1]
-
-                    self.analyzation_of_media_folder_complete_signal.emit((media_file_list, media_type, show_title))
-                else:
-                    self.error_message_signal.emit('Files in directory are already updated: ' + directory)
+                        self.analyzation_of_media_folder_complete_signal.emit((media_file_list, media_type, show_title))
+                    case 'Files Updated':
+                        self.error_message_signal.emit('Files in directory are already updated: ' + directory)
             else:
                 self.error_message_signal.emit('No media was found in folder: ' + directory)
         else:
