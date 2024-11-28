@@ -1,5 +1,5 @@
 import re
-
+import os
 
 def media_file_check(media_file_list, directory):
     """
@@ -16,7 +16,7 @@ def media_file_check(media_file_list, directory):
         if all(re.split(r"\s-\ss\d+e\d+\.\w+", item)[0] in directory for item in media_file_list):
             results = 'Files Updated'
     else:
-        if re.split(r"\.(mkv|mp4|avi)", media_file_list[0])[0] in directory:
+        if os.path.splitext(media_file_list[0])[0] in directory:
             results = 'Files Updated'
 
     return results
