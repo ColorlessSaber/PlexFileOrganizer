@@ -23,7 +23,6 @@ class MainWindow(qtw.QMainWindow):
 		self.view.start_analyzing_media_folder_signal.connect(self.model.analyze_media_folder)
 		self.view.start_update_file_names_thread_signal.connect(self.model.update_file_names)
 
-		self.model.analyzation_of_media_folder_complete_signal.connect(self.view.update_media_information_view)
 		self.model.error_message_signal.connect(self.view.error_message_popup)
 		self.model.update_file_names_complete_signal.connect(self.view.completed_message_popup)
 
