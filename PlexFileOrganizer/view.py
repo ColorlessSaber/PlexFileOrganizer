@@ -3,7 +3,7 @@ The front-end of the program
 """
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
-
+from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolders
 
 class View(qtw.QWidget):
     start_analyzing_media_folder_signal = qtc.Signal(str)
@@ -12,9 +12,16 @@ class View(qtw.QWidget):
     def __init__(self):
         super().__init__()
 
+        # pop-up windows
+        self.create_media_folders_window = None
+        self.select_media_files_window = None
+
         # widgets
         self.update_media_files_btn = qtw.QPushButton('Update Media Files', self)
+        self.update_media_files_btn.clicked.connect(self.update_media_files)
+
         self.create_media_folders_btn = qtw.QPushButton('Create Media Folder(s)', self)
+        self.create_media_folders_btn.clicked.connect(self.create_media_folders)
 
         self.clear_log_btn = qtw.QPushButton('Clear Log', self)
         self.clear_log_btn.clicked.connect(self.clear_log_window)
@@ -34,27 +41,28 @@ class View(qtw.QWidget):
         grid_layout.addWidget(self.quit_app_btn, 7, 3)
         self.setLayout(grid_layout)
 
-        # variables
-        self.media_files_directory = ''
-        self.media_files_list = []
 
     @qtc.Slot()
-    def select_folder(self):
+    def create_media_folders(self):
         """
-        Opens a QfileDialog to have user select directory of media file(s) they wish to modify
+        Launches pop-up window to allow user to select folder(s) to create
 
         :return:
         """
+        self.log_window.insertPlainText('\nOpening Create Media Folder(s) Window')
+        self.create_media_folders_window = CreateMediaFolders(self)
+        self.create_media_folders_window.exec()
 
-        directory = qtw.QFileDialog.getExistingDirectory(
-            self,
-            "Select Location of Media File(s)...",
-            qtc.QDir.homePath()
-        )
+    @qtc.Slot()
+    def update_media_files(self):
+        """
+        Launches pop-up window to allow user to select media file(s) that need to be updated
 
-        if directory:
-            self.media_files_directory = directory
-            self.start_analyzing_media_folder_signal.emit(directory)
+        :return:
+        """
+        self.log_window.insertPlainText('\nOpening Media File Select Window')
+        self.select_media_files_window = MediaFileSelect(self)
+        self.select_media_files_window.exec()
 
     @qtc.Slot()
     def clear_log_window(self):
@@ -79,7 +87,7 @@ class View(qtw.QWidget):
     @qtc.Slot(str)
     def error_message_popup(self, error_message):
         """
-        Writes into the Media Log Window the error that was ran into while trying to complete the task.
+        Writes into the Media Log Window the error that was run into while trying to complete the task.
 
         :param error_message:
         :return:

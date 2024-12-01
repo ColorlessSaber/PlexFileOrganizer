@@ -20,10 +20,6 @@ class MainWindow(qtw.QMainWindow):
 		self.statusBar().addPermanentWidget(qtw.QLabel('Version 2.0.0'))
 
 		# connect signals to slots
-		self.view.start_analyzing_media_folder_signal.connect(self.model.analyze_media_folder)
-		self.view.start_update_file_names_thread_signal.connect(self.model.update_file_names)
-
-		self.model.error_message_signal.connect(self.view.error_message_popup)
-		self.model.update_file_names_complete_signal.connect(self.view.completed_message_popup)
+		#TODO connect signals to slots when ready
 
 		self.show()
