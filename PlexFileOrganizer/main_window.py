@@ -20,6 +20,6 @@ class MainWindow(qtw.QMainWindow):
 		self.statusBar().addPermanentWidget(qtw.QLabel('Version 2.0.0'))
 
 		# connect signals to slots
-		#TODO connect signals to slots when ready
+		self.view.start_creating_media_folders_signal.connect(self.model.create_media_folders_thread)
 
 		self.show()

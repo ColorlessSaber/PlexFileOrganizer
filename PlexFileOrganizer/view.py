@@ -6,11 +6,29 @@ from PySide6 import QtCore as qtc
 from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolders
 
 class View(qtw.QWidget):
-    start_analyzing_media_folder_signal = qtc.Signal(str)
-    start_update_file_names_thread_signal = qtc.Signal(list, str)
+    start_creating_media_folders_signal = qtc.Signal(dict)
 
     def __init__(self):
         super().__init__()
+
+        # Variables
+        self.create_media_folders_selection = {
+            'directory': None,
+            'new or existing"': None,
+            'movie or tv': None,
+            'media title': None,
+            'season num': None,
+            'extra folders': {
+                'trailer': False,
+                'behind the scenes': False,
+                'deleted scenes': False,
+                'featurettes': False,
+                'interviews': False,
+                'scenes': False,
+                'shorts': False,
+                'other': False
+            }
+        }
 
         # pop-up windows
         self.create_media_folders_window = None
@@ -50,8 +68,18 @@ class View(qtw.QWidget):
         :return:
         """
         self.log_window.insertPlainText('\nOpening Create Media Folder(s) Window')
-        self.create_media_folders_window = CreateMediaFolders(self)
+        self.create_media_folders_window = CreateMediaFolders(self.create_media_folders_selection, self)
+        self.create_media_folders_window.accepted.connect(self.start_create_media_folders_thread)
         self.create_media_folders_window.exec()
+
+    @qtc.Slot()
+    def start_create_media_folders_thread(self):
+        """
+        Starts the thread to create the media folder(s).
+
+        :return:
+        """
+        self.start_creating_media_folders_signal.emit(self.create_media_folders_selection)
 
     @qtc.Slot()
     def update_media_files(self):

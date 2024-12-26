@@ -17,6 +17,16 @@ class Model(qtc.QObject):
     status_update_signal = qtc.Signal(int, str)
     update_file_names_complete_signal = qtc.Signal(str)
 
+    @qtc.Slot(dict)
+    def create_media_folders_thread(self, create_media_folders_selection):
+        """
+        Starts the thread to create the folder(s) the user wishes to make.
+
+        :param create_media_folders_selection: A dict that holds the inputs and information the user entered from Create Media Folders Pop-up
+        :return:
+        """
+        print("creating folders")
+
     def update_file_names(self, media_file_list, directory):
         """
         Starts the appropriate thread based on if the media is a movie or TV show to update the file(s) names.
