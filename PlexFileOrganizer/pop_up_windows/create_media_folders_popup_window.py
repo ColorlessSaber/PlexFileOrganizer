@@ -31,15 +31,6 @@ class CreateMediaFolders(qtw.QDialog):
         select_directory_layout.addWidget(self.select_directory_btn, 0, 0)
         select_directory_layout.addWidget(self.select_directory_label, 0, 1, 0, 2)
 
-        self.new_or_existing_group = qtw.QGroupBox('New Or Existing?')
-        self.new_media_folder_select = qtw.QRadioButton('New', self)
-        self.new_media_folder_select.toggled.connect(self.enable_or_disable_accept_btn)
-        self.existing_media_folder_select = qtw.QRadioButton('Existing', self)
-        self.existing_media_folder_select.toggled.connect(self.enable_or_disable_accept_btn)
-        self.new_or_existing_group.setLayout(qtw.QHBoxLayout())
-        self.new_or_existing_group.layout().addWidget(self.new_media_folder_select)
-        self.new_or_existing_group.layout().addWidget(self.existing_media_folder_select)
-
         self.media_type_group = qtw.QGroupBox('Media Type')
         self.media_type_movie_select = qtw.QRadioButton('Movie', self)
         self.media_type_movie_select.toggled.connect(self.enable_or_disable_season_number_line_edit)
@@ -89,7 +80,6 @@ class CreateMediaFolders(qtw.QDialog):
         # layout
         main_layout = qtw.QVBoxLayout()
         main_layout.addLayout(select_directory_layout)
-        main_layout.addWidget(self.new_or_existing_group)
         main_layout.addWidget(self.media_type_group)
         main_layout.addLayout(media_inform_form)
         main_layout.addLayout(extra_folder_layout)
@@ -99,8 +89,7 @@ class CreateMediaFolders(qtw.QDialog):
 
     @qtc.Slot()
     def enable_or_disable_accept_btn(self):
-        if (self.new_media_folder_select.isChecked() or self.existing_media_folder_select.isChecked()) and \
-                (self.media_type_tv_select.isChecked() or self.media_type_tv_select) and (len(self.media_title.text())>0):
+        if (self.media_type_tv_select.isChecked() or self.media_type_tv_select) and (len(self.media_title.text())>0):
             self.accept_btn.setEnabled(True)
         else:
             self.accept_btn.setEnabled(False)
@@ -131,7 +120,6 @@ class CreateMediaFolders(qtw.QDialog):
         """Runs when accept button is pressed"""
         if self.selected_directory:
             self.create_media_folders_section['directory'] = self.selected_directory
-            self.create_media_folders_section['new or existing'] = 'new' if self.new_media_folder_select.isChecked() else 'existing'
             self.create_media_folders_section['movie or tv'] = 'movie' if self.media_type_movie_select.isChecked() else 'tv'
             self.create_media_folders_section['media title'] = self.media_title.text()
             self.create_media_folders_section['season num'] = self.season_number.text()

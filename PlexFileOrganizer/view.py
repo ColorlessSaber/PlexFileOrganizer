@@ -14,7 +14,6 @@ class View(qtw.QWidget):
         # Variables
         self.create_media_folders_selection = {
             'directory': None,
-            'new or existing"': None,
             'movie or tv': None,
             'media title': None,
             'season num': None,
