@@ -102,21 +102,11 @@ class View(qtw.QWidget):
         self.log_window.insertPlainText('Media Log Window')
 
     @qtc.Slot(str)
-    def completed_message_popup(self, completed_message):
+    def write_to_log_window(self, message):
         """
-        Writes into the Media Log Window that the task is completed.
+        Writes into the Media Log Window.
 
-        :param completed_message: message to display to user
+        :param message: message to display to user
         :return:
         """
-        self.log_window.insertPlainText('\n'+completed_message)
-
-    @qtc.Slot(str)
-    def error_message_popup(self, error_message):
-        """
-        Writes into the Media Log Window the error that was run into while trying to complete the task.
-
-        :param error_message:
-        :return:
-        """
-        self.log_window.insertPlainText('\n'+error_message)
+        self.log_window.insertPlainText('\n' + message)

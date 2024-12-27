@@ -17,9 +17,23 @@ class MainWindow(qtw.QMainWindow):
 		self.model = Model()
 		self.setCentralWidget(self.view)
 
+		self.progress_bar = qtw.QProgressBar()
+		self.progress_bar.setMinimum(0)
+		self.progress_bar.setMaximum(100)
+		self.statusBar().addPermanentWidget(self.progress_bar)
+
 		self.statusBar().addPermanentWidget(qtw.QLabel('Version 2.0.0'))
 
 		# connect signals to slots
-		self.view.start_creating_media_folders_signal.connect(self.model.create_media_folders_thread)
+		self.view.start_creating_media_folders_signal.connect(self.model.start_create_media_folders_thread)
 
 		self.show()
+
+	def update_progress_bar(self, value):
+		"""
+		Update the progress bar.
+
+		:param value: the percentage progress bar should be at.
+		:return:
+		"""
+		self.progress_bar.setValue(value)

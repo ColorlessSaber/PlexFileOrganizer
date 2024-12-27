@@ -3,6 +3,7 @@ The back-end of the Plex File Organizer
 """
 import os
 from PySide6 import QtCore as qtc
+from PlexFileOrganizer.create_media_folders_thread import CreateMediaFoldersThread
 from PlexFileOrganizer.update_tv_show_file_names_thread import UpdateTvShowFileNamesThread
 from PlexFileOrganizer.update_movie_file_name_thread import UpdateMovieFileNameThread
 from PlexFileOrganizer.functions import media_file_check
@@ -12,20 +13,21 @@ class Model(qtc.QObject):
 
     thread_pool = qtc.QThreadPool()
 
-    analyzation_of_media_folder_complete_signal = qtc.Signal(object)
+    analysis_of_media_folder_complete_signal = qtc.Signal(object)
     error_message_signal = qtc.Signal(str)
     status_update_signal = qtc.Signal(int, str)
     update_file_names_complete_signal = qtc.Signal(str)
 
     @qtc.Slot(dict)
-    def create_media_folders_thread(self, create_media_folders_selection):
+    def start_create_media_folders_thread(self, create_media_folders_selection):
         """
         Starts the thread to create the folder(s) the user wishes to make.
 
         :param create_media_folders_selection: A dict that holds the inputs and information the user entered from Create Media Folders Pop-up
         :return:
         """
-        print("creating folders")
+        create_media_folders_thread = CreateMediaFoldersThread(create_media_folders_selection)
+        self.thread_pool.start(create_media_folders_thread)
 
     def update_file_names(self, media_file_list, directory):
         """
@@ -76,7 +78,7 @@ class Model(qtc.QObject):
         :param error_message: error message string
         :return:
         """
-
+        print(error_message)
         self.error_message_signal.emit(error_message)
 
     @qtc.Slot(str)
