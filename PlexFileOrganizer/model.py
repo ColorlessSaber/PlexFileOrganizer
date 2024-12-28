@@ -3,7 +3,7 @@ The back-end of the Plex File Organizer
 """
 import os
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.create_media_folders_thread import CreateMediaFoldersThread
+from PlexFileOrganizer.create_media_folder_thread import CreateMediaFolderThread
 from PlexFileOrganizer.update_tv_show_file_names_thread import UpdateTvShowFileNamesThread
 from PlexFileOrganizer.update_movie_file_name_thread import UpdateMovieFileNameThread
 from PlexFileOrganizer.functions import media_file_check
@@ -13,21 +13,27 @@ class Model(qtc.QObject):
 
     thread_pool = qtc.QThreadPool()
 
-    analysis_of_media_folder_complete_signal = qtc.Signal(object)
+    user_input_request_signal = qtc.Signal()
+    user_input_response_signal = qtc.Signal()
     error_message_signal = qtc.Signal(str)
     status_update_signal = qtc.Signal(int, str)
+
+    analysis_of_media_folder_complete_signal = qtc.Signal(object)
     update_file_names_complete_signal = qtc.Signal(str)
 
     @qtc.Slot(dict)
-    def start_create_media_folders_thread(self, create_media_folders_selection):
+    def start_create_media_folder_thread(self, create_media_folder_selection):
         """
         Starts the thread to create the folder(s) the user wishes to make.
 
-        :param create_media_folders_selection: A dict that holds the inputs and information the user entered from Create Media Folders Pop-up
+        :param create_media_folder_selection: A dict that holds the inputs and information the user entered from Create Media Folder Pop-up
         :return:
         """
-        create_media_folders_thread = CreateMediaFoldersThread(create_media_folders_selection)
-        self.thread_pool.start(create_media_folders_thread)
+        create_media_folder_thread = CreateMediaFolderThread(create_media_folder_selection)
+        create_media_folder_thread.signals.request_user_input_signal.connect(self.user_input_request_signal)
+        create_media_folder_thread.signals.progress.connect(self.status_update_signal)
+        self.user_input_response_signal.connect(create_media_folder_thread.user_input)
+        self.thread_pool.start(create_media_folder_thread)
 
     def update_file_names(self, media_file_list, directory):
         """
@@ -60,7 +66,7 @@ class Model(qtc.QObject):
         self.update_file_names_complete_signal.emit(completed_message)
 
     @qtc.Slot(int, str)
-    def status_update(self, progress_bar_percentage, status_message):
+    def status_update(self, progress_bar_percentage, status_message): #TODO Remove this function if not needed.
         """
         Update the progress bar and status message on screen.
 
@@ -78,7 +84,6 @@ class Model(qtc.QObject):
         :param error_message: error message string
         :return:
         """
-        print(error_message)
         self.error_message_signal.emit(error_message)
 
     @qtc.Slot(str)

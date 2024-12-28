@@ -1,5 +1,5 @@
 """
 __init__ file for pop_up_windows folder
 """
-from .create_media_folders_popup_window import CreateMediaFolders
+from .create_media_folder_popup_window import CreateMediaFolder
 from .media_file_select_popup_window import MediaFileSelect

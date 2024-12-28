@@ -1,18 +1,18 @@
 """
-Pop-up window to allow user to create folder(s) per media type-TV show or movie
+Pop-up window to allow user to create a media folder for a movie or TV show
 """
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 from PySide6 import QtCore as qtc
 
-class CreateMediaFolders(qtw.QDialog):
+class CreateMediaFolder(qtw.QDialog):
 
-    def __init__(self, create_media_folders_section, parent=None):
+    def __init__(self, create_media_folder_section, parent=None):
         """
         Dialog window to allow user to select if media folder is existing or not, movie or tv show,
         information about the media, and what Extra Folders they wish to create/add.
 
-        :param create_media_folders_section: A dict to hold the inputs and information the user entered
+        :param create_media_folder_section: A dict to hold the inputs and information the user entered
         :param parent:
         """
         # The modal=True makes sure the user cannot click the main screen until they close the popup
@@ -20,7 +20,7 @@ class CreateMediaFolders(qtw.QDialog):
         self.setWindowTitle('Create Media Folder(s)')
 
         # variables
-        self.create_media_folders_section = create_media_folders_section
+        self.create_media_folder_section = create_media_folder_section
         self.selected_directory = ''
 
         # widgets
@@ -45,11 +45,11 @@ class CreateMediaFolders(qtw.QDialog):
         media_inform_form = qtw.QFormLayout()
         self.media_title = qtw.QLineEdit(self)
         self.media_title.textChanged.connect(self.enable_or_disable_accept_btn)
-        self.season_number = qtw.QLineEdit(self)
-        self.season_number.setValidator(qtg.QIntValidator(0, 100))
-        self.season_number.setEnabled(False)
+        self.number_of_seasons = qtw.QLineEdit(self)
+        self.number_of_seasons.setValidator(qtg.QIntValidator(0, 100))
+        self.number_of_seasons.setEnabled(False)
         media_inform_form.addRow('Title:', self.media_title)
-        media_inform_form.addRow('Season #:', self.season_number)
+        media_inform_form.addRow('Number of Seasons:', self.number_of_seasons)
 
         self.extra_folders_option_group = qtw.QGroupBox('Extra Folder(s)')
         self.trailers_cb = qtw.QCheckBox('Trailers', self)
@@ -89,7 +89,8 @@ class CreateMediaFolders(qtw.QDialog):
 
     @qtc.Slot()
     def enable_or_disable_accept_btn(self):
-        if (self.media_type_tv_select.isChecked() or self.media_type_tv_select) and (len(self.media_title.text())>0):
+        if (self.media_type_tv_select.isChecked() or self.media_type_tv_select) and (len(self.media_title.text())>0) \
+                and self.selected_directory:
             self.accept_btn.setEnabled(True)
         else:
             self.accept_btn.setEnabled(False)
@@ -97,9 +98,9 @@ class CreateMediaFolders(qtw.QDialog):
     @qtc.Slot()
     def enable_or_disable_season_number_line_edit(self):
         if self.media_type_movie_select.isChecked():
-            self.season_number.setEnabled(False)
+            self.number_of_seasons.setEnabled(False)
         elif self.media_type_tv_select.isChecked():
-            self.season_number.setEnabled(True)
+            self.number_of_seasons.setEnabled(True)
         else:
             pass
 
@@ -114,22 +115,23 @@ class CreateMediaFolders(qtw.QDialog):
         if directory:
             self.selected_directory = directory
             self.select_directory_label.setText(directory)
+            self.enable_or_disable_accept_btn()
 
     @qtc.Slot()
     def accept(self):
         """Runs when accept button is pressed"""
         if self.selected_directory:
-            self.create_media_folders_section['directory'] = self.selected_directory
-            self.create_media_folders_section['movie or tv'] = 'movie' if self.media_type_movie_select.isChecked() else 'tv'
-            self.create_media_folders_section['media title'] = self.media_title.text()
-            self.create_media_folders_section['season num'] = self.season_number.text()
-            self.create_media_folders_section['extra folders']['trailer'] = self.trailers_cb.isChecked()
-            self.create_media_folders_section['extra folders']['behind the scenes'] = self.behind_the_scenes_cb.isChecked()
-            self.create_media_folders_section['extra folders']['featurettes'] = self.featurettes_cb.isChecked()
-            self.create_media_folders_section['extra folders']['interviews '] = self.interviews_cb.isChecked()
-            self.create_media_folders_section['extra folders']['scenes'] = self.scenes_cb.isChecked()
-            self.create_media_folders_section['extra folders']['shorts'] = self.shorts_cb.isChecked()
-            self.create_media_folders_section['extra folders']['other'] = self.other_cb.isChecked()
+            self.create_media_folder_section['directory'] = self.selected_directory
+            self.create_media_folder_section['movie or tv'] = 'movie' if self.media_type_movie_select.isChecked() else 'tv'
+            self.create_media_folder_section['media title'] = self.media_title.text()
+            self.create_media_folder_section['number of season'] = self.number_of_seasons.text()
+            self.create_media_folder_section['extra folders']['trailer'] = self.trailers_cb.isChecked()
+            self.create_media_folder_section['extra folders']['behind the scenes'] = self.behind_the_scenes_cb.isChecked()
+            self.create_media_folder_section['extra folders']['featurettes'] = self.featurettes_cb.isChecked()
+            self.create_media_folder_section['extra folders']['interviews '] = self.interviews_cb.isChecked()
+            self.create_media_folder_section['extra folders']['scenes'] = self.scenes_cb.isChecked()
+            self.create_media_folder_section['extra folders']['shorts'] = self.shorts_cb.isChecked()
+            self.create_media_folder_section['extra folders']['other'] = self.other_cb.isChecked()
             super().accept()
         else:
             qtw.QMessageBox.critical(self, 'No Directory Selected', 'Please select a directory to create folder(s) in.')

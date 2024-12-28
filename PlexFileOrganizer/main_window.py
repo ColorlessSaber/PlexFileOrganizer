@@ -25,15 +25,21 @@ class MainWindow(qtw.QMainWindow):
 		self.statusBar().addPermanentWidget(qtw.QLabel('Version 2.0.0'))
 
 		# connect signals to slots
-		self.view.start_creating_media_folders_signal.connect(self.model.start_create_media_folders_thread)
+		self.view.start_creating_media_folder_signal.connect(self.model.start_create_media_folder_thread)
+		self.view.user_input_response_signal.connect(self.model.user_input_response_signal)
+
+		self.model.user_input_request_signal.connect(self.view.launch_user_input_request_popup)
+		self.model.status_update_signal.connect(self.update_progress_bar_and_print_message)
 
 		self.show()
 
-	def update_progress_bar(self, value):
+	def update_progress_bar_and_print_message(self, progress_bar_percentage, status_message):
 		"""
-		Update the progress bar.
+		Update the progress bar and print message on Log Window
 
-		:param value: the percentage progress bar should be at.
+		:param progress_bar_percentage: The int value for the progress bar
+		:param status_message: Message to display on the status bar
 		:return:
 		"""
-		self.progress_bar.setValue(value)
+		self.progress_bar.setValue(progress_bar_percentage)
+		self.view.write_to_log_window(status_message)
