@@ -32,7 +32,7 @@ class Model(qtc.QObject):
         create_media_folder_thread = CreateMediaFolderThread(create_media_folder_selection)
         create_media_folder_thread.signals.request_user_input_signal.connect(self.user_input_request_signal)
         create_media_folder_thread.signals.progress.connect(self.status_update_signal)
-        self.user_input_response_signal.connect(create_media_folder_thread.user_input)
+        self.user_input_response_signal.connect(create_media_folder_thread.user_confirmation)
         self.thread_pool.start(create_media_folder_thread)
 
     def update_file_names(self, media_file_list, directory):

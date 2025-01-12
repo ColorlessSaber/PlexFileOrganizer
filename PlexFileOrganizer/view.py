@@ -15,9 +15,9 @@ class View(qtw.QWidget):
         # Variables
         self.create_media_folder_selection = {
             'directory': None,
-            'movie or tv': None,
+            'movie or tv': None, # holds either 'movie' or 'tv'
             'media title': None,
-            'number of seasons': None,
+            'number of seasons': None,  # an int value
             'extra folders': {
                 'trailer': False,
                 'behind the scenes': False,
@@ -44,7 +44,7 @@ class View(qtw.QWidget):
         self.clear_log_btn = qtw.QPushButton('Clear Log', self)
         self.clear_log_btn.clicked.connect(self.clear_log_window)
 
-        self.quit_app_btn = qtw.QPushButton('Quiet Application', self)
+        self.quit_app_btn = qtw.QPushButton('Quit Application', self)
         self.quit_app_btn.clicked.connect(qtc.QCoreApplication.instance().quit)
 
         self.log_window = qtw.QTextBrowser()

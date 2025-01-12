@@ -124,9 +124,10 @@ class CreateMediaFolder(qtw.QDialog):
             self.create_media_folder_section['directory'] = self.selected_directory
             self.create_media_folder_section['movie or tv'] = 'movie' if self.media_type_movie_select.isChecked() else 'tv'
             self.create_media_folder_section['media title'] = self.media_title.text()
-            self.create_media_folder_section['number of season'] = self.number_of_seasons.text()
+            self.create_media_folder_section['number of seasons'] = int(self.number_of_seasons.text())
             self.create_media_folder_section['extra folders']['trailer'] = self.trailers_cb.isChecked()
             self.create_media_folder_section['extra folders']['behind the scenes'] = self.behind_the_scenes_cb.isChecked()
+            self.create_media_folder_section['extra folders']['deleted scenes'] = self.deleted_scenes_cb.isChecked()
             self.create_media_folder_section['extra folders']['featurettes'] = self.featurettes_cb.isChecked()
             self.create_media_folder_section['extra folders']['interviews '] = self.interviews_cb.isChecked()
             self.create_media_folder_section['extra folders']['scenes'] = self.scenes_cb.isChecked()
