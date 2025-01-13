@@ -3,9 +3,11 @@ setup file
 """
 import os
 import sys
-from PlexFileOrganizer import MainWindow
+
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
+
+from PlexFileOrganizer import MainWindow
 
 basedir = os.path.dirname(__file__)
 

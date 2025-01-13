@@ -16,22 +16,23 @@ class Model(qtc.QObject):
     user_input_request_signal = qtc.Signal()
     user_input_response_signal = qtc.Signal()
     error_message_signal = qtc.Signal(str)
-    status_update_signal = qtc.Signal(int, str)
+    update_progress_signal = qtc.Signal(int, str)
 
     analysis_of_media_folder_complete_signal = qtc.Signal(object)
     update_file_names_complete_signal = qtc.Signal(str)
 
-    @qtc.Slot(dict)
-    def start_create_media_folder_thread(self, create_media_folder_selection):
+    @qtc.Slot(object)
+    def start_create_media_folder_thread(self, media_folder_selection):
         """
         Starts the thread to create the folder(s) the user wishes to make.
 
-        :param create_media_folder_selection: A dict that holds the inputs and information the user entered from Create Media Folder Pop-up
+        :param media_folder_selection: Dataclass MediaFolder, holding the user inputs and selections.
         :return:
         """
-        create_media_folder_thread = CreateMediaFolderThread(create_media_folder_selection)
+        create_media_folder_thread = CreateMediaFolderThread(media_folder_selection)
         create_media_folder_thread.signals.request_user_input_signal.connect(self.user_input_request_signal)
-        create_media_folder_thread.signals.progress.connect(self.status_update_signal)
+        create_media_folder_thread.signals.progress.connect(self.update_progress_signal)
+        #TODO add in signal to launch popup to inform user the task is done.
         self.user_input_response_signal.connect(create_media_folder_thread.user_confirmation)
         self.thread_pool.start(create_media_folder_thread)
 
@@ -74,7 +75,7 @@ class Model(qtc.QObject):
         :param status_message: Message to display on the status bar
         :return:
         """
-        self.status_update_signal.emit(progress_bar_percentage, status_message)
+        self.update_progress_signal.emit(progress_bar_percentage, status_message)
 
     @qtc.Slot(str)
     def error_detected(self, error_message):
@@ -89,6 +90,8 @@ class Model(qtc.QObject):
     @qtc.Slot(str)
     def analyze_media_folder(self, directory):
         """
+        OLD CODE! WILL BE REMOVED SHORTLY!
+
         Checks the directory to see if it's a media folder for a movie or TV show. If it passes: creates a list of the
         media file(s) in the directory given; and determines if the directory is for a movie or TV show,
         the tile of the show and if a TV show the TV show's season number.

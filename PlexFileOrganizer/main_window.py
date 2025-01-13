@@ -4,6 +4,7 @@ The main window for the application
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 from PySide6 import QtGui as qtg
+
 from PlexFileOrganizer.model import Model
 from PlexFileOrganizer.view import View
 
@@ -29,7 +30,7 @@ class MainWindow(qtw.QMainWindow):
 		self.view.user_input_response_signal.connect(self.model.user_input_response_signal)
 
 		self.model.user_input_request_signal.connect(self.view.launch_user_input_request_popup)
-		self.model.status_update_signal.connect(self.update_progress_bar_and_print_message)
+		self.model.update_progress_signal.connect(self.update_progress_bar_and_print_message)
 
 		self.show()
 

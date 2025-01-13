@@ -1,34 +1,20 @@
 """
 The front-end of the program
 """
+from PlexFileOrganizer.dataclasses import MediaFolder
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder
 
 class View(qtw.QWidget):
-    start_creating_media_folder_signal = qtc.Signal(dict)
+    start_creating_media_folder_signal = qtc.Signal(object)
     user_input_response_signal = qtc.Signal()
 
     def __init__(self):
         super().__init__()
 
         # Variables
-        self.create_media_folder_selection = {
-            'directory': None,
-            'movie or tv': None, # holds either 'movie' or 'tv'
-            'media title': None,
-            'number of seasons': None,  # an int value
-            'extra folders': {
-                'trailer': False,
-                'behind the scenes': False,
-                'deleted scenes': False,
-                'featurettes': False,
-                'interviews': False,
-                'scenes': False,
-                'shorts': False,
-                'other': False
-            }
-        }
+        self.create_media_folder_selection = MediaFolder()
 
         # pop-up windows
         self.create_media_folder_window = None
