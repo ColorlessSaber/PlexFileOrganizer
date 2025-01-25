@@ -66,17 +66,6 @@ class Model(qtc.QObject):
         """
         self.update_file_names_complete_signal.emit(completed_message)
 
-    @qtc.Slot(int, str)
-    def status_update(self, progress_bar_percentage, status_message): #TODO Remove this function if not needed.
-        """
-        Update the progress bar and status message on screen.
-
-        :param progress_bar_percentage: The int value for the progress bar
-        :param status_message: Message to display on the status bar
-        :return:
-        """
-        self.update_progress_signal.emit(progress_bar_percentage, status_message)
-
     @qtc.Slot(str)
     def error_detected(self, error_message):
         """
