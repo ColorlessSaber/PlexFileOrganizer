@@ -26,8 +26,9 @@ class MainWindow(qtw.QMainWindow):
 		self.statusBar().addPermanentWidget(qtw.QLabel('Version 2.0.0'))
 
 		# connect signals to slots
-		self.view.start_creating_media_folder_signal.connect(self.model.start_create_media_folder_thread)
+		self.view.initiate_creating_media_folder_signal.connect(self.model.start_create_media_folder_thread)
 		self.view.user_input_response_signal.connect(self.model.user_input_response_signal)
+		self.view.initiate_scan_of_directory_signal.connect(self.model.start_scan_of_directory_thread)
 
 		self.model.user_input_request_signal.connect(self.view.launch_user_input_request_popup)
 		self.model.update_progress_signal.connect(self.update_progress_bar_and_print_message)

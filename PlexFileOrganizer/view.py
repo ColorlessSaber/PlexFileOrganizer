@@ -7,7 +7,8 @@ from PySide6 import QtCore as qtc
 from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder
 
 class View(qtw.QWidget):
-    start_creating_media_folder_signal = qtc.Signal(object)
+    initiate_creating_media_folder_signal = qtc.Signal(object)
+    initiate_scan_of_directory_signal = qtc.Signal(str)
     user_input_response_signal = qtc.Signal()
 
     def __init__(self):
@@ -54,17 +55,17 @@ class View(qtw.QWidget):
         """
         self.log_window.insertPlainText('\nOpening Create Media Folder(s) Window')
         self.create_media_folder_window = CreateMediaFolder(self.create_media_folder_selection, self)
-        self.create_media_folder_window.accepted.connect(self.start_create_media_folder_thread)
+        self.create_media_folder_window.accepted.connect(self.initiate_create_media_folder_thread)
         self.create_media_folder_window.exec()
 
     @qtc.Slot()
-    def start_create_media_folder_thread(self):
+    def initiate_create_media_folder_thread(self):
         """
-        Starts the thread to create the media folder(s).
+        Initiates the process to launch the thread to create the media folder(s).
 
         :return:
         """
-        self.start_creating_media_folder_signal.emit(self.create_media_folder_selection)
+        self.initiate_creating_media_folder_signal.emit(self.create_media_folder_selection)
 
     @qtc.Slot()
     def launch_update_media_files_popup(self):
@@ -75,7 +76,18 @@ class View(qtw.QWidget):
         """
         self.log_window.insertPlainText('\nOpening Media File Select Window')
         self.select_media_files_window = MediaFileSelect(self)
+        self.select_media_files_window.start_scan_of_directory_signal.connect(self.initiate_scan_of_directory_thread)
         self.select_media_files_window.exec()
+
+    @qtc.Slot(str)
+    def initiate_scan_of_directory_thread(self, directory_path):
+        """
+        Initiates the process to launch the thread to scan directory
+
+        :param directory_path: The directory path user wishes to scan
+        :return:
+        """
+        self. initiate_scan_of_directory_signal.emit(directory_path)
 
     @qtc.Slot()
     def launch_user_input_request_popup(self):
@@ -84,6 +96,7 @@ class View(qtw.QWidget):
             'Media Folder Exists',
             'The Media Folder you wish to make already exists. Please click "ok" to cancel creation of Media Folder.'
         )
+
         if response == qtw.QMessageBox.Ok:
             self.user_input_response_signal.emit()
 

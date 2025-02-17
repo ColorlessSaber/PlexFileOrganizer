@@ -1,9 +1,6 @@
 """
 Thread for creating the media folders in the selected directory
 """
-import os
-from collections import Counter
-
 from PySide6 import QtCore as qtc
 
 class ThreadSignals(qtc.QObject):

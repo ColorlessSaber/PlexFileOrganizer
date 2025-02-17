@@ -3,9 +3,8 @@ The back-end of the Plex File Organizer
 """
 import os
 from PySide6 import QtCore as qtc
+from PlexFileOrganizer.threads import ScanDirectoryThread
 from PlexFileOrganizer.create_media_folder_thread import CreateMediaFolderThread
-from PlexFileOrganizer.update_tv_show_file_names_thread import UpdateTvShowFileNamesThread
-from PlexFileOrganizer.update_movie_file_name_thread import UpdateMovieFileNameThread
 from PlexFileOrganizer.functions import media_file_check
 
 
@@ -36,26 +35,17 @@ class Model(qtc.QObject):
         self.user_input_response_signal.connect(create_media_folder_thread.user_confirmation)
         self.thread_pool.start(create_media_folder_thread)
 
-    def update_file_names(self, media_file_list, directory):
+    @qtc.Slot(str)
+    def start_scan_of_directory_thread(self, directory_path):
         """
-        Starts the appropriate thread based on if the media is a movie or TV show to update the file(s) names.
+        Starts the thread to scan the selected directory.
 
-        :param media_file_list: A list of file(s) that need their file name changed.
-        :param directory: Location of where the file(s) are located.
+        :param directory_path: The directory path the user wishes to scan
         :return:
         """
-        if 'movies' in directory.lower():
-            update_movie_file_name_thread = UpdateMovieFileNameThread(media_file_list, directory)
-            update_movie_file_name_thread.signals.progress.connect(self.status_update)
-            update_movie_file_name_thread.signals.finish.connect(self.complete_update_file_names)
-            update_movie_file_name_thread.signals.error.connect(self.error_detected)
-            self.thread_pool.start(update_movie_file_name_thread)
-        else:   # TV show thread
-            update_tv_show_file_names_thread = UpdateTvShowFileNamesThread(media_file_list, directory)
-            update_tv_show_file_names_thread.signals.progress.connect(self.status_update)
-            update_tv_show_file_names_thread.signals.finish.connect(self.complete_update_file_names)
-            update_tv_show_file_names_thread.signals.error.connect(self.error_detected)
-            self.thread_pool.start(update_tv_show_file_names_thread)
+        scan_directory_thread = ScanDirectoryThread(directory_path)
+        scan_directory_thread.signals.progress.connect(self.update_progress_signal)
+        self.thread_pool.start(scan_directory_thread)
 
     @qtc.Slot(str)
     def complete_update_file_names(self, completed_message):
