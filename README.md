@@ -18,7 +18,7 @@ Bug Fixes
 _2.0.0_ (Working towards)
 
 Features
-* Has the ability to create a folder for a new movie or TV show, along with sub-folders for miscellaneous, and wait until ripping is complete to update the file names.
+* Has the ability to create a folder for a new movie or TV show, along with sub-folders for miscellaneous.
 * Able differentiate files in folder that already match the media folder name and the files that need to be updated.
 * For TV shows, let the user be able to identify which file is a specific episode.
 
