@@ -13,12 +13,3 @@ def directory_scanner(directory_path):
         for entry in directory_to_scan:
             if not entry.name.startswith("."):  # skips over hidden folders/files.
                 yield entry
-
-
-def file_checker(item_to_check):
-    """
-    Checks the item given to see if it is a file.
-
-    :param item_to_check:
-    :return:
-    """
