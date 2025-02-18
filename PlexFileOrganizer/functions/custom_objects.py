@@ -22,9 +22,6 @@ class ExtraFolders(UserDict):
                 'other': False
             }
 
-    def __del__(self):
-        raise RuntimeError("Deletion not allowed")
-
     def pop(self, s = None):
         raise RuntimeError("Deletion not allowed")
 
@@ -38,8 +35,6 @@ class MediaFile(UserString):
     """
     custom immutable string. Has built-in functions to do simple tasks
     """
-    def __del__(self):
-        raise RuntimeError("Deletion not allowed")
 
     def split(self, sep = None, maxsplit = -1):
         raise RuntimeError("Splitting not allowed")
