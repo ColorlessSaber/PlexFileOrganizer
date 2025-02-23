@@ -1,6 +1,6 @@
 import re
 
-def media_file_format_checker(media_file):
+def correct_media_file_format(media_file):
     """
     checks the media_file and verifies if it has been formated correctly or not based on folder its under.
 
