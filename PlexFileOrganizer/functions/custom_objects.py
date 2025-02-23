@@ -12,7 +12,7 @@ class ExtraFolders(UserDict):
     def __init__(self):
         super().__init__()
         self.data = {
-                'trailer': False,
+                'trailers': False,
                 'behind the scenes': False,
                 'deleted scenes': False,
                 'featurettes': False,
