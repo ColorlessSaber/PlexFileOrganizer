@@ -1,23 +1,23 @@
 """
 Thread for scanning the directory user selected
 """
-from collections import deque
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.functions import directory_scanner, correct_media_file_format, MediaFile
+from PlexFileOrganizer.functions import directory_scanner, CorrectMediaFileFormat, MediaFile
 
 class ThreadSignals(qtc.QObject):
     """
     The signals for thread
     """
     error = qtc.Signal(str)
-    finish = qtc.Signal(str)
+    media_files_found = qtc.Signal(object)
+    no_media_files_found = qtc.Signal()
     progress = qtc.Signal(int, str)
 
 class ScanDirectoryThread(qtc.QRunnable):
 
     def __init__(self, directory_path):
         super().__init__()
-        self.directory_path = deque([directory_path])
+        self.directory_path = directory_path
         self.mutex = qtc.QMutex()
         self.signals = ThreadSignals()
 
@@ -28,11 +28,24 @@ class ScanDirectoryThread(qtc.QRunnable):
 
         :return:
         """
+        correct_media_file_format = CorrectMediaFileFormat()
         media_file_list = []    # holds the media files that need to be updated
 
         self.mutex.lock()
-        for entry in directory_scanner(self.directory_path):
-            if not correct_media_file_format(entry.path):
-                media_file_list.append(entry.path)
+        try:
+            for entry in directory_scanner(self.directory_path):
+                if any(entry.path.endswith(extension) for extension in ['.mkv', '.mp4', '.avi']):
+                    if not correct_media_file_format.all_formats(entry):
+                        media_file_list.append(MediaFile(entry.path))
 
-        self.mutex.unlock()
+        except OSError as e:
+            self.signals.error.emit(e)
+
+        finally:
+            self.mutex.unlock()
+
+            # check to see if the scan found media files that need to be updated.
+            if media_file_list:
+                self.signals.media_files_found.emit(media_file_list)
+            else:
+                self.signals.no_media_files_found.emit()

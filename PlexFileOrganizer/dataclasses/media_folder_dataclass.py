@@ -47,6 +47,6 @@ class MediaFolder:
         an_extra_folder_was_created = False # a flag to indicate if an extra folder was created.
         for key in self.extra_folders:
             if self.extra_folders[key]:
-                os.mkdir('{}/{}/{}'.format(self.directory, self.media_title, key))
+                os.mkdir('{}/{}/{}'.format(self.directory, self.media_title, key.title()))
                 an_extra_folder_was_created = True
         return an_extra_folder_was_created

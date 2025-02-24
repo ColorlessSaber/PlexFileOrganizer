@@ -4,7 +4,6 @@ The back-end of the Plex File Organizer
 import os
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.threads import ScanDirectoryThread, CreateMediaFolderThread
-from PlexFileOrganizer.functions import media_file_check
 
 
 class Model(qtc.QObject):
