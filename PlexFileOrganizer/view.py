@@ -1,12 +1,10 @@
-"""
-The front-end of the program
-"""
 from PlexFileOrganizer.dataclasses import MediaFolder
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder
 
 class View(qtw.QWidget):
+    """The front-end of the program"""
     initiate_creating_media_folder_signal = qtc.Signal(object)
     initiate_scan_of_directory_signal = qtc.Signal(str, object, bool)
     user_input_response_signal = qtc.Signal()
@@ -76,7 +74,7 @@ class View(qtw.QWidget):
         """
         self.log_window.insertPlainText('\nOpening Media File Select Window')
         self.select_media_files_window = MediaFileSelect(self)
-        self.select_media_files_window.start_scan_of_directory_signal.connect(self.initiate_scan_of_directory_signal)
+        self.select_media_files_window.initiate_scan_of_directory_signal.connect(self.initiate_scan_of_directory_signal)
         self.select_media_files_window.exec()
 
     @qtc.Slot()

@@ -1,11 +1,11 @@
-"""
-Pop-up window to allow user to select media files they wish to update.
-"""
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 
 class MediaFileSelect(qtw.QDialog):
-    start_scan_of_directory_signal = qtc.Signal(str, object, bool)
+    """
+    Pop-up window to allow user to select media files they wish to update.
+    """
+    initiate_scan_of_directory_signal = qtc.Signal(str, object, bool)
 
 
     def __init__(self, parent=None):
@@ -43,6 +43,6 @@ class MediaFileSelect(qtw.QDialog):
         )
 
         if directory:
-            self.start_scan_of_directory_signal.emit(directory,
-                                                     self.current_media_file_list,
-                                                     self.files_in_extra_folders_are_formated)
+            self.initiate_scan_of_directory_signal.emit(directory,
+                                                        self.current_media_file_list,
+                                                        self.files_in_extra_folders_are_formated)

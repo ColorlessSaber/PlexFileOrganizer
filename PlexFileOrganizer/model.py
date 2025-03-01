@@ -1,12 +1,9 @@
-"""
-The back-end of the Plex File Organizer
-"""
-import os
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.threads import ScanDirectoryThread, CreateMediaFolderThread
 
 
 class Model(qtc.QObject):
+    """The back-end of the Plex File Organizer"""
 
     thread_pool = qtc.QThreadPool()
 

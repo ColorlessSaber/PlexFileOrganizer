@@ -1,6 +1,3 @@
-"""
-The main window for the application
-"""
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 from PySide6 import QtGui as qtg
@@ -10,6 +7,7 @@ from PlexFileOrganizer.view import View
 
 
 class MainWindow(qtw.QMainWindow):
+	"""The main window for the application"""
 
 	def __init__(self):
 		super().__init__()
