@@ -16,11 +16,18 @@ class ThreadSignals(qtc.QObject):
 
 class ScanDirectoryThread(qtc.QRunnable):
 
-    def __init__(self, directory_path):
+    def __init__(self, directory_path, current_media_file_list, files_in_extra_folders_are_formated):
+        """
+
+        :param directory_path: Directory to scan
+        :param current_media_file_list: The media files that were found in the previous directory scan
+        :param files_in_extra_folders_are_formated: a flag that makes the function define all files in extra folders are
+        formated correctly or not. True - formated correctly, False - not formated correctly.
+        """
         super().__init__()
-        #TODO pass a value to files_in_extra_folders_are_not_formated
-        self.files_in_extra_folders_are_not_formated = True # a flag that makes the function define all files in extra folders as not
+        self.files_in_extra_folders_are_formated = files_in_extra_folders_are_formated
         self.directory_path = directory_path
+        self.current_media_file_list = current_media_file_list
         self.mutex = qtc.QMutex()
         self.signals = ThreadSignals()
 
@@ -31,24 +38,20 @@ class ScanDirectoryThread(qtc.QRunnable):
 
         :return:
         """
-        extra_folder_format = re.compile(r"""
-                                ^(trailer(s)?) | # trailers folder
-                                (behind the scenes) | # behind the scenes folder
-                                (deleted scenes) | # deleted scenes folder
-                                (featurettes) | # featurettes folder
-                                (interviews) | # interviews folder
-                                (scenes) | # scenes folder
-                                (shorts) | # shorts folder
-                                (other) | # other folder
-                                """, re.VERBOSE | re.IGNORECASE)
-        media_file_list = []    # holds the media files that need to be updated
+        scan_media_file_list = []    # holds the media files that were found that need to be updated
 
         self.mutex.lock()
         try:
             for entry in directory_scanner(self.directory_path):
                 if any(entry.path.endswith(extension) for extension in ['.mkv', '.mp4', '.avi']):
-                    if not correct_media_file_format(entry, self.files_in_extra_folders_are_not_formated):
-                        media_file_list.append(MediaFile(entry.path))
+                    if not correct_media_file_format(entry, self.files_in_extra_folders_are_formated):
+                        scan_media_file_list.append(MediaFile(entry.path))
+
+            # compare current_media_file_list to scan_media_file_list
+            # if there is a media file in scan_media_file_list, append it to current_media_file_list
+            for media_file in scan_media_file_list:
+                if media_file not in self.current_media_file_list:
+                    self.current_media_file_list.append(media_file)
 
         except OSError as e:
             self.signals.error.emit(e)
@@ -56,8 +59,8 @@ class ScanDirectoryThread(qtc.QRunnable):
         finally:
             self.mutex.unlock()
 
-            # check to see if the scan found media files that need to be updated.
-            if media_file_list:
-                self.signals.media_files_found.emit(media_file_list)
+            # check to see if any media files were found
+            if self.current_media_file_list:
+                self.signals.media_files_found.emit(self.current_media_file_list)
             else:
                 self.signals.no_media_files_found.emit()

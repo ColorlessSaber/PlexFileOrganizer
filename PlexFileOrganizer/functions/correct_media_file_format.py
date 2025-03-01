@@ -7,7 +7,7 @@ def correct_media_file_format(media_file, files_in_extra_folders_are_formated = 
 
     :param media_file: a DirEntry object of media file to check
     :param files_in_extra_folders_are_formated: a flag that makes the function define all files in extra folders are
-    formated correctly or not
+    formated correctly or not. True - formated correctly, False - not formated correctly.
     :return:
     """
     tv_show_episode_format = re.compile(r"""
@@ -25,14 +25,14 @@ def correct_media_file_format(media_file, files_in_extra_folders_are_formated = 
 
     # check see if the folder is an extra folder
     extra_folder_format = [
-        r"^trailer(s)?$",
-        r"^behind the scenes$",
-        r"^deleted scenes$",
-        r"^featurettes$",
-        r"^interviews$",
-        r"^scenes$",
-        r"^shorts$",
-        r"^other$"
+        r"trailer(s)?$",
+        r"behind the scenes$",
+        r"deleted scenes$",
+        r"featurettes$",
+        r"interviews$",
+        r"scenes$",
+        r"shorts$",
+        r"other$"
     ]
     extra_folder_format_check_results = [re.match(pattern, media_file.path.split('/')[-2], re.IGNORECASE) for pattern in extra_folder_format]
 

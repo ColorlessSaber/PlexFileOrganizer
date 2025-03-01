@@ -5,13 +5,17 @@ from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 
 class MediaFileSelect(qtw.QDialog):
-    start_scan_of_directory_signal = qtc.Signal(str)
+    start_scan_of_directory_signal = qtc.Signal(str, object, bool)
 
 
     def __init__(self, parent=None):
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
         self.setWindowTitle("Media File Select")
+
+        # variables
+        self.current_media_file_list = []
+        self.files_in_extra_folders_are_formated = True
 
         # widgets
         self.scan_folder_btn = qtw.QPushButton('Scan Folder', self)
@@ -39,4 +43,6 @@ class MediaFileSelect(qtw.QDialog):
         )
 
         if directory:
-            self.start_scan_of_directory_signal.emit(directory)
+            self.start_scan_of_directory_signal.emit(directory,
+                                                     self.current_media_file_list,
+                                                     self.files_in_extra_folders_are_formated)

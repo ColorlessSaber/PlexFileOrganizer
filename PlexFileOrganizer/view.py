@@ -8,7 +8,7 @@ from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder
 
 class View(qtw.QWidget):
     initiate_creating_media_folder_signal = qtc.Signal(object)
-    initiate_scan_of_directory_signal = qtc.Signal(str)
+    initiate_scan_of_directory_signal = qtc.Signal(str, object, bool)
     user_input_response_signal = qtc.Signal()
 
     def __init__(self):
@@ -76,18 +76,8 @@ class View(qtw.QWidget):
         """
         self.log_window.insertPlainText('\nOpening Media File Select Window')
         self.select_media_files_window = MediaFileSelect(self)
-        self.select_media_files_window.start_scan_of_directory_signal.connect(self.initiate_scan_of_directory_thread)
+        self.select_media_files_window.start_scan_of_directory_signal.connect(self.initiate_scan_of_directory_signal)
         self.select_media_files_window.exec()
-
-    @qtc.Slot(str)
-    def initiate_scan_of_directory_thread(self, directory_path):
-        """
-        Initiates the process to launch the thread to scan directory
-
-        :param directory_path: The directory path user wishes to scan
-        :return:
-        """
-        self. initiate_scan_of_directory_signal.emit(directory_path)
 
     @qtc.Slot()
     def launch_user_input_request_popup(self):

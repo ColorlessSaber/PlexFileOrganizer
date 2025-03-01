@@ -34,14 +34,18 @@ class Model(qtc.QObject):
         self.thread_pool.start(create_media_folder_thread)
 
     @qtc.Slot(str)
-    def start_scan_of_directory_thread(self, directory_path):
+    def start_scan_of_directory_thread(self, directory_path, current_media_file_list, files_in_extra_folders_are_formated):
         """
         Starts the thread to scan the selected directory.
 
         :param directory_path: The directory path the user wishes to scan
+        :param current_media_file_list: The media files that were found in the previous directory scan
+        :param files_in_extra_folders_are_formated: a flag that makes the function define all files in extra folders are
+        formated correctly or not. True - formated correctly, False - not formated correctly.
         :return:
         """
-        scan_directory_thread = ScanDirectoryThread(directory_path)
+        scan_directory_thread = ScanDirectoryThread(directory_path, current_media_file_list,
+                                                    files_in_extra_folders_are_formated)
         scan_directory_thread.signals.progress.connect(self.update_progress_signal)
         self.thread_pool.start(scan_directory_thread)
 
