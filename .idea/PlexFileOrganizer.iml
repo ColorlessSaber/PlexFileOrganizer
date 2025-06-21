@@ -8,7 +8,7 @@
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/scratchpad" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.13 (PlexFileOrganizer)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.13 virtualenv at /Volumes/Programs Drive/pycharm projects/PlexFileOrganizer/.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
