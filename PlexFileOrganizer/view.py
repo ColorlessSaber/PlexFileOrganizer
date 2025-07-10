@@ -1,7 +1,7 @@
 from PlexFileOrganizer.dataclasses import MediaFolder
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder
+from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder, AutoUpdateMediaFilesWindow
 
 class View(qtw.QWidget):
     """The front-end of the program"""
@@ -14,71 +14,99 @@ class View(qtw.QWidget):
 
         # Variables
         self.create_media_folder_selection = MediaFolder()
+        self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False}
 
         # pop-up windows
         self.create_media_folder_window = None
         self.select_media_files_window = None
+        self.auto_update_media_files_conformation_window = None
 
         # widgets
-        self.update_media_files_btn = qtw.QPushButton('Update Media Files', self)
-        self.update_media_files_btn.clicked.connect(self.launch_update_media_files_popup)
+        self.btn_create_media_folder = qtw.QPushButton('Create Media Folder', self)
+        self.btn_create_media_folder.clicked.connect(self.launch_create_media_folder_window)
 
-        self.create_media_folder_btn = qtw.QPushButton('Create Media Folder', self)
-        self.create_media_folder_btn.clicked.connect(self.launch_create_media_folder_popup)
+        self.btn_auto_update_media_files = qtw.QPushButton('Auto-Update Media Files', self)
+        self.btn_auto_update_media_files.clicked.connect(self.launch_auto_update_media_files_conformation_window)
 
-        self.clear_log_btn = qtw.QPushButton('Clear Log', self)
-        self.clear_log_btn.clicked.connect(self.clear_log_window)
+        self.btn_manual_update_media_files = qtw.QPushButton('Manual-Update Media Files', self)
+        self.btn_manual_update_media_files.clicked.connect(self.launch_manual_update_media_files_window)
 
-        self.quit_app_btn = qtw.QPushButton('Quit Application', self)
-        self.quit_app_btn.clicked.connect(qtc.QCoreApplication.instance().quit)
+        self.btn_clear_log = qtw.QPushButton('Clear Log', self)
+        self.btn_clear_log.clicked.connect(self.clear_log_window)
+
+        self.btn_quit_app = qtw.QPushButton('Quit Application', self)
+        self.btn_quit_app.clicked.connect(qtc.QCoreApplication.instance().quit)
 
         self.log_window = qtw.QTextBrowser()
         self.log_window.insertPlainText('Media Log Window')
 
-        # layout
+        # Set up the layout of window
         grid_layout = qtw.QGridLayout()
-        grid_layout.addWidget(self.update_media_files_btn, 0, 0)
-        grid_layout.addWidget(self.create_media_folder_btn, 0, 1)
+        grid_layout.addWidget(self.btn_create_media_folder, 0, 0)
+        grid_layout.addWidget(self.btn_auto_update_media_files, 0, 1)
+        grid_layout.addWidget(self.btn_manual_update_media_files, 0, 2)
         grid_layout.addWidget(self.log_window, 2, 0, 5, 4)
-        grid_layout.addWidget(self.clear_log_btn, 7, 0)
-        grid_layout.addWidget(self.quit_app_btn, 7, 3)
+        grid_layout.addWidget(self.btn_clear_log, 7, 0)
+        grid_layout.addWidget(self.btn_quit_app, 7, 3)
         self.setLayout(grid_layout)
 
+# *** Methods that launch popup windows ***
     @qtc.Slot()
-    def launch_create_media_folder_popup(self):
+    def launch_create_media_folder_window(self):
         """
-        Launches pop-up window to allow user to select folder(s) to create
+        Launches the Create Media Folder window.
 
         :return:
         """
-        self.log_window.insertPlainText('\nOpening Create Media Folder(s) Window')
+        self.log_window.insertPlainText('\nOpening Create Media Folder Window')
         self.create_media_folder_window = CreateMediaFolder(self.create_media_folder_selection, self)
         self.create_media_folder_window.accepted.connect(self.initiate_create_media_folder_thread)
         self.create_media_folder_window.exec()
 
     @qtc.Slot()
+    def launch_auto_update_media_files_conformation_window(self):
+        """
+        Launches pop-up window Auto-Update Media Files Confirmation.
+
+        :return:
+        """
+        self.log_window.insertPlainText('\nOpening "Auto-Update Media Files Conformation Window"')
+        self.auto_update_media_files_conformation_window = AutoUpdateMediaFilesWindow(self.auto_update_media_files_options, self)
+        self.auto_update_media_files_conformation_window.accepted.connect(self.initiate_auto_update_media_files_thread)
+        self.auto_update_media_files_conformation_window.exec()
+
+    @qtc.Slot()
+    def launch_manual_update_media_files_window(self):
+        """
+        Launches the Manual Update Media Files window.
+
+        :return:
+        """
+        self.log_window.insertPlainText('\nOpening "Manual Update Media Files" Window')
+
+# *** Methods that start threads ***
+    @qtc.Slot()
     def initiate_create_media_folder_thread(self):
         """
-        Initiates the process to launch the thread to create the media folder(s).
+        Initiates the process to launch the thread to create the media folder.
 
         :return:
         """
         self.initiate_creating_media_folder_signal.emit(self.create_media_folder_selection)
 
     @qtc.Slot()
-    def launch_update_media_files_popup(self):
+    def initiate_auto_update_media_files_thread(self):
         """
-        Launches pop-up window to allow user to select media file(s) that need to be updated
+        The view-side slot to initiate the process to launch thread to start
+        auto-update media files.
 
         :return:
         """
-        self.log_window.insertPlainText('\nOpening Media File Select Window')
-        self.select_media_files_window = MediaFileSelect(self)
-        self.select_media_files_window.initiate_scan_of_directory_signal.connect(self.initiate_scan_of_directory_signal)
-        self.select_media_files_window.exec()
+        print(self.auto_update_media_files_options)
 
+# *** Methods that launches messageboxes ***
     @qtc.Slot()
-    def launch_user_input_request_popup(self):
+    def messagebox_inform_user_media_file_exist(self):
         response = qtw.QMessageBox.information(
             self,
             'Media Folder Exists',
@@ -88,6 +116,7 @@ class View(qtw.QWidget):
         if response == qtw.QMessageBox.Ok:
             self.user_input_response_signal.emit()
 
+# *** Methods for Log Window ***
     @qtc.Slot()
     def clear_log_window(self):
         """
