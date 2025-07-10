@@ -31,7 +31,7 @@
 ## About The Project
 Creating a program to help the user create folder for new movies/tv shows, properly name media file(s) to match the media they are in while following
 Plex approve file naming convention, and organize the media folder(s)--AKA your music folder--if it gets out of hand. Also, it will contain other handy futures:
-rename existing media file(s); and have a built-in media player so the user can see what the media file is, thus allowing them to properly name it.
+rename existing media file(s); and have a built-in media player so the user can see what the media file is, thus allowing them to name it properly.
 
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>
 
@@ -76,8 +76,8 @@ _Version 3 Features_
 
 Will work on getting these added to Github Issue section. For now, the up-and-coming features reside here.
 
-**NOTE** If you look at the history of this project, you will notice a version-1 and version-2 branches. Please ignore that.
-When I realized that I wanted more features and make this repo public, I made the decision to start over from skratch.
+**NOTE** If you look at the history of this project, you will notice a commit that say "Version 2.0.0". Please ignore that.
+When I realized that I wanted more features and make this repo public, I made the decision to start over at Version 1.0.0.
 
 <!-- License -->
 ## License
@@ -102,13 +102,13 @@ Please head to my portfolio website and use the contact form to reach out to me:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/PlexFileOrganizer.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
 [contributors-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/PlexFileOrganizer.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
 [forks-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/PlexFileOrganizer.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
 [stars-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/PlexFileOrganizer.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
 [issues-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/issues
 
 [python-shield]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
