@@ -13,7 +13,7 @@ class CreateMediaFolder(qtw.QDialog):
         information about the media, and what Extra Folders they wish to create/add.
 
         :param create_media_folder_section: A dict to hold the inputs and information the user entered
-        :param parent:
+        :param parent: The parent window the dialog window will be linked to.
         """
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
@@ -77,7 +77,7 @@ class CreateMediaFolder(qtw.QDialog):
         self.cancel_btn = qtw.QPushButton('Cancel', self)
         self.cancel_btn.clicked.connect(self.reject)
 
-        # layout
+        # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
         main_layout.addLayout(select_directory_layout)
         main_layout.addWidget(self.media_type_group)

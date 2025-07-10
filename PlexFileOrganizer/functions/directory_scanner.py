@@ -17,5 +17,5 @@ def directory_scanner(directory_path):
 
 
 if __name__ == '__main__':
-    for entry in directory_scanner("/Volumes/Media Library/Anime TV Shows/Frieren Beyond Journey's End"):
-        print(entry.name)
+    for item in directory_scanner("/Volumes/Media Library/Anime TV Shows/Frieren Beyond Journey's End"):
+        print(item.name)
