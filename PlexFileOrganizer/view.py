@@ -5,16 +5,17 @@ from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder,
 
 class View(qtw.QWidget):
     """The front-end of the program"""
-    initiate_creating_media_folder_signal = qtc.Signal(object)
-    initiate_scan_of_directory_signal = qtc.Signal(str, object, bool)
-    user_input_response_signal = qtc.Signal()
+    signal_initiate_creating_media_folder = qtc.Signal(object)
+    signal_initiate_scan_of_directory = qtc.Signal(str, object, bool)
+    signal_initiate_auto_update_media_files = qtc.Signal(object)
+    signal_user_input_response = qtc.Signal()
 
     def __init__(self):
         super().__init__()
 
         # Variables
-        self.create_media_folder_selection = MediaFolder()
-        self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False}
+        self.create_media_folder_selection = MediaFolder() # contains the information the media folder the user wish's to create
+        self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False} # contains information for the AutoUpdateMediaFilesThread
 
         # pop-up windows
         self.create_media_folder_window = None
@@ -92,17 +93,17 @@ class View(qtw.QWidget):
 
         :return:
         """
-        self.initiate_creating_media_folder_signal.emit(self.create_media_folder_selection)
+        self.signal_initiate_creating_media_folder.emit(self.create_media_folder_selection)
 
     @qtc.Slot()
     def initiate_auto_update_media_files_thread(self):
         """
-        The view-side slot to initiate the process to launch thread to start
+        The view-side to initiate the process to launch thread to start
         auto-update media files.
 
         :return:
         """
-        print(self.auto_update_media_files_options)
+        self.signal_initiate_auto_update_media_files.emit(self.auto_update_media_files_options)
 
 # *** Methods that launches messageboxes ***
     @qtc.Slot()
@@ -114,7 +115,7 @@ class View(qtw.QWidget):
         )
 
         if response == qtw.QMessageBox.Ok:
-            self.user_input_response_signal.emit()
+            self.signal_user_input_response.emit()
 
 # *** Methods for Log Window ***
     @qtc.Slot()
