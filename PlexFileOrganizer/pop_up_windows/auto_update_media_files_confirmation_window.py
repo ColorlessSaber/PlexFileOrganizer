@@ -9,17 +9,18 @@ from PySide6 import QtCore as qtc
 
 class AutoUpdateMediaFilesWindow(qtw.QDialog):
 
-    def __init__(self, outer_auto_update_media_files_options, parent=None):
+    def __init__(self, user_selected_dir_and_options, parent=None):
         """
-        :param outer_auto_update_media_files_options: A dictionary containing the directory the user will selected,
-        and if they wish to update the media files in the extra folder(s)
+
+        :param user_selected_dir_and_options: A dictionary containing the directory the user has selected,
+        and if they wish to update the media files in the extra folder(s).
         :param parent: The parent window the dialog window will be linked to.
         """
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
         self.setWindowTitle('Auto-Update Media Files Confirmation')
 
-        self.auto_update_media_files_options = outer_auto_update_media_files_options
+        self.user_selected_dir_and_options = user_selected_dir_and_options
 
         # Labels
         label_information_of_process = qtw.QLabel(
@@ -77,7 +78,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         # confirm user selected a directory
         if directory_selected_by_user:
             self.btn_proceed.setEnabled(True) # enable the button given user has selected a directory
-            self.auto_update_media_files_options['directory'] = directory_selected_by_user
+            self.user_selected_dir_and_options['directory'] = directory_selected_by_user
             self.label_selected_directory.setText(directory_selected_by_user)
 
     def accept(self):
@@ -86,5 +87,5 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
 
         :return:
         """
-        self.auto_update_media_files_options['scan_extra_folder'] = self.cb_extra_folders_to_be_scanned.isChecked()
+        self.user_selected_dir_and_options['scan_extra_folder'] = self.cb_extra_folders_to_be_scanned.isChecked()
         super().accept()
