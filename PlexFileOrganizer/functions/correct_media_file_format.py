@@ -1,13 +1,114 @@
 import re
+from operator import truediv
 
+
+class FolderAndFilePatterns:
+    """
+    Contains regex expressions to check to see if media file is in an extra folder or a tv show season folder, and if the
+    media file is properly name for the folder they are in.
+    """
+
+    def tv_show_episode_pattern(self, media_file):
+        """
+        The regex expression for the correct tv show media file name.
+        
+        :param media_file: a DirEntry object of media file to check
+        :return: A Bool value. True - media file is formatted correctly for tv show folder. False - media file is
+        not formatted correctly for tv show folder.
+        """
+        tv_show_episode_format = re.compile(r"""
+                                ^.+   # wildcard to handle name of show
+                                \s  
+                                -
+                                \s
+                                s\d+e\d+(-e\d+)?  # season, episode number and possible multiple episode
+                                \.\w+ # file extension
+                                """, re.VERBOSE | re.IGNORECASE)
+        
+        if tv_show_episode_format.match(media_file.name):
+            return True
+        else:
+            return False
+
+    def movie_pattern(self, media_file):
+        """
+        The regex expression for the correct movie media file name.
+        
+        :param media_file: a DirEntry object of media file to check
+        :return: The regex expression to check against file.
+        """
+        movie_format = re.compile(r"""
+                                ^(?P<title>^.+)   # group 1: the name of the file
+                                (?P<ext>\.\w+) # group 2: file extension
+                                """, re.VERBOSE | re.IGNORECASE)
+        if movie_format.match(media_file.name).group('title') == media_file.path.split('/')[-2]:
+            return True
+        else:
+            return False
+
+    def tv_show_season_folder_check(self, media_file):
+        """
+        Checks the given file's path to see if it is in a tv show folder or not.
+
+        :param media_file: a DirEntry object of media file to check
+        :return: Bool value. True - file is in a tv show season folder, false - file is not in a tv show season folder
+        """
+        # tv show season folders come in two types: Season # and Specials. Hence, check checking for two patterns.
+        if re.match(r'^(Season\s\d)|(Specials)$', media_file.path.split('/')[-2], re.IGNORECASE):
+            return True
+        else:
+            return False
+
+    def extra_folder_check(self, media_file):
+        """
+        Checks the given file's path to see if it is in an extra folder or not.
+
+        :param media_file: a DirEntry object of media file to check
+        :return: Bool value. True - file is in an extra folder, false - file is not in an extra folder
+        """
+        extra_folder_format = [
+            r"trailer(s)?$",
+            r"behind the scenes$",
+            r"deleted scenes$",
+            r"featurettes$",
+            r"interviews$",
+            r"scenes$",
+            r"shorts$",
+            r"other$"
+        ]
+        # run through the list above against the directory path for a match
+        extra_folder_format_check_results = [re.match(pattern, media_file.path.split('/')[-2], re.IGNORECASE) for pattern in extra_folder_format]
+        if any(extra_folder_pattern_match for extra_folder_pattern_match in extra_folder_format_check_results):
+            return True
+        else:
+            return False
+
+def check_files_in_media_folder(media_file_list):
+    """
+    Checks if the media files in the given list are all formated correctly for tv show or movie folder they are in.
+
+    :param media_file_list: a DirEntry object of media file to check
+    :return: Bool value. True -- all media files in folder are formated correctly. False -- at lest one media file in the folder isn't formated correctly
+    """
+    folder_and_file_patterns = FolderAndFilePatterns()
+    for file in media_file_list:
+        if folder_and_file_patterns.tv_show_season_folder_check(file) and folder_and_file_patterns.tv_show_episode_pattern(file):
+            pass
+        elif folder_and_file_patterns.movie_pattern(file):
+            pass
+        else:
+            return False
+    return True
+
+
+# TODO remove this function once its no longer used.
 def correct_media_file_format(media_file, files_in_extra_folders_are_formated = True):
     """
     Checks the media_file to see if it is formated correctly for tv show or movie, and all files in extra folders
     if desired.
 
     :param media_file: a DirEntry object of media file to check
-    :param files_in_extra_folders_are_formated: a flag that makes the function define all files in extra folders are
-    formated correctly or not. True - formated correctly, False - not formated correctly.
+    :param files_in_extra_folders_are_formated: a flag that makes the function define all files in extra folders are formated correctly or not. True - formated correctly, False - not formated correctly.
     :return:
     """
     tv_show_episode_format = re.compile(r"""

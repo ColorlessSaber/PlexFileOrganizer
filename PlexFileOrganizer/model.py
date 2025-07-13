@@ -41,10 +41,12 @@ class Model(qtc.QObject):
         formated correctly or not. True - formated correctly, False - not formated correctly.
         :return:
         """
-        scan_directory_thread = ScanDirectoryThread(directory_path, current_media_file_list,
+        #TODO remove this function if no longer necessary
+        print("Code not in use")
+        """scan_directory_thread = ScanDirectoryThread(directory_path, current_media_file_list,
                                                     files_in_extra_folders_are_formated)
         scan_directory_thread.signals.progress.connect(self.signal_update_progress)
-        self.thread_pool.start(scan_directory_thread)
+        self.thread_pool.start(scan_directory_thread)"""
 
     @qtc.Slot(object)
     def start_auto_update_media_files_thread(self, user_selected_options):
@@ -56,10 +58,35 @@ class Model(qtc.QObject):
         :return:
         """
         auto_update_media_files_threads = AutoUpdateMediaFilesThread(user_selected_options)
-        auto_update_media_files_threads.signals.progress.connect(self.signal_update_progress)
+        auto_update_media_files_threads.signals.progress.connect(self.slot_model_update_progress_status)
+        auto_update_media_files_threads.signals.error.connect(self.slot_model_error_message)
         self.thread_pool.start(auto_update_media_files_threads)
 
 # *** Signals to inform or request input from user methods ***
+    @qtc.Slot(int, str)
+    def slot_model_update_progress_status(self, progress_bar_percentage, message):
+        """
+        The slot on the model side for all threads to connect to for sending out a progress update--change to progress
+        bar and message to print to user.
+
+        :param progress_bar_percentage: An int value to set the progress bar position.
+        :param message: A string message to be printed out to the user.
+        :return:
+        """
+        self.signal_update_progress.emit(progress_bar_percentage, message)
+
+    @qtc.Slot(str)
+    def slot_model_error_message(self, error_message):
+        """
+        The slot on the model side for all threads' corresponding signal to connect to for sending out an error message
+        to the user.
+
+        :param error_message: The string error message to be printed out to the user.
+        :return:
+        """
+        print(error_message) # for debugging
+        self.signal_error_message.emit(error_message)
+
     @qtc.Slot(str)
     def complete_update_file_names(self, completed_message):
         """

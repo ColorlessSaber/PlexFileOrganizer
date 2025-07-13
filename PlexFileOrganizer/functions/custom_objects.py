@@ -33,7 +33,8 @@ class ExtraFolders(UserDict):
 
 class MediaFile(UserString):
     """
-    custom immutable string. Has built-in functions to do simple tasks
+    custom immutable string for the full path for a media file. Has built-in functions to do simple tasks-- return file name,
+    return file_extension, return the folder the file is in.
     """
 
     def split(self, sep = None, maxsplit = -1):
@@ -44,8 +45,8 @@ class MediaFile(UserString):
 
     def file_name(self):
         """
-        Removes the path and the extension from the file.
-        :return: file name
+        Stips the path from the file, leaving only the name of the file without its extension
+        :return: The file name with no extension
         """
         file_path = pathlib.Path(self.data)
         return file_path.stem
