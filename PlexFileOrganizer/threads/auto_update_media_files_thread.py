@@ -3,7 +3,7 @@ Thread for Auto Update Media Files
 """
 import pathlib
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.functions import directory_scanner, FolderAndFilePatterns, check_files_in_media_folder
+from PlexFileOrganizer.functions import directory_scanner, FolderAndFilePatterns, check_files_in_media_folder, automatic_media_file_update
 
 class ThreadSignals(qtc.QObject):
     """
@@ -37,12 +37,13 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         media_files_in_same_dir = []
 
         try:
+            #TODO Add in progress update signals
             for entry in directory_scanner(self.directory_and_options['directory']):
                 if any(entry.path.endswith(file_extension) for file_extension in ['.mkv', '.mp4', '.avi']):
                     # Skip checking the media files in Extra Folders, unless the option in directory_and_options
                     # says we need to check them.
                     # When the 'scan_extra_folder' folder is set to false, the media file in the Extra folder is skipped -- I.E.,
-                    # its assumed it is formated correctly.
+                    # its assumed the file is formated correctly.
                     if folder_and_file_pattern.extra_folder_check(entry) and not self.directory_and_options['scan_extra_folder']:
                         continue
 
@@ -58,8 +59,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                             # correctly fo the folder it is in.
                             all_files_are_formatted_incorrectly = check_files_in_media_folder(media_files_in_same_dir)
                             if not all_files_are_formatted_incorrectly:
-                                print(media_files_in_same_dir)
-                                # TODO create function to start updating the media files automatically
+                                automatic_media_file_update(media_files_in_same_dir)
                             media_files_in_same_dir = [entry]  # clear the list and append the lastest media file for new group folder check
 
                     else:
@@ -68,9 +68,12 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
             # The case when the user selects a media folder or a sub-media folder versus a folder containing several media folder(s).
             all_files_are_formatted_incorrectly = check_files_in_media_folder(media_files_in_same_dir)
             if not all_files_are_formatted_incorrectly:
-                print(media_files_in_same_dir)
-                # TODO create function to start updating the media files automatically
+                automatic_media_file_update(media_files_in_same_dir)
 
             print('finished the check') # for debugging
         except OSError as e:
+            self.signals.error.emit(e)
+
+        except Exception as e:
+            # bad use of an exception, but required to catch an error for something that isn't covered for.
             self.signals.error.emit(e)

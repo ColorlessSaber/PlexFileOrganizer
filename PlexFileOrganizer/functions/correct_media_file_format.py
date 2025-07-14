@@ -1,12 +1,23 @@
 import re
-from operator import truediv
-
 
 class FolderAndFilePatterns:
     """
     Contains regex expressions to check to see if media file is in an extra folder or a tv show season folder, and if the
     media file is properly name for the folder they are in.
     """
+    extra_media_file_format = re.compile(r"""
+                                            ^(?P<title>.+) # group 1: the name of the file
+                                            (?P<number>\d+) # group 2: the number of the file
+                                            """, re.VERBOSE | re.IGNORECASE)
+
+    tv_show_episode_format = re.compile(r"""
+                                    ^.+   # wildcard to handle name of show
+                                    \s  
+                                    -
+                                    \s
+                                    s\d+e\d+(-e\d+)?  # season, episode number and possible multiple episode
+                                    \.\w+ # file extension
+                                    """, re.VERBOSE | re.IGNORECASE)
 
     def tv_show_episode_pattern(self, media_file):
         """
@@ -16,16 +27,8 @@ class FolderAndFilePatterns:
         :return: A Bool value. True - media file is formatted correctly for tv show folder. False - media file is
         not formatted correctly for tv show folder.
         """
-        tv_show_episode_format = re.compile(r"""
-                                ^.+   # wildcard to handle name of show
-                                \s  
-                                -
-                                \s
-                                s\d+e\d+(-e\d+)?  # season, episode number and possible multiple episode
-                                \.\w+ # file extension
-                                """, re.VERBOSE | re.IGNORECASE)
-        
-        if tv_show_episode_format.match(media_file.name):
+
+        if self.tv_show_episode_format.match(media_file.name):
             return True
         else:
             return False
@@ -38,7 +41,7 @@ class FolderAndFilePatterns:
         :return: The regex expression to check against file.
         """
         movie_format = re.compile(r"""
-                                ^(?P<title>^.+)   # group 1: the name of the file
+                                ^(?P<title>.+)   # group 1: the name of the file
                                 (?P<ext>\.\w+) # group 2: file extension
                                 """, re.VERBOSE | re.IGNORECASE)
         if movie_format.match(media_file.name).group('title') == media_file.path.split('/')[-2]:
@@ -67,7 +70,7 @@ class FolderAndFilePatterns:
         :return: Bool value. True - file is in an extra folder, false - file is not in an extra folder
         """
         extra_folder_format = [
-            r"trailer(s)?$",
+            r"trailers$",
             r"behind the scenes$",
             r"deleted scenes$",
             r"featurettes$",

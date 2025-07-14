@@ -43,10 +43,10 @@ class MediaFile(UserString):
     def __add__(self, other):
         raise RuntimeError("Adding not allowed")
 
-    def file_name(self):
+    def file_name_no_extension(self):
         """
         Stips the path from the file, leaving only the name of the file without its extension
-        :return: The file name with no extension
+        :return: A string. The file name with no extension
         """
         file_path = pathlib.Path(self.data)
         return file_path.stem
@@ -54,7 +54,21 @@ class MediaFile(UserString):
     def file_extension(self):
         """
         Strips the path and file name, leaving only the extension.
-        :return: file's extension
+        :return: A string. file's extension
         """
         _, extension = os.path.splitext(self.data)
         return extension
+
+    def directory_path(self):
+        """
+        Strips the file name, leaving only the directory path the file is in.
+        :return: A string. The directory path file is located
+        """
+        return os.path.dirname(os.path.abspath(self.data))
+
+    def folder_file_is_in(self):
+        """
+        Strips away everything, leaving only the folder the file is in.
+        :return: A string. The folder file is in.
+        """
+        return pathlib.Path(self.data).parent.resolve().name
