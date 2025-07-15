@@ -37,7 +37,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         media_files_in_same_dir = []
 
         try:
-            #TODO Add in progress update signals
+            self.signals.progress.emit(50, 'Scanning directory...')
             for entry in directory_scanner(self.directory_and_options['directory']):
                 if any(entry.path.endswith(file_extension) for file_extension in ['.mkv', '.mp4', '.avi']):
                     # Skip checking the media files in Extra Folders, unless the option in directory_and_options
@@ -59,7 +59,9 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                             # correctly fo the folder it is in.
                             all_files_are_formatted_incorrectly = check_files_in_media_folder(media_files_in_same_dir)
                             if not all_files_are_formatted_incorrectly:
-                                automatic_media_file_update(media_files_in_same_dir)
+                                message_to_user = automatic_media_file_update(media_files_in_same_dir)
+                                if message_to_user: # if the string has something, send it off
+                                    self.signals.progress.emit(50, message_to_user)
                             media_files_in_same_dir = [entry]  # clear the list and append the lastest media file for new group folder check
 
                     else:
@@ -68,9 +70,12 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
             # The case when the user selects a media folder or a sub-media folder versus a folder containing several media folder(s).
             all_files_are_formatted_incorrectly = check_files_in_media_folder(media_files_in_same_dir)
             if not all_files_are_formatted_incorrectly:
-                automatic_media_file_update(media_files_in_same_dir)
+                message_to_user = automatic_media_file_update(media_files_in_same_dir)
+                if message_to_user:  # if the string has something, send it off
+                    self.signals.progress.emit(50, message_to_user)
 
             print('finished the check') # for debugging
+            self.signals.progress.emit(100, 'Finished scanning.')
         except OSError as e:
             self.signals.error.emit(e)
 

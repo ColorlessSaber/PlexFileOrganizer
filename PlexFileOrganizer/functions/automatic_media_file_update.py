@@ -21,6 +21,7 @@ def automatic_media_file_update(list_of_media_files):
 
     folder_and_files_patterns = FolderAndFilePatterns()
 
+    status_message = '' # To hold the message to print to the user. Letting them how many files where affected.
     unformatted_media_files = []  # A list to hold the media files that need to be updated.
     # for the variable below, each element will be a tuple and each tuple will have the
     # following format: (MediaFile, new file name)
@@ -30,7 +31,7 @@ def automatic_media_file_update(list_of_media_files):
     # once determined, update the media file(s) accordingly.
     first_file_in_list = list_of_media_files[0]
     if folder_and_files_patterns.tv_show_season_folder_check(first_file_in_list.path):
-        print("tv show") # for debugging
+        #print("tv show") # for debugging
 
         media_files_in_season_folder = convert_elements_to_media_file_class(list_of_media_files)
 
@@ -57,7 +58,6 @@ def automatic_media_file_update(list_of_media_files):
         # now having the highest episode number, the next step is to create the correct file format name for each media files
         # that need to be updated. The directory is included to make it easer when using library os
         #
-        #
         # The correct file format for a media file in a tv show season folder is the follow:
         # show_name - sxxeyy.extension
         # xx - the season number, found by looking at the folder it is in. for Specials folder, the season number is 00.
@@ -74,6 +74,9 @@ def automatic_media_file_update(list_of_media_files):
             # A '.' is not included for the extension for .file_extension() returns the dot with the extension
             new_file_name = f"{file.directory_path()}/{tv_show_name} - s{season_number}e{episode_number_string}{file.file_extension()}"
             media_files_to_be_updated.append((file, new_file_name))
+
+        # create a string message to user so they know what folder has files to be updated
+        status_message = f'\t-- Folder: {tv_show_name}/{season_folder}, # of Update Files: {len(media_files_to_be_updated)}'
 
     elif folder_and_files_patterns.extra_folder_check(first_file_in_list.path):
         # print("extra folder") # for debugging
@@ -96,17 +99,22 @@ def automatic_media_file_update(list_of_media_files):
             else:
                 unformatted_media_files.append(file)
 
-        # Now having the highest number, the next step is to create the correct file format name for each media files
-        # that need to be updated. The directory is included to make it easer when using library os
-        #
-        #
-        # the correct file format for a media file in an extra folder is it matches the folder name and then
-        # has an incremented number appended to the end of it.
-        for file in unformatted_media_files:
-            highest_file_number += 1
-            # A '.' is not included for the extension for .file_extension() returns the dot with the extension
-            new_file_name = f"{file.directory_path()}/{correct_file_format} {highest_file_number}{file.file_extension()}"
-            media_files_to_be_updated.append((file, new_file_name))
+        # only proceed to the second step if there is files that need to be updated.
+        if unformatted_media_files:
+            # Now having the highest number, the next step is to create the correct file format name for each media files
+            # that need to be updated. The directory is included to make it easer when using library os
+            #
+            # the correct file format for a media file in an extra folder is it matches the folder name and then
+            # has an incremented number appended to the end of it.
+            for file in unformatted_media_files:
+                highest_file_number += 1
+                # A '.' is not included for the extension for .file_extension() returns the dot with the extension
+                new_file_name = f"{file.directory_path()}/{correct_file_format} {highest_file_number}{file.file_extension()}"
+                media_files_to_be_updated.append((file, new_file_name))
+
+            # create a string message to user so they know what folder has files to be updated
+            show_name = first_file_in_list.path.split('/')[-3]
+            status_message = f'\t-- Folder: {show_name}/{correct_file_format}s, # of Update Files: {len(media_files_to_be_updated)}'
 
     else: # movie folder
         # print('movie update') # for debugging
@@ -121,7 +129,13 @@ def automatic_media_file_update(list_of_media_files):
         new_file_name = f"{old_movie_file_format.directory_path()}/{old_movie_file_format.folder_file_is_in()}{old_movie_file_format.file_extension()}"
         media_files_to_be_updated.append((old_movie_file_format, new_file_name))
 
-    # TODO add code to loop though the media_files_to_be_update and update the files
-    print(media_files_to_be_updated) # for debugging
+        # create a string message to user so they know what folder has files to be updated
+        status_message = f'\t-- Folder: {old_movie_file_format.folder_file_is_in()}, # of Update Files: {len(media_files_to_be_updated)}'
 
-    # TODO have the function return a message of what it accomplished. Maybe also format it pretty, IE show the files updated--before / after
+    # only start the process of updating the files if there is something to update. else skip
+    if media_files_to_be_updated:
+        # TODO add code to loop though the media_files_to_be_update and update the files
+        #print(media_files_to_be_updated) # for debugging
+        return status_message
+    else:
+        return status_message
