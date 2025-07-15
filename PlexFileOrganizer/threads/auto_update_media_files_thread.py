@@ -9,7 +9,7 @@ class ThreadSignals(qtc.QObject):
     """
     The signals for the thread
     """
-    error = qtc.Signal(str)
+    error = qtc.Signal(object)
     progress = qtc.Signal(int, str)
 
 class AutoUpdateMediaFilesThread(qtc.QRunnable):
@@ -44,7 +44,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                     # says we need to check them.
                     # When the 'scan_extra_folder' folder is set to false, the media file in the Extra folder is skipped -- I.E.,
                     # its assumed the file is formated correctly.
-                    if folder_and_file_pattern.extra_folder_check(entry) and not self.directory_and_options['scan_extra_folder']:
+                    if folder_and_file_pattern.extra_folder_check(entry.path) and not self.directory_and_options['scan_extra_folder']:
                         continue
 
                     # Compare the new media file to the last appended file in the list to see if they are in
@@ -74,6 +74,6 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         except OSError as e:
             self.signals.error.emit(e)
 
-        except Exception as e:
+        except BaseException as e:
             # bad use of an exception, but required to catch an error for something that isn't covered for.
             self.signals.error.emit(e)

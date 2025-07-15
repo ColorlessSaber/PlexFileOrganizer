@@ -9,7 +9,7 @@ class Model(qtc.QObject):
 
     signal_user_input_request = qtc.Signal()
     signal_user_input_response = qtc.Signal()
-    signal_error_message = qtc.Signal(str)
+    signal_error_message = qtc.Signal(object)
     signal_update_progress = qtc.Signal(int, str)
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
     signal_update_file_names_complete = qtc.Signal(str)
@@ -75,7 +75,7 @@ class Model(qtc.QObject):
         """
         self.signal_update_progress.emit(progress_bar_percentage, message)
 
-    @qtc.Slot(str)
+    @qtc.Slot(object)
     def slot_model_error_message(self, error_message):
         """
         The slot on the model side for all threads' corresponding signal to connect to for sending out an error message
@@ -86,12 +86,3 @@ class Model(qtc.QObject):
         """
         print(error_message) # for debugging
         self.signal_error_message.emit(error_message)
-
-    @qtc.Slot(str)
-    def complete_update_file_names(self, completed_message):
-        """
-        Signal for completion of either UpdateTvShowFileNamesThread or UpdateMovieFileNameThread
-
-        :return:
-        """
-        self.signal_update_file_names_complete.emit(completed_message)

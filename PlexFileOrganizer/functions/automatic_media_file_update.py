@@ -28,7 +28,8 @@ def automatic_media_file_update(list_of_media_files):
 
     # take the first element from the media file list, determine what folder the file(s) are in.
     # once determined, update the media file(s) accordingly.
-    if folder_and_files_patterns.tv_show_season_folder_check(list_of_media_files[0]):
+    first_file_in_list = list_of_media_files[0]
+    if folder_and_files_patterns.tv_show_season_folder_check(first_file_in_list.path):
         print("tv show") # for debugging
 
         media_files_in_season_folder = convert_elements_to_media_file_class(list_of_media_files)
@@ -44,9 +45,14 @@ def automatic_media_file_update(list_of_media_files):
         # media files into a list
         highest_episode_number = 0
         for file in media_files_in_season_folder:
-            print(file)
+            if folder_and_files_patterns.tv_show_episode_pattern_check(file.file_name()):
+                continue
+            else:
+                unformatted_media_files.append(file)
 
-    elif folder_and_files_patterns.extra_folder_check(list_of_media_files[0]):
+        print(unformatted_media_files)
+
+    elif folder_and_files_patterns.extra_folder_check(first_file_in_list.path):
         # print("extra folder") # for debugging
 
         media_files_in_extra_folder = convert_elements_to_media_file_class(list_of_media_files)
@@ -63,17 +69,18 @@ def automatic_media_file_update(list_of_media_files):
         # a list
         highest_file_number = 0
         for file in media_files_in_extra_folder:
-            if correct_file_format in file.file_name_no_extension():
-                file_number = folder_and_files_patterns.extra_media_file_format.match(file.file_name_no_extension()).group('number')
+            if correct_file_format in file.file_name():
+                file_number = folder_and_files_patterns.extra_media_file_format.match(file.file_name(with_extension=False)).group('number')
                 if int(file_number) > highest_file_number:
                     highest_file_number = int(file_number)
             else:
                 unformatted_media_files.append(file)
 
-        # Now having the highest number, create the correct file format names for the media files that need to be updated
+        # Now having the highest number, create the correct file format name for each media files that need to be updated, and
+        # include the directory they are located in.
         for file in unformatted_media_files:
             highest_file_number += 1
-            new_file_name = correct_file_format + ' ' + str(highest_file_number)
+            new_file_name = file.directory_path() + '/' + correct_file_format + ' ' + str(highest_file_number) + file.file_extension()
             media_files_to_be_updated.append((file, new_file_name))
 
     else: # movie folder
