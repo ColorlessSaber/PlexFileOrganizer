@@ -34,23 +34,46 @@ def automatic_media_file_update(list_of_media_files):
 
         media_files_in_season_folder = convert_elements_to_media_file_class(list_of_media_files)
 
-        # The correct file format for a media file in a tv show season folder is the follow:
-        # show_name - sxxeyy.extension
-        # xx - the season number, found by looking at the folder it is in. for Specials folder, the season number is 00.
-        # yy - episode number, starting from 01 and up.
-        #
-        #
         # First step is to determine if there is an media file(s) in the folder with the correct format. if so,
         # grab the highest episode number in the group of correctly formated media file(s) while placing unformatted
         # media files into a list
         highest_episode_number = 0
         for file in media_files_in_season_folder:
             if folder_and_files_patterns.tv_show_episode_pattern_check(file.file_name()):
-                continue
+
+                # a tv show episode may be multiple episode, which is why we need to check/grab both numbers
+                first_episode_number = folder_and_files_patterns.tv_episode_file_format.match(file.file_name()).group('first_ep')
+                second_episode_number = folder_and_files_patterns.tv_episode_file_format.match(file.file_name()).group('second_ep')
+                if second_episode_number is not None:
+                    if int(second_episode_number) > highest_episode_number:
+                        highest_episode_number = int(highest_episode_number)
+                else:
+                    if int(first_episode_number) > highest_episode_number:
+                        highest_episode_number = int(first_episode_number)
+
             else:
                 unformatted_media_files.append(file)
 
-        print(unformatted_media_files)
+        # now having the highest episode number, the next step is to create the correct file format name for each media files
+        # that need to be updated. The directory is included to make it easer when using library os
+        #
+        #
+        # The correct file format for a media file in a tv show season folder is the follow:
+        # show_name - sxxeyy.extension
+        # xx - the season number, found by looking at the folder it is in. for Specials folder, the season number is 00.
+        # yy - episode number.
+        tv_show_name = first_file_in_list.path.split('/')[-3]
+        season_folder = first_file_in_list.path.split('/')[-2]
+        if len(season_folder.split(' ')[1]) > 1: # if the season number is greater than 9, a '0' is not appended to the start
+            season_number = season_folder.split(' ')[1]
+        else:
+            season_number = '0' + season_folder.split(' ')[1]
+        for file in unformatted_media_files:
+            highest_episode_number += 1
+            episode_number_string = str(highest_episode_number) if highest_episode_number > 10 else ('0' + str(highest_episode_number))
+            # A '.' is not included for the extension for .file_extension() returns the dot with the extension
+            new_file_name = f"{file.directory_path()}/{tv_show_name} - s{season_number}e{episode_number_string}{file.file_extension()}"
+            media_files_to_be_updated.append((file, new_file_name))
 
     elif folder_and_files_patterns.extra_folder_check(first_file_in_list.path):
         # print("extra folder") # for debugging
@@ -61,9 +84,6 @@ def automatic_media_file_update(list_of_media_files):
         # The removing the 's' from the folder name make the file name singular instead of plural.
         correct_file_format = media_files_in_extra_folder[0].folder_file_is_in().strip('s')
 
-        # the correct file format for a media file in an extra folder is it matches the folder name and then
-        # has an incremented number appended to the end of it.
-        #
         # First step is to determine if there is a media file(s) in the folder with the correct format. if so, grab
         # the highest number in the group of correctly formated media file(s) while placing unformatted media files into
         # a list
@@ -76,11 +96,16 @@ def automatic_media_file_update(list_of_media_files):
             else:
                 unformatted_media_files.append(file)
 
-        # Now having the highest number, create the correct file format name for each media files that need to be updated, and
-        # include the directory they are located in.
+        # Now having the highest number, the next step is to create the correct file format name for each media files
+        # that need to be updated. The directory is included to make it easer when using library os
+        #
+        #
+        # the correct file format for a media file in an extra folder is it matches the folder name and then
+        # has an incremented number appended to the end of it.
         for file in unformatted_media_files:
             highest_file_number += 1
-            new_file_name = file.directory_path() + '/' + correct_file_format + ' ' + str(highest_file_number) + file.file_extension()
+            # A '.' is not included for the extension for .file_extension() returns the dot with the extension
+            new_file_name = f"{file.directory_path()}/{correct_file_format} {highest_file_number}{file.file_extension()}"
             media_files_to_be_updated.append((file, new_file_name))
 
     else: # movie folder
@@ -92,7 +117,9 @@ def automatic_media_file_update(list_of_media_files):
 
         # the correct file format for a movie media file is it's matches the folder name it is in.
         # hence why the 'new file name' is the name of the folder the file is in.
-        media_files_to_be_updated.append((old_movie_file_format, old_movie_file_format.folder_file_is_in()))
+        # A '.' is not included for the extension for .file_extension() returns the dot with the extension
+        new_file_name = f"{old_movie_file_format.directory_path()}/{old_movie_file_format.folder_file_is_in()}{old_movie_file_format.file_extension()}"
+        media_files_to_be_updated.append((old_movie_file_format, new_file_name))
 
     # TODO add code to loop though the media_files_to_be_update and update the files
     print(media_files_to_be_updated) # for debugging

@@ -15,12 +15,17 @@ class FolderAndFilePatterns:
                                             (?P<number>\d+) # group 2: the number of the file
                                             """, re.VERBOSE | re.IGNORECASE)
 
+    # tv episode format is as follows: name_of_show - sxxeyy
+    # xx - the season number. For Specials folder, the season number is 00
+    # yy - episode number
+    #
+    # The format has two groups to make is easy to grab the episode number(s) from an existing episode media file.
     tv_episode_file_format = re.compile(r"""
                                     ^.+   # wildcard to handle name of show
-                                    \s  
-                                    -
-                                    \s
-                                    s\d+e\d+(-e\d+)?  # season, episode number and possible multiple episode
+                                    \s-\s # dash between name of show and season and episode number
+                                    s\d+  # season number
+                                    e(?P<first_ep>\d+)  # episode number
+                                    (-e(?P<second_ep>\d+))?  # possible multiple episode number
                                     \.\w+ # file extension
                                     """, re.VERBOSE | re.IGNORECASE)
 
