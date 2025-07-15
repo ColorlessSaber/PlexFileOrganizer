@@ -7,7 +7,7 @@ from collections import UserDict, UserString
 
 class ExtraFolders(UserDict):
     """
-    Custom semi-immutable dict. Only allow the user to the values at each key.
+    Custom semi-immutable dict. Only allow the user to modify the values at each key.
     """
     def __init__(self):
         super().__init__()
@@ -43,13 +43,18 @@ class MediaFile(UserString):
     def __add__(self, other):
         raise RuntimeError("Adding not allowed")
 
-    def file_name_no_extension(self):
+    def file_name(self, with_extension=True):
         """
-        Stips the path from the file, leaving only the name of the file without its extension
+        Returns the name of the file, with the option to showing the file extension with the file name.
+
+        :param with_extension: Keeps or strips extension from file name. Default True to keep extension
         :return: A string. The file name with no extension
         """
-        file_path = pathlib.Path(self.data)
-        return file_path.stem
+        if with_extension:
+            return os.path.basename(self.data)
+        else:
+            file_path = pathlib.Path(self.data)
+            return file_path.name
 
     def file_extension(self):
         """
