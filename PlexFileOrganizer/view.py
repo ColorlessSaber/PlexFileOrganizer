@@ -9,6 +9,7 @@ class View(qtw.QWidget):
     signal_initiate_scan_of_directory = qtc.Signal(str, object, bool)
     signal_initiate_auto_update_media_files = qtc.Signal(object)
     signal_user_input_response = qtc.Signal()
+    signal_reset_progress_bar = qtc.Signal()
 
     def __init__(self):
         super().__init__()
@@ -116,6 +117,23 @@ class View(qtw.QWidget):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_user_input_response.emit()
+
+    @qtc.Slot()
+    def messagebox_auto_update_media_files_complete(self):
+        """
+        Launches the messagebox to inform user the auto update media file(s) is complete.
+        And reset the progress bar once user closes the window
+
+        :return:
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Auto Update Media Files Complete!',
+            'Finished scanning the selected directory. Please see console window for information on if any files were updated during the scan.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
 
 # *** Methods for Log Window ***
     @qtc.Slot()

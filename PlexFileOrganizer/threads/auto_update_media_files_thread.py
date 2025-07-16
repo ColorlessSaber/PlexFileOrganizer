@@ -10,6 +10,7 @@ class ThreadSignals(qtc.QObject):
     The signals for the thread
     """
     error = qtc.Signal(object)
+    finished = qtc.Signal(str)
     progress = qtc.Signal(int, str)
 
 class AutoUpdateMediaFilesThread(qtc.QRunnable):
@@ -74,8 +75,10 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                 if message_to_user:  # if the string has something, send it off
                     self.signals.progress.emit(50, message_to_user)
 
-            print('finished the check') # for debugging
+            #print('finished the check') # for debugging
             self.signals.progress.emit(100, 'Finished scanning.')
+            self.signals.finished.emit('auto_update')
+
         except OSError as e:
             self.signals.error.emit(e)
 
