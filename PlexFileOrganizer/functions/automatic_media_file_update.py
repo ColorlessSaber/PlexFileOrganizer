@@ -1,5 +1,4 @@
-import re
-from PlexFileOrganizer.functions import MediaFile, FolderAndFilePatterns
+from PlexFileOrganizer.functions import MediaFile, FolderAndFilePatterns, update_file_name
 
 def automatic_media_file_update(list_of_media_files):
     """
@@ -76,7 +75,7 @@ def automatic_media_file_update(list_of_media_files):
             media_files_to_be_updated.append((file, new_file_name))
 
         # create a string message to user so they know what folder has files to be updated
-        status_message = f'\t-- Folder: {tv_show_name}/{season_folder}, # of Update Files: {len(media_files_to_be_updated)}'
+        status_message = f'\t-- Folder: {tv_show_name}/{season_folder} -> # of Update Files: {len(media_files_to_be_updated)}'
 
     elif folder_and_files_patterns.extra_folder_check(first_file_in_list.path):
         # print("extra folder") # for debugging
@@ -114,7 +113,7 @@ def automatic_media_file_update(list_of_media_files):
 
             # create a string message to user so they know what folder has files to be updated
             show_name = first_file_in_list.path.split('/')[-3]
-            status_message = f'\t-- Folder: {show_name}/{correct_file_format}s, # of Update Files: {len(media_files_to_be_updated)}'
+            status_message = f'\t-- Folder: {show_name}/{correct_file_format}s -> # of Update Files: {len(media_files_to_be_updated)}'
 
     else: # movie folder
         # print('movie update') # for debugging
@@ -130,11 +129,11 @@ def automatic_media_file_update(list_of_media_files):
         media_files_to_be_updated.append((old_movie_file_format, new_file_name))
 
         # create a string message to user so they know what folder has files to be updated
-        status_message = f'\t-- Folder: {old_movie_file_format.folder_file_is_in()}, # of Update Files: {len(media_files_to_be_updated)}'
+        status_message = f'\t-- Folder: {old_movie_file_format.folder_file_is_in()} -> # of Update Files: {len(media_files_to_be_updated)}'
 
     # only start the process of updating the files if there is something to update. else skip
     if media_files_to_be_updated:
-        # TODO add code to loop though the media_files_to_be_update and update the files
+        update_file_name(media_files_to_be_updated)
         #print(media_files_to_be_updated) # for debugging
         return status_message
     else:

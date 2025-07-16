@@ -3,7 +3,10 @@ Thread for Auto Update Media Files
 """
 import pathlib
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.functions import directory_scanner, FolderAndFilePatterns, check_files_in_media_folder, automatic_media_file_update
+from PlexFileOrganizer.functions import (directory_scanner,
+                                         FolderAndFilePatterns,
+                                         check_files_in_media_folder,
+                                         automatic_media_file_update)
 
 class ThreadSignals(qtc.QObject):
     """
