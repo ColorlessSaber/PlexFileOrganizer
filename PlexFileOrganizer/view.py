@@ -6,7 +6,6 @@ from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder,
 class View(qtw.QWidget):
     """The front-end of the program"""
     signal_initiate_creating_media_folder = qtc.Signal(object)
-    signal_initiate_scan_of_directory = qtc.Signal(str, object, bool)
     signal_initiate_auto_update_media_files = qtc.Signal(object)
     signal_user_input_response = qtc.Signal()
     signal_reset_progress_bar = qtc.Signal()
