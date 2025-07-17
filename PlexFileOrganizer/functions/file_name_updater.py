@@ -1,18 +1,15 @@
 import os
 
 
-def file_name_updater(file_list, directory):
+def update_file_name(list_of_files_to_update):
     """
-    A function that takes in a list of files that need their name changed.
+    Takes a list were each element is a tuple--tuples contain the following: (old file name, new file name)--and iterate
+    through the list and update the file names to the new one.
 
-    :param file_list: A list were each entry is a file with their old name and their new name--
-    ((old_file_name, new_file_name),...)
-    :param directory: The location of the file(s) that need their names changed.
+    :param list_of_files_to_update: A list with tuple elements.
     :return: error: Returns blank if ran into error; returns error message if ran into error.
     """
-    try:
-        for filename in file_list:
-            os.rename(os.path.join(directory, filename[0]), os.path.join(directory, filename[1]))
-        return ''   # return black for no errors were found
-    except FileNotFoundError as error:
-        return error
+    for file in list_of_files_to_update:
+        old_file, new_file = file # extract the old and new file name from the tuple
+        #print("Old file: {} \nNew file: {} \n".format(old_file, new_file))  # for debugging
+        os.rename(old_file, new_file)

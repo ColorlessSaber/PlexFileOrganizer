@@ -72,7 +72,8 @@ def automatic_media_file_update(list_of_media_files):
             episode_number_string = str(highest_episode_number) if highest_episode_number > 10 else ('0' + str(highest_episode_number))
             # A '.' is not included for the extension for .file_extension() returns the dot with the extension
             new_file_name = f"{file.directory_path()}/{tv_show_name} - s{season_number}e{episode_number_string}{file.file_extension()}"
-            media_files_to_be_updated.append((file, new_file_name))
+            # The str() is needed to convert the MediaFile class to a string, so it can be used by os.rename
+            media_files_to_be_updated.append((str(file), new_file_name))
 
         # create a string message to user so they know what folder has files to be updated
         status_message = f'\t-- Folder: {tv_show_name}/{season_folder} -> # of Update Files: {len(media_files_to_be_updated)}'
@@ -109,7 +110,8 @@ def automatic_media_file_update(list_of_media_files):
                 highest_file_number += 1
                 # A '.' is not included for the extension for .file_extension() returns the dot with the extension
                 new_file_name = f"{file.directory_path()}/{correct_file_format} {highest_file_number}{file.file_extension()}"
-                media_files_to_be_updated.append((file, new_file_name))
+                # The str() is needed to convert the MediaFile class to a string, so it can be used by os.rename
+                media_files_to_be_updated.append((str(file), new_file_name))
 
             # create a string message to user so they know what folder has files to be updated
             show_name = first_file_in_list.path.split('/')[-3]
@@ -126,7 +128,8 @@ def automatic_media_file_update(list_of_media_files):
         # hence why the 'new file name' is the name of the folder the file is in.
         # A '.' is not included for the extension for .file_extension() returns the dot with the extension
         new_file_name = f"{old_movie_file_format.directory_path()}/{old_movie_file_format.folder_file_is_in()}{old_movie_file_format.file_extension()}"
-        media_files_to_be_updated.append((old_movie_file_format, new_file_name))
+        # The str() is needed to convert the MediaFile class to a string, so it can be used by os.rename
+        media_files_to_be_updated.append((str(old_movie_file_format), new_file_name))
 
         # create a string message to user so they know what folder has files to be updated
         status_message = f'\t-- Folder: {old_movie_file_format.folder_file_is_in()} -> # of Update Files: {len(media_files_to_be_updated)}'
