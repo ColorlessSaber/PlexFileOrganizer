@@ -37,9 +37,6 @@ class MediaFile(UserString):
     return file_extension, return the folder the file is in.
     """
 
-    def split(self, sep = None, maxsplit = -1):
-        raise RuntimeError("Splitting not allowed")
-
     def __add__(self, other):
         raise RuntimeError("Adding not allowed")
 
