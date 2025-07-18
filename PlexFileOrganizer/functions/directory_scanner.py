@@ -2,7 +2,7 @@ import os
 
 def directory_scanner(directory_path):
     """
-    A generator function that drills into a directory with multiple directories, subdirectories, etc.
+    A generator that drills into a directory with multiple directories, subdirectories, etc.
     Yields any files it finds.
 
     :param directory_path: The directory path that will be scanned.
@@ -17,5 +17,4 @@ def directory_scanner(directory_path):
 
 
 if __name__ == '__main__':
-    for entry in directory_scanner("/Volumes/Media Library/Anime TV Shows/Frieren Beyond Journey's End"):
-        print(entry.name)
+    pass

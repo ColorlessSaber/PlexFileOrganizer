@@ -8,7 +8,6 @@ class ThreadSignals(qtc.QObject):
     The signals for thread
     """
     error = qtc.Signal(str)
-    finish = qtc.Signal(str)
     progress = qtc.Signal(int, str)
     request_user_input_signal = qtc.Signal()
 
