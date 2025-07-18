@@ -7,7 +7,7 @@ class View(qtw.QWidget):
     """The front-end of the program"""
     signal_initiate_creating_media_folder = qtc.Signal(object)
     signal_initiate_auto_update_media_files = qtc.Signal(object)
-    signal_user_input_response = qtc.Signal()
+    signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_reset_progress_bar = qtc.Signal()
 
     def __init__(self):
@@ -107,15 +107,15 @@ class View(qtw.QWidget):
 
 # *** Methods that launches messageboxes ***
     @qtc.Slot()
-    def messagebox_inform_user_media_file_exist(self):
+    def messagebox_inform_user_of_existing_media_file(self):
         response = qtw.QMessageBox.information(
             self,
-            'Media Folder Exists',
+            'Media Folder Already Exists',
             'The Media Folder you wish to make already exists. Please click "ok" to cancel creation of Media Folder.'
         )
 
         if response == qtw.QMessageBox.Ok:
-            self.signal_user_input_response.emit()
+            self.signal_user_confirmation_of_existing_media_folder.emit()
 
     @qtc.Slot()
     def messagebox_auto_update_media_files_complete(self):

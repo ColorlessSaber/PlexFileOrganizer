@@ -7,13 +7,12 @@ class Model(qtc.QObject):
 
     thread_pool = qtc.QThreadPool()
 
-    signal_user_input_request = qtc.Signal()
-    signal_user_input_response = qtc.Signal()
+    signal_inform_user_of_existing_media_folder = qtc.Signal()
+    signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_error_message = qtc.Signal(object)
     signal_update_progress = qtc.Signal(int, str)
     signal_finished = qtc.Signal(str)
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
-    signal_update_file_names_complete = qtc.Signal(str)
 
 # *** The creation and start of thread methods ***
     @qtc.Slot(object)
@@ -25,10 +24,9 @@ class Model(qtc.QObject):
         :return:
         """
         create_media_folder_thread = CreateMediaFolderThread(media_folder_selection)
-        create_media_folder_thread.signals.request_user_input_signal.connect(self.signal_user_input_request) #TODO make this connect to a model method
+        create_media_folder_thread.signals.request_user_input_signal.connect(self.signal_inform_user_of_existing_media_folder)
         create_media_folder_thread.signals.progress.connect(self.slot_thread_update_progress_status)
-        #TODO add in signal to launch popup to inform user the task is done.
-        self.signal_user_input_response.connect(create_media_folder_thread.user_confirmation) #TODO make this connect to a model method
+        self.signal_user_confirmation_of_existing_media_folder.connect(create_media_folder_thread.user_confirmation) # signal from model to thread
         self.thread_pool.start(create_media_folder_thread)
 
     @qtc.Slot(object)
