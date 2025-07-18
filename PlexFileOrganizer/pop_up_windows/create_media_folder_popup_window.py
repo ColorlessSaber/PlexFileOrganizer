@@ -123,19 +123,16 @@ class CreateMediaFolder(qtw.QDialog):
         Runs when accept button is pressed
         :return:
         """
-        if self.selected_directory:
-            self.create_media_folder_section.directory = self.selected_directory
-            self.create_media_folder_section.media_title = self.media_title.text()
-            self.create_media_folder_section.movie_or_tv = 'movie' if self.media_type_movie_select.isChecked() else 'tv'
-            self.create_media_folder_section.number_of_seasons = int(self.number_of_seasons.text()) if self.number_of_seasons.text() else 0
-            self.create_media_folder_section.extra_folders['trailers'] = self.trailers_cb.isChecked()
-            self.create_media_folder_section.extra_folders['behind the scenes'] = self.behind_the_scenes_cb.isChecked()
-            self.create_media_folder_section.extra_folders['deleted scenes'] = self.deleted_scenes_cb.isChecked()
-            self.create_media_folder_section.extra_folders['featurettes'] = self.featurettes_cb.isChecked()
-            self.create_media_folder_section.extra_folders['interviews '] = self.interviews_cb.isChecked()
-            self.create_media_folder_section.extra_folders['scenes'] = self.scenes_cb.isChecked()
-            self.create_media_folder_section.extra_folders['shorts'] = self.shorts_cb.isChecked()
-            self.create_media_folder_section.extra_folders['other'] = self.other_cb.isChecked()
-            super().accept()
-        else:
-            qtw.QMessageBox.critical(self, 'No Directory Selected', 'Please select a directory to create folder(s) in.')
+        self.create_media_folder_section.directory = self.selected_directory
+        self.create_media_folder_section.media_title = self.media_title.text()
+        self.create_media_folder_section.movie_or_tv = 'movie' if self.media_type_movie_select.isChecked() else 'tv'
+        self.create_media_folder_section.number_of_seasons = int(self.number_of_seasons.text()) if self.number_of_seasons.text() else 0
+        self.create_media_folder_section.extra_folders['trailers'] = self.trailers_cb.isChecked()
+        self.create_media_folder_section.extra_folders['behind the scenes'] = self.behind_the_scenes_cb.isChecked()
+        self.create_media_folder_section.extra_folders['deleted scenes'] = self.deleted_scenes_cb.isChecked()
+        self.create_media_folder_section.extra_folders['featurettes'] = self.featurettes_cb.isChecked()
+        self.create_media_folder_section.extra_folders['interviews '] = self.interviews_cb.isChecked()
+        self.create_media_folder_section.extra_folders['scenes'] = self.scenes_cb.isChecked()
+        self.create_media_folder_section.extra_folders['shorts'] = self.shorts_cb.isChecked()
+        self.create_media_folder_section.extra_folders['other'] = self.other_cb.isChecked()
+        super().accept()
