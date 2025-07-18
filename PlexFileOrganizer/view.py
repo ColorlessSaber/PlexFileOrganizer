@@ -83,7 +83,13 @@ class View(qtw.QWidget):
 
         :return:
         """
-        self.log_window.insertPlainText('\nOpening "Manual Update Media Files" Window')
+        response = qtw.QMessageBox.information(
+            self,
+            'Feature coming in V1.0.0!',
+            'The feature to manual rename media files will be coming in version 1.0.0.'
+        )
+        if response == qtw.QMessageBox.Ok:
+            self.log_window.insertPlainText('\nOpening "Manual Update Media Files" Window')
 
 # *** Methods that start threads ***
     @qtc.Slot()

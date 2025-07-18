@@ -51,7 +51,6 @@ class CreateMediaFolder(qtw.QDialog):
         media_inform_form.addRow('Title:', self.media_title)
         media_inform_form.addRow('Number of Seasons:', self.number_of_seasons)
 
-        self.extra_folders_option_group = qtw.QGroupBox('Extra Folder(s)')
         self.trailers_cb = qtw.QCheckBox('Trailers', self)
         self.behind_the_scenes_cb = qtw.QCheckBox('Behind The Scenes', self)
         self.deleted_scenes_cb = qtw.QCheckBox('Deleted Scenes', self)
