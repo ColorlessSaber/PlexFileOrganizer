@@ -1,0 +1,8 @@
+# default folders and files to ignore
+.idea/
+.venv/
+*.spec
+
+# folders generated from using pyinsaller
+build/
+dist/

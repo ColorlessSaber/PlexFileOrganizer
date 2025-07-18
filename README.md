@@ -54,7 +54,7 @@ If you wish to make an executable, download the latest version of PyInstaller, o
 folder is located, and then run the follow commanded in the terminal.
 
 <code>
-pyinstaller plex-file-organizer.spec
+pyinstaller --windowed setup.py
 </code>
 
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>
@@ -64,8 +64,8 @@ pyinstaller plex-file-organizer.spec
 _Version 1 Features_
 - [x] Create a media folder for a new movie or TV show, along with sub-folders for miscellaneous content--trailers, extra, etc.
 - [ ] Add a new season folder to an existing TV show media folder.
-- [ ] Automatically go through the selected folder and identify the media files that need to be updated and rename the file accordingly.
-  - [ ] know what episode number to start from for new media files if there are existing ones already in the folder.
+- [X] Automatically go through the selected folder and identify the media files that need to be updated and rename the file accordingly.
+  - [X] know what episode number to start from for new media files if there are existing ones already in the folder.
 - [ ] Allow the user to manually rename media files--new or existing--in an existing folder.
 
 _Version 2 Features_
