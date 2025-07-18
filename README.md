@@ -6,6 +6,7 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
+[![GPL License][license-shield]][license-url]
 
 <!--Project header-->
 <br>
@@ -104,12 +105,14 @@ Please head to my portfolio website and use the contact form to reach out to me:
 <!-- MARKDOWN LINKS & IMAGES -->
 [contributors-shield]: https://img.shields.io/github/contributors/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
 [contributors-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/ColorlessSaber/plexFileOrganizer.svg?style=for-the-badge
 [forks-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/network/members
-[stars-shield]: https://img.shields.io/github/stars/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/ColorlessSaber/plexFileOrganizer.svg?style=for-the-badge
 [stars-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/stargazers
 [issues-shield]: https://img.shields.io/github/issues/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
 [issues-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/issues
+[license-shield]: https://img.shields.io/github/license/ColorlessSaber/PlexFileOrganizer.svg?style=for-the-badge
+[license-url]: https://github.com/ColorlessSaber/PlexFileOrganizer/blob/main/LICENSE
 
 [python-shield]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white
 [python-url]: https://www.python.org
