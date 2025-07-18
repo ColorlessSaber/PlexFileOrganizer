@@ -25,15 +25,23 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         # Labels
         label_information_of_process = qtw.QLabel(
             """
-            The Auto-Update Media Files process will automatically scan the selected media folder below.\n
-            This process will auto-number tv shows as they are alphabetically ordered in the folder they are in.\n
-            If you know the media files aren't in the correct order, then cancel the process and\n
-            use the "Manual Update Media Files" option on
-            main window.
+            Please read the following before proceeding to select a directory to Auto-Update Media Files in a selected
+            directory and the available options.
+            The program will make the following assumptions.
+            1. The files in the TV season folder are in the correct chronological order by episode—from top to bottom.
+            2. All files are single episodes; there isn’t a file that represents two or more episodes.
+            3. When selecting ‘Update media files in Extra Folder(s)’ the program will override any custom naming you
+            gave to a file in a Extra Folder to the default naming convention for the folder they are in.
+            EX: files in a Trailers folder will get ‘Trailer #.'
+            
+            If you wish to give custom names for files in an Extra Folder, you know that a tv show file represents two
+            or more episodes, or the files in a season folder aren’t in chronological order by episode; exit out of
+            this window and click the “Manual-Update Media Files’ option on the main window.
             """,
             self
         )
-        label_information_of_process.setAlignment(qtc.Qt.AlignmentFlag.AlignCenter)
+        label_information_of_process.setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+        label_information_of_process.setFont(qtg.QFont('Arial', 16))
         self.label_selected_directory = qtw.QLabel('', self)
 
         # buttons and checkbox creation
