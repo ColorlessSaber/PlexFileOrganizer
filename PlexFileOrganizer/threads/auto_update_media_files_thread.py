@@ -5,8 +5,9 @@ import pathlib
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.functions import (directory_scanner,
                                          FolderAndFilePatterns,
-                                         check_files_in_media_folder,
-                                         automatic_media_file_update)
+                                         automatic_media_file_update,
+                                         find_media_files_in_dir,
+                                         video_file_condition)
 
 class ThreadSignals(qtc.QObject):
     """
@@ -42,6 +43,19 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
 
         try:
             self.signals.progress.emit(50, 'Scanning directory...')
+            # with each list of files in a directory, check to see if any of them are not formated correctly.
+            for file_list in find_media_files_in_dir(video_file_condition, self.directory_and_options['directory']):
+                all_files_are_formatted_correctly = folder_and_file_pattern.check_files_in_folder(file_list)
+                if not all_files_are_formatted_correctly:
+                    print(file_list)
+                else:
+                    continue
+
+            # print('finished the check') # for debugging
+            self.signals.progress.emit(100, 'Finished scanning.')
+            self.signals.finished.emit('auto_update')
+
+            """ OLD CODE BELOW
             for entry in directory_scanner(self.directory_and_options['directory']):
                 if any(entry.path.endswith(file_extension) for file_extension in ['.mkv', '.mp4', '.avi']):
                     # Skip checking the media files in Extra Folders, unless the option in directory_and_options
@@ -77,14 +91,14 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                 message_to_user = automatic_media_file_update(media_files_in_same_dir)
                 if message_to_user:  # if the string has something, send it off
                     self.signals.progress.emit(50, message_to_user)
-
-            #print('finished the check') # for debugging
-            self.signals.progress.emit(100, 'Finished scanning.')
-            self.signals.finished.emit('auto_update')
-
+            """
+        finally:
+            print('hello')
+        """ COMMENTED OUT FOR JUST FOR DEBUGGING
         except OSError as e:
             self.signals.error.emit(e)
 
         except BaseException as e:
             # bad use of an exception, but required to catch an error for something that isn't covered for.
             self.signals.error.emit(e)
+        """
