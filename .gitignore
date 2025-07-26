@@ -1,8 +1,10 @@
-# default folders and files to ignore
-.idea/
+# Virtual enviroments
 .venv/
-*.spec
+
+# JetBrain folders
+.idea/
 
 # folders generated from using pyinsaller
 build/
 dist/
+*.spec
