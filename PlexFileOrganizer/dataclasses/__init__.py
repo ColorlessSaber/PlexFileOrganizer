@@ -1,5 +1,5 @@
 """
 __init__ file for dataclasses folder
 """
-
-from .media_folder_dataclass import MediaFolder
+# TODO rename the folder from "dataclasses" to "classes"
+from .media_folder_classes import GenerateMediaFolder, AddToExistingMediaFolder

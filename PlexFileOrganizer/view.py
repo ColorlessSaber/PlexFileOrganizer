@@ -1,4 +1,4 @@
-from PlexFileOrganizer.dataclasses import MediaFolder
+from PlexFileOrganizer.dataclasses import GenerateMediaFolder, AddToExistingMediaFolder
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 from PlexFileOrganizer.pop_up_windows import MediaFileSelect, CreateMediaFolder, AutoUpdateMediaFilesWindow
@@ -14,7 +14,8 @@ class View(qtw.QWidget):
         super().__init__()
 
         # Variables
-        self.create_media_folder_selection = MediaFolder() # contains the information the media folder the user wish's to create
+        self.generate_media_folder_data_class = GenerateMediaFolder()
+        self.add_to_existing_media_folder_class = AddToExistingMediaFolder()
         self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False} # contains information for the AutoUpdateMediaFilesThread
 
         # pop-up windows
@@ -25,6 +26,9 @@ class View(qtw.QWidget):
         # widgets
         self.btn_create_media_folder = qtw.QPushButton('Create Media Folder', self)
         self.btn_create_media_folder.clicked.connect(self.launch_create_media_folder_window)
+
+        self.btn_add_to_existing_media_folder = qtw.QPushButton('Add to Existing Media Folder', self)
+        self.btn_add_to_existing_media_folder.clicked.connect(self.launch_add_to_existing_media_folder_window)
 
         self.btn_auto_update_media_files = qtw.QPushButton('Auto-Update Media Files', self)
         self.btn_auto_update_media_files.clicked.connect(self.launch_auto_update_media_files_conformation_window)
@@ -42,13 +46,15 @@ class View(qtw.QWidget):
         self.log_window.insertPlainText('Media Log Window')
 
         # Set up the layout of window
+        # QGridLayout placement order: row, column, row-span, column-span
         grid_layout = qtw.QGridLayout()
         grid_layout.addWidget(self.btn_create_media_folder, 0, 0)
         grid_layout.addWidget(self.btn_auto_update_media_files, 0, 1)
         grid_layout.addWidget(self.btn_manual_update_media_files, 0, 2)
-        grid_layout.addWidget(self.log_window, 2, 0, 5, 4)
-        grid_layout.addWidget(self.btn_clear_log, 7, 0)
-        grid_layout.addWidget(self.btn_quit_app, 7, 3)
+        grid_layout.addWidget(self.btn_add_to_existing_media_folder, 1, 0)
+        grid_layout.addWidget(self.log_window, 3, 0, 5, 4)
+        grid_layout.addWidget(self.btn_clear_log, 8, 0)
+        grid_layout.addWidget(self.btn_quit_app, 8, 3)
         self.setLayout(grid_layout)
 
 # *** Methods that launch popup windows ***
@@ -60,9 +66,18 @@ class View(qtw.QWidget):
         :return:
         """
         self.log_window.insertPlainText('\nOpening Create Media Folder Window')
-        self.create_media_folder_window = CreateMediaFolder(self.create_media_folder_selection, self)
+        self.create_media_folder_window = CreateMediaFolder(self.generate_media_folder_data_class, self)
         self.create_media_folder_window.accepted.connect(self.initiate_create_media_folder_thread)
         self.create_media_folder_window.exec()
+
+    @qtc.Slot()
+    def launch_add_to_existing_media_folder_window(self):
+        """
+        Launches the "Add to Existing Media Folder" window.
+
+        :return:
+        """
+        print("Launching 'Add to Existing Media Folder' window")
 
     @qtc.Slot()
     def launch_auto_update_media_files_conformation_window(self):
@@ -99,7 +114,7 @@ class View(qtw.QWidget):
 
         :return:
         """
-        self.signal_initiate_creating_media_folder.emit(self.create_media_folder_selection)
+        self.signal_initiate_creating_media_folder.emit(self.generate_media_folder_data_class)
 
     @qtc.Slot()
     def initiate_auto_update_media_files_thread(self):
