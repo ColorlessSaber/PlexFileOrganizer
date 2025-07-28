@@ -27,6 +27,8 @@ class MainWindow(qtw.QMainWindow):
 		self.view.signal_user_confirmation_of_existing_media_folder.connect(self.model.signal_user_confirmation_of_existing_media_folder)
 		self.view.signal_initiate_auto_update_media_files.connect(self.model.start_auto_update_media_files_thread)
 
+		self.view.modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.model.start_scan_of_existing_media_folder_thread)
+
 		# view signals to be connected to main_window slots
 		self.view.signal_reset_progress_bar.connect(self.slot_reset_progress_bar)
 

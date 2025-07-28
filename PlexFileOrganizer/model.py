@@ -20,7 +20,7 @@ class Model(qtc.QObject):
         """
         Starts the thread to create the folder(s) the user wishes to make.
 
-        :param media_folder_selection: Dataclass MediaFolder, holding the user inputs and selections.
+        :param media_folder_selection: A class holding information of the user's inputs and selections for the new media folder.
         :return:
         """
         create_media_folder_thread = CreateMediaFolderThread(media_folder_selection)
@@ -43,6 +43,16 @@ class Model(qtc.QObject):
         auto_update_media_files_threads.signals.error.connect(self.slot_thread_error_message)
         auto_update_media_files_threads.signals.finished.connect(self.slot_thread_finished)
         self.thread_pool.start(auto_update_media_files_threads)
+
+    @qtc.Slot(object)
+    def start_scan_of_existing_media_folder_thread(self, media_folder_info):
+        """
+        Creates and starts the thread to scan an existing media folder.
+
+        :param media_folder_info: a class that will contain the information about the media folder
+        :return:
+        """
+        print("starting the thread to scan media folder")
 
 # *** Signals to inform or request input from user methods ***
     @qtc.Slot(int, str)

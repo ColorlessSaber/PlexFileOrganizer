@@ -14,18 +14,17 @@ class MediaFolderData:
     number_of_seasons: int = field(default=None)
     extra_folders: dict = field(default_factory=ExtraFolders) #TODO look into replacing the userDict with just a plain "dict"
 
-class AddToExistingMediaFolder(MediaFolderData):
+class ModifiedMediaFolder(MediaFolderData):
     """
-    Holds methods to analyze and generate more folders for an existing media folder
+    Holds methods to generate more folders or remove folders for an existing media folder
 
     Inheritance MediaFolderData.
     """
 
-    def analyze_existing_media_folder(self, directory):
+    def generate_new_season_folders(self):
         """
-        Analyzes the given directory of a media folder and records what folders were pre-created in the directory.
+        Generates one or more new season folders.
 
-        :param directory: The media folder directory to be analyzed.
         :return:
         """
         pass
