@@ -1,5 +1,5 @@
 import re
-
+# TODO look into moving this into the "dataclasses"/"classes" folder
 class FolderAndFilePatterns:
     """
     Contains regex expressions to check to see if media file is in an extra folder or a tv show season folder, and if the
