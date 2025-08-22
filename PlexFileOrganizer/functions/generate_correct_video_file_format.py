@@ -1,4 +1,4 @@
-from PlexFileOrganizer.functions import MediaFile, FolderAndFilePatterns, update_files_in_directory
+from PlexFileOrganizer.classes import MediaFile, FolderAndFilePatterns
 
 def generate_correct_video_file_format(list_of_video_files):
     """

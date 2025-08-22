@@ -4,7 +4,7 @@ File to hold custom objects--objects that are user control able
 import os
 import pathlib
 from collections import UserDict, UserString
-# TODO look into moving this into the "dataclasses"/"classes" folder
+
 class ExtraFolders(UserDict):
     """
     Custom semi-immutable dict. Only allow the user to modify the values at each key.

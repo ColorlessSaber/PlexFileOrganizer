@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass, field
-from PlexFileOrganizer.functions import ExtraFolders
+from PlexFileOrganizer.classes import ExtraFolders
 
 @dataclass
 class MediaFolderData:
@@ -11,7 +11,7 @@ class MediaFolderData:
     media_title: str = field(default=None)
     movie_or_tv: str = field(default=None)
     number_of_seasons: int = field(default=None)
-    extra_folders: dict = field(default_factory=ExtraFolders) #TODO look into replacing the userDict with just a plain "dict"
+    extra_folders: dict = field(default_factory=ExtraFolders)
 
 class ModifiedMediaFolder(MediaFolderData):
     """

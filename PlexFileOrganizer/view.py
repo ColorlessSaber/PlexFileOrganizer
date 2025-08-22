@@ -1,4 +1,4 @@
-from PlexFileOrganizer.dataclasses import GenerateMediaFolder, ModifiedMediaFolder
+from PlexFileOrganizer.classes import GenerateMediaFolder, ModifiedMediaFolder
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc
