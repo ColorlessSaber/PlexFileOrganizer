@@ -1,7 +1,6 @@
 import os
 from dataclasses import dataclass, field
 from PlexFileOrganizer.functions import ExtraFolders
-# TODO rename the file to better identify what this file contains
 
 @dataclass
 class MediaFolderData:
@@ -16,7 +15,7 @@ class MediaFolderData:
 
 class ModifiedMediaFolder(MediaFolderData):
     """
-    Holds methods to generate more folders or remove folders for an existing media folder
+    Holds methods to generate more folders for or remove folders from an existing media folder
 
     Inheritance MediaFolderData.
     """

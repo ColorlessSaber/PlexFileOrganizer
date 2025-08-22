@@ -1,5 +1,9 @@
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.threads import CreateMediaFolderThread, AutoUpdateMediaFilesThread
+from PlexFileOrganizer.threads import (
+    CreateMediaFolderThread,
+    AutoUpdateMediaFilesThread,
+    ScanExistingMediaFolder
+)
 
 
 class Model(qtc.QObject):
@@ -52,7 +56,10 @@ class Model(qtc.QObject):
         :param media_folder_info: a class that will contain the information about the media folder
         :return:
         """
-        print("starting the thread to scan media folder")
+        scan_existing_media_folder = ScanExistingMediaFolder(media_folder_info)
+        scan_existing_media_folder.signals.progress.connect(self.slot_thread_update_progress_status)
+        scan_existing_media_folder.signals.error.connect(self.slot_thread_error_message)
+        self.thread_pool.start(scan_existing_media_folder)
 
 # *** Signals to inform or request input from user methods ***
     @qtc.Slot(int, str)

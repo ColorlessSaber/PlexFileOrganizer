@@ -1,3 +1,7 @@
+"""
+Contains functions to test if a file meets the conditions
+"""
+
 def video_file_condition(file_path):
     """
     The condition that validates that the file found is a video file.
