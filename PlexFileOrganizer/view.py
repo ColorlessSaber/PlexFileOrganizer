@@ -1,9 +1,9 @@
-from PlexFileOrganizer.classes import GenerateMediaFolder, ModifiedMediaFolder
+from .classes import GenerateMediaFolder, ModifiedMediaFolder
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc
 )
-from PlexFileOrganizer.pop_up_windows import (
+from .pop_up_windows import (
     MediaFileSelect,
     CreateMediaFolder,
     AutoUpdateMediaFilesWindow,

@@ -1,5 +1,5 @@
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.threads import (
+from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
     ScanExistingMediaFolder

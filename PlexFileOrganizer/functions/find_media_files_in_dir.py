@@ -1,5 +1,5 @@
 import pathlib
-from PlexFileOrganizer.functions import directory_scanner, video_file_condition
+from . import directory_scanner, video_file_condition
 
 
 def find_media_files_in_dir(file_condition, directory):

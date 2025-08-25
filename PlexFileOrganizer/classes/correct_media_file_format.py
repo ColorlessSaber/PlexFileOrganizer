@@ -5,12 +5,24 @@ class FolderAndFilePatterns:
     Contains regex expressions to check to see if media file is in an extra folder or a tv show season folder, and if the
     media file is properly name for the folder they are in.
     """
-    movie_file_format = re.compile(r"""
+    extra_folder_format = [
+        r"trailers$",
+        r"behind the scenes$",
+        r"deleted scenes$",
+        r"featurettes$",
+        r"interviews$",
+        r"scenes$",
+        r"shorts$",
+        r"other$"
+    ]
+
+    # *** File Format Regex Patterns ***
+    movie_file_format_regex_pattern = re.compile(r"""
                                     ^(?P<title>.+)   # group 1: the name of the file
                                     (?P<ext>\.\w+) # group 2: file extension
                                     """, re.VERBOSE | re.IGNORECASE)
 
-    extra_file_format = re.compile(r"""
+    extra_file_format_regex_pattern = re.compile(r"""
                                             ^(?P<title>.+) # group 1: the name of the file
                                             \s
                                             (?P<number>\d+) # group 2: the number of the file
@@ -22,7 +34,7 @@ class FolderAndFilePatterns:
     # yy - episode number
     #
     # The format has two groups to make is easy to grab the episode number(s) from an existing episode media file.
-    tv_episode_file_format = re.compile(r"""
+    tv_episode_file_format_regex_pattern = re.compile(r"""
                                     ^.+   # wildcard to handle name of show
                                     \s-\s # dash between name of show and season and episode number
                                     s\d+  # season number
@@ -31,6 +43,15 @@ class FolderAndFilePatterns:
                                     \.\w+ # file extension
                                     """, re.VERBOSE | re.IGNORECASE)
 
+    # *** Folder Format Regex Patterns ***
+    tv_show_folder_format_regex_pattern = re.compile(r"""
+    ^(Season\s\d)|(Specials)$ # A season folder can be either Season ## or Specials
+    """, re.VERBOSE | re.IGNORECASE)
+
+    extra_folder_format_regex_pattern = re.compile(r"""
+    ^(trailers)|(behind scenes)|(deleted scenes)|(featurettes)|(interviews)|(scenes)|(shorts)|(other)$
+    """, re.VERBOSE | re.IGNORECASE)
+
     def tv_show_episode_pattern_check(self, file_name):
         """
         Checks to see if the given video file matches the correct tv show episode file format.
@@ -38,7 +59,7 @@ class FolderAndFilePatterns:
         :param file_name: the file name to check against
         :return: A Bool value. True - formatted correctly, False - not formatted correctly
         """
-        if self.tv_episode_file_format.match(file_name):
+        if self.tv_episode_file_format_regex_pattern.match(file_name):
             return True
         else:
             return False
@@ -51,7 +72,7 @@ class FolderAndFilePatterns:
         :param file_path: The absolute path to the file
         :return: A bool value. True - formatted correctly, False - not formatted correctly
         """
-        if self.movie_file_format.match(file_name).group('title') == file_path.split('/')[-2]:
+        if self.movie_file_format_regex_pattern.match(file_name).group('title') == file_path.split('/')[-2]:
             return True
         else:
             return False
@@ -64,7 +85,7 @@ class FolderAndFilePatterns:
         :param file_path: The absolute path to the file
         :return: True - formatted correctly, False - not formatted correctly
         """
-        if self.extra_file_format.match(file_name):
+        if self.extra_file_format_regex_pattern.match(file_name):
             return True
         else:
             return False

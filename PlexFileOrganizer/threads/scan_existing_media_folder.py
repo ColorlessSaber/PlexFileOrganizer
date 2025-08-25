@@ -2,8 +2,8 @@
 Thread for creating the media folders in the selected directory
 """
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.functions import video_file_condition
-from PlexFileOrganizer.classes import correct_media_file_format
+from ..functions import video_file_condition
+from ..classes import correct_media_file_format
 import os
 
 class ThreadSignals(qtc.QObject):

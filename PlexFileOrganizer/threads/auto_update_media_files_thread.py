@@ -1,10 +1,9 @@
 """
 Thread for Auto Update Media Files
 """
-import pathlib
 from PySide6 import QtCore as qtc
-from PlexFileOrganizer.classes import FolderAndFilePatterns
-from PlexFileOrganizer.functions import (update_files_in_directory,
+from ..classes import FolderAndFilePatterns
+from ..functions import (update_files_in_directory,
                                          generate_correct_video_file_format,
                                          find_media_files_in_dir,
                                          video_file_condition)

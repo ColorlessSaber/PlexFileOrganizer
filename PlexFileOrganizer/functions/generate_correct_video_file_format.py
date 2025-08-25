@@ -1,4 +1,4 @@
-from PlexFileOrganizer.classes import MediaFile, FolderAndFilePatterns
+from ..classes import MediaFile, FolderAndFilePatterns
 
 def generate_correct_video_file_format(list_of_video_files):
     """
@@ -35,8 +35,8 @@ def generate_correct_video_file_format(list_of_video_files):
             if folder_and_files_patterns.tv_show_episode_pattern_check(file.file_name()):
 
                 # a tv show episode may be multiple episode, which is why we need to check/grab both numbers
-                first_episode_number = folder_and_files_patterns.tv_episode_file_format.match(file.file_name()).group('first_ep')
-                second_episode_number = folder_and_files_patterns.tv_episode_file_format.match(file.file_name()).group('second_ep')
+                first_episode_number = folder_and_files_patterns.tv_episode_file_format_regex_pattern.match(file.file_name()).group('first_ep')
+                second_episode_number = folder_and_files_patterns.tv_episode_file_format_regex_pattern.match(file.file_name()).group('second_ep')
                 if second_episode_number is not None:
                     if int(second_episode_number) > highest_episode_number:
                         highest_episode_number = int(highest_episode_number)
@@ -90,7 +90,7 @@ def generate_correct_video_file_format(list_of_video_files):
         highest_file_number = 0
         for file in class_based_video_file_list:
             if correct_file_format in file.file_name():
-                file_number = folder_and_files_patterns.extra_file_format.match(file.file_name(with_extension=False)).group('number')
+                file_number = folder_and_files_patterns.extra_file_format_regex_pattern.match(file.file_name(with_extension=False)).group('number')
                 if int(file_number) > highest_file_number:
                     highest_file_number = int(file_number)
             else:

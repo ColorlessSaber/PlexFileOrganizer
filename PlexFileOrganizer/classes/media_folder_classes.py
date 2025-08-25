@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass, field
-from PlexFileOrganizer.classes import ExtraFolders
+from . import ExtraFolders
 
 @dataclass
 class MediaFolderData:

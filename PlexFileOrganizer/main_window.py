@@ -1,8 +1,8 @@
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 
-from PlexFileOrganizer.model import Model
-from PlexFileOrganizer.view import View
+from .model import Model
+from .view import View
 
 
 class MainWindow(qtw.QMainWindow):
