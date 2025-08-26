@@ -33,8 +33,8 @@ class ExtraFolders(UserDict):
 
 class MediaFile(UserString):
     """
-    custom immutable string for the full path for a media file. Has built-in functions to do simple tasks-- return file name,
-    return file_extension, return the folder the file is in.
+    custom immutable string for the full path for a media file. Has built-in functions to do simple tasks--
+    return file name, file's extension, directory path, folder file is in
     """
 
     def __add__(self, other):
