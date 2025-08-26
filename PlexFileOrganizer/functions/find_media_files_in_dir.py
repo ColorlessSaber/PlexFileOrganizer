@@ -1,20 +1,23 @@
 import pathlib
-from . import directory_scanner, video_file_condition
+from . import directory_scanner, video_file_condition, default_folder_condition
 
 
-def find_media_files_in_dir(file_condition, directory):
+def find_media_files_in_dir(file_condition, directory, folder_condition=default_folder_condition):
     """
     A generator that returns all files in a given directory that meet the condition given by the
     file_condition function.
 
     :param file_condition: A function that specifies that condition the file needs to be met.
     :param directory: The directory to scan for files
+    :param folder_condition: A function that specifies that condition the folder needs to be met.
     :return: A tuple of all the files in a given directory
     """
     files_in_directory = []
 
     for entry in directory_scanner(directory):
-        if file_condition(entry.path):
+        file_directory_path = pathlib.Path(entry).parent.resolve().name
+
+        if file_condition(entry.name) and folder_condition(file_directory_path):
             # Compare the new media file to the last appended file in the list to see if they are in
             # the same directory. If they are in the same directory, append the media file to the list.
             # If they aren't in the same directory, yield the list.

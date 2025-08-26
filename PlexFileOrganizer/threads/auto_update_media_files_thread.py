@@ -38,6 +38,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
 
         try:
             self.signals.progress.emit(50, 'Scanning directory...')
+            """ TODO temp blocked out until find_media_files_in_dir is upgraded
             for file_list in find_media_files_in_dir(video_file_condition, self.directory_and_options['directory']):
                 # Skip checking the video files in an Extra Folder, unless the option in directory_and_options
                 # says we need to check them.
@@ -54,7 +55,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                     self.signals.progress.emit(50, message_number_of_files_affected)
                 else:
                     continue
-
+            """
             # print('finished the check') # for debugging
             self.signals.progress.emit(100, 'Finished scanning.')
             self.signals.finished.emit('auto_update')

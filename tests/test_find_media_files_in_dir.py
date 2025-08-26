@@ -1,0 +1,46 @@
+from ..PlexFileOrganizer.functions import find_media_files_in_dir, skip_extra_folders
+import os
+
+# TODO need more tests: test for skipping extra folder, testing empty result
+def txt_file_condition(file_path):
+    """
+    Created for this test to work with the test_library
+    """
+    if file_path.endswith('.txt'):
+        return True
+    else:
+        return False
+
+class TestFindMediaFilesInDir:
+
+    def test_movie_folder(self):
+        errors = []
+        movie_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/movies'
+
+        for file_list in find_media_files_in_dir(txt_file_condition, movie_directory):
+            directory_path = os.path.dirname(os.path.abspath(file_list[0]))
+
+            func_file_count = len(file_list)
+            os_scan_file_count = len([name for name in os.listdir(directory_path) if "." in name])
+
+            if not func_file_count == os_scan_file_count:
+                errors.append(
+                    f"Directory: {directory_path} -> func file count: {func_file_count}, os scan file count: {os_scan_file_count}")
+
+        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+
+    def test_tv_show_folder(self):
+        errors = []
+        tv_show_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/tv shows'
+
+        for file_list in find_media_files_in_dir(txt_file_condition, tv_show_directory):
+            directory_path = os.path.dirname(os.path.abspath(file_list[0]))
+
+            func_file_count = len(file_list)
+            os_scan_file_count = len([name for name in os.listdir(directory_path) if "." in name])
+
+            if not func_file_count == os_scan_file_count:
+                errors.append(
+                    f"Directory: {directory_path} -> func file count: {func_file_count}, os scan file count: {os_scan_file_count}")
+
+        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
