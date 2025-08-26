@@ -1,5 +1,5 @@
-from ..PlexFileOrganizer.classes import FolderAndFilePatterns
-import pytest
+from ..PlexFileOrganizer.classes import FolderAndFilePatterns, MediaFile
+
 folder_and_file_patterns = FolderAndFilePatterns()
 
 class TestClass:
@@ -49,5 +49,87 @@ class TestClass:
 
         if folder_and_file_patterns.tv_episode_file_format_regex_pattern.match(multiple_episode_file) is None:
             errors.append(f"Error with multiple episode file pattern")
+
+        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+
+    def test_tv_episode_func_check(self):
+        errors = []
+        single_episode_file = "test - s01e01.mkv"
+        multiple_episode_file = "test - s01e01-e05.mkv"
+
+        if not folder_and_file_patterns.tv_show_episode_pattern_check(single_episode_file):
+            errors.append(f"Error with single episode file pattern")
+
+        if not folder_and_file_patterns.tv_show_episode_pattern_check(multiple_episode_file):
+            errors.append(f"Error with multiple episode file pattern")
+
+        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+
+    def test_movie_file_func_check(self):
+        movie_file = MediaFile("/dir/test/test.mkv")
+        folder_name = "test"
+
+        assert folder_and_file_patterns.movie_media_file_check(movie_file.file_name(), folder_name)
+
+    def test_extra_file_func_check(self):
+        errors = []
+        media_file_names = [
+            MediaFile("/dir/trailers/trailers 01.mkv"),
+            MediaFile("/dir/behind the scenes/behind the scenes 01.mkv"),
+            MediaFile("/dir/deleted scenes/deleted scenes 01.mkv"),
+            MediaFile("/dir/featurettes/featurettes 01.mkv"),
+            MediaFile("/dir/interviews/interviews 01.mkv"),
+            MediaFile("/dir/scenes/scenes 01.mkv"),
+            MediaFile("/dir/shorts/shorts 01.mkv"),
+            MediaFile("/dir/other/other 01.mkv"),
+        ]
+
+        extra_folder_format = [
+            "trailers",
+            "behind the scenes",
+            "deleted scenes",
+            "featurettes",
+            "interviews",
+            "scenes",
+            "shorts",
+            "other"
+        ]
+
+        for i in zip(media_file_names, extra_folder_format):
+            file_name, folder_name = i
+            if not folder_and_file_patterns.extra_media_file_check(file_name.file_name(), folder_name):
+                errors.append(f"Error with folder '{folder_name}' pattern match")
+
+        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+
+    def test_tv_show_season_folder_func_check(self):
+        errors = []
+        folder_names = [
+            "Season 01",
+            "Season 100",
+            "Specials",
+        ]
+
+        for folder_name in folder_names:
+            if not folder_and_file_patterns.tv_show_season_folder_check(folder_name):
+                errors.append(f"Error with folder '{folder_name}' pattern match")
+
+        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+
+    def test_extra_folder_func_check(self):
+        errors = []
+        extra_folder_formats = [
+            "trailers",
+            "behind the scenes",
+            "deleted scenes",
+            "featurettes",
+            "interviews",
+            "scenes",
+            "shorts",
+            "other"
+        ]
+        for extra_folder in extra_folder_formats:
+            if not folder_and_file_patterns.extra_folder_check(extra_folder):
+                errors.append(f"Error with folder '{extra_folder}' pattern match")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
