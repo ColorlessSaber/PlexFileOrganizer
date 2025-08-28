@@ -1,8 +1,8 @@
 import pathlib
-from . import directory_scanner, video_file_condition, default_folder_condition
+from . import directory_scanner, video_file_condition
 
 
-def find_media_files_in_dir(file_condition, directory, folder_condition=default_folder_condition):
+def find_media_files_in_dir(file_condition, folder_condition, directory):
     """
     A generator that returns all files in a given directory that meet the condition given by the
     file_condition function.

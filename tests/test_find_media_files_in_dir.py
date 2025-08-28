@@ -1,7 +1,11 @@
-from ..PlexFileOrganizer.functions import find_media_files_in_dir, skip_extra_folders
+from ..PlexFileOrganizer.functions import (
+    find_media_files_in_dir,
+    season_and_skip_extra_folders,
+    season_and_extra_folders,
+    default_folder_condition
+)
 import os
 
-# TODO need more tests: test for skipping extra folder, testing empty result
 def txt_file_condition(file_path):
     """
     Created for this test to work with the test_library
@@ -17,7 +21,7 @@ class TestFindMediaFilesInDir:
         errors = []
         movie_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/movies'
 
-        for file_list in find_media_files_in_dir(txt_file_condition, movie_directory):
+        for file_list in find_media_files_in_dir(txt_file_condition, default_folder_condition, movie_directory):
             directory_path = os.path.dirname(os.path.abspath(file_list[0]))
 
             func_file_count = len(file_list)
@@ -33,7 +37,7 @@ class TestFindMediaFilesInDir:
         errors = []
         tv_show_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/tv shows'
 
-        for file_list in find_media_files_in_dir(txt_file_condition, tv_show_directory):
+        for file_list in find_media_files_in_dir(txt_file_condition, default_folder_condition, tv_show_directory):
             directory_path = os.path.dirname(os.path.abspath(file_list[0]))
 
             func_file_count = len(file_list)
@@ -44,3 +48,21 @@ class TestFindMediaFilesInDir:
                     f"Directory: {directory_path} -> func file count: {func_file_count}, os scan file count: {os_scan_file_count}")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+
+    def test_season_folder_and_skip_extra(self):
+        number_of_scanned_folders = 0
+        extra_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/tv shows/Zenless Zone Zero'
+
+        for _ in find_media_files_in_dir(txt_file_condition, season_and_skip_extra_folders, extra_directory):
+            number_of_scanned_folders += 1
+
+        assert number_of_scanned_folders == 1
+
+    def test_season_and_extra_folders(self):
+        number_of_scanned_folders = 0
+        extra_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/tv shows/Zenless Zone Zero'
+
+        for _ in find_media_files_in_dir(txt_file_condition, season_and_extra_folders, extra_directory):
+            number_of_scanned_folders += 1
+
+        assert number_of_scanned_folders == 2
