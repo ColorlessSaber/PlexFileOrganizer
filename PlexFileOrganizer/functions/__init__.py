@@ -8,7 +8,6 @@ from .generate_correct_video_file_format import generate_correct_video_file_form
 from .file_condition_functions import video_file_condition
 from .folder_condition_functions import (
     default_folder_condition,
-    season_and_extra_folders,
-    season_and_skip_extra_folders
+    skip_extra_folders
 )
 from .find_media_files_in_dir import find_media_files_in_dir

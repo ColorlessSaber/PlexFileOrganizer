@@ -3,10 +3,14 @@ Thread for Auto Update Media Files
 """
 from PySide6 import QtCore as qtc
 from ..classes import FolderAndFilePatterns
-from ..functions import (update_files_in_directory,
-                                         generate_correct_video_file_format,
-                                         find_media_files_in_dir,
-                                         video_file_condition)
+from ..functions import (
+    update_files_in_directory,
+    generate_correct_video_file_format,
+    find_media_files_in_dir,
+    video_file_condition,
+    skip_extra_folders,
+    default_folder_condition
+)
 
 class ThreadSignals(qtc.QObject):
     """
@@ -38,24 +42,22 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
 
         try:
             self.signals.progress.emit(50, 'Scanning directory...')
-            """ TODO temp blocked out until find_media_files_in_dir is upgraded
-            for file_list in find_media_files_in_dir(video_file_condition, self.directory_and_options['directory']):
-                # Skip checking the video files in an Extra Folder, unless the option in directory_and_options
-                # says we need to check them.
-                # When the 'scan_extra_folder' folder is set to false, the media file in the Extra folder is skipped -- I.E.,
-                # its assumed the file is formated correctly.
-                if folder_and_file_pattern.extra_folder_check(file_list[0]) and not self.directory_and_options['scan_extra_folder']:
-                    continue
 
+            # set up the generator that will return the media files in a given directory based on options selected by
+            # user
+            if self.directory_and_options['scan_extra_folder']:
+                generator_find_media_files = find_media_files_in_dir(video_file_condition, default_folder_condition, self.directory_and_options['directory'])
+            else:
+                generator_find_media_files = find_media_files_in_dir(video_file_condition, skip_extra_folders, self.directory_and_options['directory'])
+
+            for file_list in generator_find_media_files:
                 # check to see if all files in folder are formatted correctly
-                all_files_are_formatted_correctly = folder_and_file_pattern.check_files_in_folder(file_list)
+                all_files_are_formatted_correctly = folder_and_file_pattern.check_files_in_list(file_list)
                 if not all_files_are_formatted_correctly:
-                    files_to_be_updated, message_number_of_files_affected = generate_correct_video_file_format(file_list)
-                    update_files_in_directory(files_to_be_updated)
-                    self.signals.progress.emit(50, message_number_of_files_affected)
-                else:
-                    continue
-            """
+                    print("generate correct file formats") # debug
+                    #files_to_be_updated, message_number_of_files_affected = generate_correct_video_file_format(file_list)
+                    #update_files_in_directory(files_to_be_updated)
+                    #self.signals.progress.emit(50, message_number_of_files_affected)
             # print('finished the check') # for debugging
             self.signals.progress.emit(100, 'Finished scanning.')
             self.signals.finished.emit('auto_update')

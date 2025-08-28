@@ -1,7 +1,6 @@
 from ..PlexFileOrganizer.functions import (
     find_media_files_in_dir,
-    season_and_skip_extra_folders,
-    season_and_extra_folders,
+    skip_extra_folders,
     default_folder_condition
 )
 import os
@@ -49,20 +48,11 @@ class TestFindMediaFilesInDir:
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
-    def test_season_folder_and_skip_extra(self):
+    def test_skip_extra_folder(self):
         number_of_scanned_folders = 0
         extra_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/tv shows/Zenless Zone Zero'
 
-        for _ in find_media_files_in_dir(txt_file_condition, season_and_skip_extra_folders, extra_directory):
-            number_of_scanned_folders += 1
-
-        assert number_of_scanned_folders == 1
-
-    def test_season_and_extra_folders(self):
-        number_of_scanned_folders = 0
-        extra_directory = '/Volumes/Hub SSD/python projects/PlexFileOrganizer/tests/test_library/tv shows/Zenless Zone Zero'
-
-        for _ in find_media_files_in_dir(txt_file_condition, season_and_extra_folders, extra_directory):
+        for _ in find_media_files_in_dir(txt_file_condition, skip_extra_folders, extra_directory):
             number_of_scanned_folders += 1
 
         assert number_of_scanned_folders == 2

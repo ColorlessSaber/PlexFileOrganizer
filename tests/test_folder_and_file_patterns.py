@@ -74,13 +74,13 @@ class TestClass:
     def test_extra_file_func_check(self):
         errors = []
         media_file_names = [
-            MediaFile("/dir/trailers/trailers 01.mkv"),
-            MediaFile("/dir/behind the scenes/behind the scenes 01.mkv"),
-            MediaFile("/dir/deleted scenes/deleted scenes 01.mkv"),
-            MediaFile("/dir/featurettes/featurettes 01.mkv"),
-            MediaFile("/dir/interviews/interviews 01.mkv"),
-            MediaFile("/dir/scenes/scenes 01.mkv"),
-            MediaFile("/dir/shorts/shorts 01.mkv"),
+            MediaFile("/dir/trailers/trailer 01.mkv"),
+            MediaFile("/dir/behind the scenes/behind the scene 01.mkv"),
+            MediaFile("/dir/deleted scenes/deleted scene 01.mkv"),
+            MediaFile("/dir/featurettes/featurette 01.mkv"),
+            MediaFile("/dir/interviews/interview 01.mkv"),
+            MediaFile("/dir/scenes/scene 01.mkv"),
+            MediaFile("/dir/shorts/short 01.mkv"),
             MediaFile("/dir/other/other 01.mkv"),
         ]
 

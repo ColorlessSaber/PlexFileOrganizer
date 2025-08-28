@@ -1,4 +1,5 @@
 import re
+import pathlib
 
 class FolderAndFilePatterns:
     """
@@ -74,7 +75,12 @@ class FolderAndFilePatterns:
         :param folder_name: The name of the folder the media file is in.
         :return: True - formatted correctly, False - not formatted correctly
         """
-        if self.extra_file_format_regex_pattern.match(file_name).group('title') == folder_name:
+        # The folder_name[:-1] removes the "s" on the end of the folder name
+        if folder_name.endswith('s'):
+            modified_folder_name = folder_name[:-1]
+        else:
+            modified_folder_name = folder_name
+        if self.extra_file_format_regex_pattern.match(file_name).group('title') == modified_folder_name:
             return True
         else:
             return False
@@ -103,21 +109,22 @@ class FolderAndFilePatterns:
         else:
             return False
 
-    def check_files_in_folder(self, list_of_files):
+    def check_files_in_list(self, list_of_files):
         """
         Checks if the media files in the given list are all formated correctly for the media folder they are in
 
         :param list_of_files: a list where each element is the full-path to a file in a directory
         :return: Bool value. True -- all media files in folder are formated correctly. False -- at lest one media file in the folder isn't formated correctly
         """
-        # TODO fix this code to work with changes above
         for file_path in list_of_files:
             file_name = file_path.split('/')[-1]
-            if self.tv_show_season_folder_check(file_path) and self.tv_show_episode_pattern_check(file_name):
+            file_directory_path = pathlib.Path(file_path).parent.resolve().name
+
+            if self.tv_show_season_folder_check(file_directory_path) and self.tv_show_episode_pattern_check(file_name):
                 continue
-            elif self.movie_media_file_check(file_name, file_path):
+            elif self.movie_media_file_check(file_name, file_directory_path):
                 continue
-            elif self.extra_folder_check(file_path) and self.extra_media_file_check(file_name, file_path):
+            elif self.extra_folder_check(file_directory_path) and self.extra_media_file_check(file_name, file_directory_path):
                 continue
             else:
                 return False
