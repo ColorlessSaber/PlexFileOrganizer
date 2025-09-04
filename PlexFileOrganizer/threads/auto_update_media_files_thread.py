@@ -38,6 +38,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
 
         :return:
         """
+        message_number_of_files_affected = ""
         folder_and_file_pattern = FolderAndFilePatterns()
 
         try:
@@ -51,13 +52,15 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                 generator_find_media_files = find_media_files_in_dir(video_file_condition, skip_extra_folders, self.directory_and_options['directory'])
 
             for file_list in generator_find_media_files:
-                # check to see if all files in folder are formatted correctly
                 all_files_are_formatted_correctly = folder_and_file_pattern.check_files_in_list(file_list)
                 if not all_files_are_formatted_correctly:
-                    print("generate correct file formats") # debug
+                    #print("generate correct file formats") # debug
                     files_to_be_updated, message_number_of_files_affected = generate_correct_video_file_format(file_list)
-                    #update_files_in_directory(files_to_be_updated)
+                    update_files_in_directory(files_to_be_updated)
                     self.signals.progress.emit(50, message_number_of_files_affected)
+
+            if not message_number_of_files_affected: # For when no files that needed updating were found.
+                self.signals.progress.emit(50, '-- No files found that needed to be updated')
             # print('finished the check') # for debugging
             self.signals.progress.emit(100, 'Finished scanning.')
             self.signals.finished.emit('auto_update')
