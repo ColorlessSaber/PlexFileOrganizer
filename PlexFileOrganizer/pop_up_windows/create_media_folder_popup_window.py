@@ -45,7 +45,7 @@ class CreateMediaFolder(qtw.QDialog):
         media_inform_form = qtw.QFormLayout()
         self.media_title = qtw.QLineEdit(self)
         self.media_title.textChanged.connect(self.enable_or_disable_accept_btn)
-        self.number_of_seasons = qtw.QLineEdit(self)
+        self.number_of_seasons = qtw.QLineEdit(self) # TODO make this an increment versus LineEdit, 1 to 100
         self.number_of_seasons.setValidator(qtg.QIntValidator(0, 100))
         self.number_of_seasons.setEnabled(False)
         media_inform_form.addRow('Title:', self.media_title)
@@ -88,6 +88,7 @@ class CreateMediaFolder(qtw.QDialog):
 
     @qtc.Slot()
     def enable_or_disable_accept_btn(self):
+        # TODO make sure user cannot click accept if tv show is selected while season number entry is empty
         if (self.media_type_tv_select.isChecked() or self.media_type_tv_select) and (len(self.media_title.text())>0) \
                 and self.selected_directory:
             self.accept_btn.setEnabled(True)
@@ -134,4 +135,5 @@ class CreateMediaFolder(qtw.QDialog):
         self.new_media_folder_info.extra_folders['scenes'] = self.scenes_cb.isChecked()
         self.new_media_folder_info.extra_folders['shorts'] = self.shorts_cb.isChecked()
         self.new_media_folder_info.extra_folders['other'] = self.other_cb.isChecked()
+        # TODO clear user entered values
         super().accept()

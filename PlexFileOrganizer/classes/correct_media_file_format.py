@@ -80,8 +80,12 @@ class FolderAndFilePatterns:
             modified_folder_name = folder_name[:-1]
         else:
             modified_folder_name = folder_name
-        if self.extra_file_format_regex_pattern.match(file_name).group('title') == modified_folder_name:
-            return True
+        file_pattern_match = self.extra_file_format_regex_pattern.match(file_name)
+        if file_pattern_match is not None:
+            if file_pattern_match.group('title') == modified_folder_name:
+                return True
+            else:
+                return False
         else:
             return False
 

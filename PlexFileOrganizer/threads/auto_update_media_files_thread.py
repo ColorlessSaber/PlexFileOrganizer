@@ -43,7 +43,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         try:
             self.signals.progress.emit(50, 'Scanning directory...')
 
-            # set up the generator that will return the media files in a given directory based on options selected by
+            # set up the generator that will return the media files in a given directory based on option(s) selected by
             # user
             if self.directory_and_options['scan_extra_folder']:
                 generator_find_media_files = find_media_files_in_dir(video_file_condition, default_folder_condition, self.directory_and_options['directory'])
@@ -55,9 +55,9 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                 all_files_are_formatted_correctly = folder_and_file_pattern.check_files_in_list(file_list)
                 if not all_files_are_formatted_correctly:
                     print("generate correct file formats") # debug
-                    #files_to_be_updated, message_number_of_files_affected = generate_correct_video_file_format(file_list)
+                    files_to_be_updated, message_number_of_files_affected = generate_correct_video_file_format(file_list)
                     #update_files_in_directory(files_to_be_updated)
-                    #self.signals.progress.emit(50, message_number_of_files_affected)
+                    self.signals.progress.emit(50, message_number_of_files_affected)
             # print('finished the check') # for debugging
             self.signals.progress.emit(100, 'Finished scanning.')
             self.signals.finished.emit('auto_update')
