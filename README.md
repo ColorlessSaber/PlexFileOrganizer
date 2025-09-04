@@ -70,6 +70,7 @@ _Version 1 Features_
 - [ ] Allow the user to manually rename media files--new or existing--in an existing folder.
 
 _Version 2 Features_
+- [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
 - [ ] Built in media player to allow user to watch to see which episode the media file is.
 
 _Version 3 Features_
