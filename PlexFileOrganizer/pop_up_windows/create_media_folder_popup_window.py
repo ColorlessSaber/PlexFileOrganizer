@@ -2,7 +2,6 @@
 Pop-up window to allow user to create a media folder for a movie or TV show
 """
 from PySide6 import QtWidgets as qtw
-from PySide6 import QtGui as qtg
 from PySide6 import QtCore as qtc
 
 class CreateMediaFolder(qtw.QDialog):
@@ -25,56 +24,56 @@ class CreateMediaFolder(qtw.QDialog):
 
         # widgets
         select_directory_layout = qtw.QGridLayout()
-        self.select_directory_btn = qtw.QPushButton('Select Directory', self)
-        self.select_directory_btn.clicked.connect(self.select_directory_popup)
+        self.btn_select_directory = qtw.QPushButton('Select Directory', self)
+        self.btn_select_directory.clicked.connect(self.select_directory_popup)
         self.select_directory_label = qtw.QLabel('', self)
-        select_directory_layout.addWidget(self.select_directory_btn, 0, 0)
+        select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
         select_directory_layout.addWidget(self.select_directory_label, 0, 1, 0, 2)
 
         self.media_type_group = qtw.QGroupBox('Media Type')
-        self.media_type_movie_select = qtw.QRadioButton('Movie', self)
-        self.media_type_movie_select.toggled.connect(self.enable_or_disable_season_number_line_edit)
-        self.media_type_movie_select.toggled.connect(self.enable_or_disable_accept_btn)
-        self.media_type_tv_select = qtw.QRadioButton('TV Show', self)
-        self.media_type_tv_select.toggled.connect(self.enable_or_disable_season_number_line_edit)
-        self.media_type_tv_select.toggled.connect(self.enable_or_disable_accept_btn)
+        self.rb_media_type_movie_select = qtw.QRadioButton('Movie', self)
+        self.rb_media_type_movie_select.setChecked(True)
+        self.rb_media_type_movie_select.toggled.connect(self.enable_or_disable_season_number_line_edit)
+        self.rb_media_type_movie_select.toggled.connect(self.enable_or_disable_accept_btn)
+        self.rb_media_type_tv_select = qtw.QRadioButton('TV Show', self)
+        self.rb_media_type_tv_select.toggled.connect(self.enable_or_disable_season_number_line_edit)
+        self.rb_media_type_tv_select.toggled.connect(self.enable_or_disable_accept_btn)
         self.media_type_group.setLayout(qtw.QHBoxLayout())
-        self.media_type_group.layout().addWidget(self.media_type_movie_select)
-        self.media_type_group.layout().addWidget(self.media_type_tv_select)
+        self.media_type_group.layout().addWidget(self.rb_media_type_movie_select)
+        self.media_type_group.layout().addWidget(self.rb_media_type_tv_select)
 
         media_inform_form = qtw.QFormLayout()
-        self.media_title = qtw.QLineEdit(self)
-        self.media_title.textChanged.connect(self.enable_or_disable_accept_btn)
-        self.number_of_seasons = qtw.QLineEdit(self) # TODO make this an increment versus LineEdit, 1 to 100
-        self.number_of_seasons.setValidator(qtg.QIntValidator(0, 100))
+        self.le_media_title = qtw.QLineEdit(self)
+        self.le_media_title.textChanged.connect(self.enable_or_disable_accept_btn)
+        self.number_of_seasons = qtw.QSpinBox(self, value=1, maximum=100, minimum=1)
         self.number_of_seasons.setEnabled(False)
-        media_inform_form.addRow('Title:', self.media_title)
+        media_inform_form.addRow('Title:', self.le_media_title)
         media_inform_form.addRow('Number of Seasons:', self.number_of_seasons)
 
-        self.trailers_cb = qtw.QCheckBox('Trailers', self)
-        self.behind_the_scenes_cb = qtw.QCheckBox('Behind The Scenes', self)
-        self.deleted_scenes_cb = qtw.QCheckBox('Deleted Scenes', self)
-        self.featurettes_cb = qtw.QCheckBox('Featurettes', self)
-        self.interviews_cb = qtw.QCheckBox('Interviews', self)
-        self.scenes_cb = qtw.QCheckBox('Scenes', self)
-        self.shorts_cb = qtw.QCheckBox('shorts', self)
-        self.other_cb = qtw.QCheckBox('Other', self)
+        self.cb_trailers = qtw.QCheckBox('Trailers', self)
+        self.cb_behind_the_scenes = qtw.QCheckBox('Behind The Scenes', self)
+        self.cb_deleted_scenes = qtw.QCheckBox('Deleted Scenes', self)
+        self.cb_featurettes = qtw.QCheckBox('Featurettes', self)
+        self.cb_interviews = qtw.QCheckBox('Interviews', self)
+        self.cb_scenes = qtw.QCheckBox('Scenes', self)
+        self.cb_shorts = qtw.QCheckBox('shorts', self)
+        self.cb_other = qtw.QCheckBox('Other', self)
         extra_folder_layout = qtw.QGridLayout()
-        extra_folder_layout.addWidget(self.trailers_cb, 0, 0)
-        extra_folder_layout.addWidget(self.behind_the_scenes_cb, 0, 1)
-        extra_folder_layout.addWidget(self.deleted_scenes_cb, 0, 2)
-        extra_folder_layout.addWidget(self.featurettes_cb, 0, 3)
-        extra_folder_layout.addWidget(self.interviews_cb, 1, 0)
-        extra_folder_layout.addWidget(self.scenes_cb, 1, 1)
-        extra_folder_layout.addWidget(self.shorts_cb, 1, 2)
-        extra_folder_layout.addWidget(self.other_cb, 1, 3)
+        extra_folder_layout.addWidget(self.cb_trailers, 0, 0)
+        extra_folder_layout.addWidget(self.cb_behind_the_scenes, 0, 1)
+        extra_folder_layout.addWidget(self.cb_deleted_scenes, 0, 2)
+        extra_folder_layout.addWidget(self.cb_featurettes, 0, 3)
+        extra_folder_layout.addWidget(self.cb_interviews, 1, 0)
+        extra_folder_layout.addWidget(self.cb_scenes, 1, 1)
+        extra_folder_layout.addWidget(self.cb_shorts, 1, 2)
+        extra_folder_layout.addWidget(self.cb_other, 1, 3)
 
-        self.accept_btn = qtw.QPushButton('Accept', self)
-        self.accept_btn.setEnabled(False)
-        self.accept_btn.clicked.connect(self.accept)
+        self.btn_accept = qtw.QPushButton('Accept', self)
+        self.btn_accept.setEnabled(False)
+        self.btn_accept.clicked.connect(self.accept)
 
-        self.cancel_btn = qtw.QPushButton('Cancel', self)
-        self.cancel_btn.clicked.connect(self.reject)
+        self.btn_cancel = qtw.QPushButton('Cancel', self)
+        self.btn_cancel.clicked.connect(self.reject)
 
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
@@ -82,24 +81,23 @@ class CreateMediaFolder(qtw.QDialog):
         main_layout.addWidget(self.media_type_group)
         main_layout.addLayout(media_inform_form)
         main_layout.addLayout(extra_folder_layout)
-        main_layout.addWidget(self.accept_btn)
-        main_layout.addWidget(self.cancel_btn)
+        main_layout.addWidget(self.btn_accept)
+        main_layout.addWidget(self.btn_cancel)
         self.setLayout(main_layout)
 
     @qtc.Slot()
     def enable_or_disable_accept_btn(self):
-        # TODO make sure user cannot click accept if tv show is selected while season number entry is empty
-        if (self.media_type_tv_select.isChecked() or self.media_type_tv_select) and (len(self.media_title.text())>0) \
+        if (self.rb_media_type_tv_select.isChecked() or self.rb_media_type_tv_select) and (len(self.le_media_title.text()) > 0) \
                 and self.selected_directory:
-            self.accept_btn.setEnabled(True)
+            self.btn_accept.setEnabled(True)
         else:
-            self.accept_btn.setEnabled(False)
+            self.btn_accept.setEnabled(False)
 
     @qtc.Slot()
     def enable_or_disable_season_number_line_edit(self):
-        if self.media_type_movie_select.isChecked():
+        if self.rb_media_type_movie_select.isChecked():
             self.number_of_seasons.setEnabled(False)
-        elif self.media_type_tv_select.isChecked():
+        elif self.rb_media_type_tv_select.isChecked():
             self.number_of_seasons.setEnabled(True)
         else:
             pass
@@ -117,23 +115,52 @@ class CreateMediaFolder(qtw.QDialog):
             self.select_directory_label.setText(directory)
             self.enable_or_disable_accept_btn()
 
+    def _reset_user_values(self):
+        """
+        Clear all entries and selectable values and disable.
+        """
+        self.selected_directory = ''
+        self.select_directory_label.setText('')
+        self.le_media_title.setText('')
+        self.rb_media_type_movie_select.setChecked(True)
+        self.rb_media_type_tv_select.setChecked(False)
+        self.number_of_seasons.setEnabled(False)
+        self.number_of_seasons.setValue(1)
+        self.cb_trailers.setChecked(False)
+        self.cb_behind_the_scenes.setChecked(False)
+        self.cb_deleted_scenes.setChecked(False)
+        self.cb_featurettes.setChecked(False)
+        self.cb_interviews.setChecked(False)
+        self.cb_scenes.setChecked(False)
+        self.cb_shorts.setChecked(False)
+        self.cb_other.setChecked(False)
+
+    @qtc.Slot()
+    def reject(self):
+        """
+        Runs when user clicks the cancel button or the x-button.
+        """
+        self._reset_user_values()
+
+        super().reject()
+
     @qtc.Slot()
     def accept(self):
         """
         Runs when accept button is pressed
-        :return:
         """
         self.new_media_folder_info.directory = self.selected_directory
-        self.new_media_folder_info.media_title = self.media_title.text()
-        self.new_media_folder_info.movie_or_tv = 'movie' if self.media_type_movie_select.isChecked() else 'tv'
+        self.new_media_folder_info.media_title = self.le_media_title.text()
+        self.new_media_folder_info.movie_or_tv = 'movie' if self.rb_media_type_movie_select.isChecked() else 'tv'
         self.new_media_folder_info.number_of_seasons = int(self.number_of_seasons.text()) if self.number_of_seasons.text() else 0
-        self.new_media_folder_info.extra_folders['trailers'] = self.trailers_cb.isChecked()
-        self.new_media_folder_info.extra_folders['behind the scenes'] = self.behind_the_scenes_cb.isChecked()
-        self.new_media_folder_info.extra_folders['deleted scenes'] = self.deleted_scenes_cb.isChecked()
-        self.new_media_folder_info.extra_folders['featurettes'] = self.featurettes_cb.isChecked()
-        self.new_media_folder_info.extra_folders['interviews '] = self.interviews_cb.isChecked()
-        self.new_media_folder_info.extra_folders['scenes'] = self.scenes_cb.isChecked()
-        self.new_media_folder_info.extra_folders['shorts'] = self.shorts_cb.isChecked()
-        self.new_media_folder_info.extra_folders['other'] = self.other_cb.isChecked()
-        # TODO clear user entered values
+        self.new_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked()
+        self.new_media_folder_info.extra_folders['behind the scenes'] = self.cb_behind_the_scenes.isChecked()
+        self.new_media_folder_info.extra_folders['deleted scenes'] = self.cb_deleted_scenes.isChecked()
+        self.new_media_folder_info.extra_folders['featurettes'] = self.cb_featurettes.isChecked()
+        self.new_media_folder_info.extra_folders['interviews '] = self.cb_interviews.isChecked()
+        self.new_media_folder_info.extra_folders['scenes'] = self.cb_scenes.isChecked()
+        self.new_media_folder_info.extra_folders['shorts'] = self.cb_shorts.isChecked()
+        self.new_media_folder_info.extra_folders['other'] = self.cb_other.isChecked()
+
+        self._reset_user_values()
         super().accept()
