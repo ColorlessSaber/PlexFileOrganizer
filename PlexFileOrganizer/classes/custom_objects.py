@@ -1,7 +1,6 @@
 """
 File to hold custom objects--objects that are user control able
 """
-import os
 import pathlib
 from collections import UserDict, UserString
 
@@ -47,26 +46,26 @@ class MediaFile(UserString):
         :param with_extension: Keeps or strips extension from file name. Default True to keep extension
         :return: A string. The file name with no extension
         """
+        file_path = pathlib.Path(self.data)
         if with_extension:
-            return os.path.basename(self.data)
-        else:
-            file_path = pathlib.Path(self.data)
             return file_path.name
+        else:
+            return file_path.name.replace(file_path.suffix, "")
 
     def file_extension(self):
         """
         Strips the path and file name, leaving only the extension.
         :return: A string. file's extension
         """
-        _, extension = os.path.splitext(self.data)
-        return extension
+        return pathlib.Path(self.data).suffix
 
     def directory_path(self):
         """
         Strips the file name, leaving only the directory path the file is in.
         :return: A string. The directory path file is located
         """
-        return os.path.dirname(os.path.abspath(self.data))
+        # str() is needed to convert PosixPath to string
+        return str(pathlib.Path(self.data).parent)
 
     def folder_file_is_in(self):
         """
