@@ -1,0 +1,25 @@
+"""
+Contains functions to test if a folder or a set of folders meets the conditions.
+"""
+from ..classes import FolderAndFilePatterns
+
+def default_folder_condition(_):
+    """
+    Allow any folder to be scanned.
+
+    :param _: Accepts a variable but does not use it.
+    """
+    return True
+
+def skip_extra_folders(folder_name):
+    """
+    Skip extra folders from being scanned.
+
+    :param folder_name: The name of the folder to be checked.
+    """
+    folder_and_file_patterns = FolderAndFilePatterns()
+
+    if folder_and_file_patterns.extra_folder_check(folder_name):
+        return False # False for we want to skip the extra folder
+    else:
+        return True # True for we want to scan the folder

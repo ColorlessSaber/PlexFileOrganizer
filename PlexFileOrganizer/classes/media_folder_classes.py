@@ -1,9 +1,9 @@
 import os
 from dataclasses import dataclass, field
-from PlexFileOrganizer.functions import ExtraFolders
+from . import ExtraFolders
 
 @dataclass
-class MediaFolder:
+class MediaFolderData:
     """
     A dataclass to hold the information and folder(s) to make for the Media Folder.
     """
@@ -12,6 +12,29 @@ class MediaFolder:
     movie_or_tv: str = field(default=None)
     number_of_seasons: int = field(default=None)
     extra_folders: dict = field(default_factory=ExtraFolders)
+
+class ModifiedMediaFolder(MediaFolderData):
+    """
+    Holds methods to generate more folders for or remove folders from an existing media folder
+
+    Inheritance MediaFolderData.
+    """
+
+    def generate_new_season_folders(self):
+        """
+        Generates one or more new season folders.
+
+        :return:
+        """
+        pass
+
+
+class GenerateMediaFolder(MediaFolderData):
+    """
+    Holds methods to generate a media folder based on user's selections.
+
+    Inheritance MediaFolderData.
+    """
 
     def check_if_media_folder_exists(self):
         """
@@ -36,7 +59,7 @@ class MediaFolder:
         Creates the number of season folder(s)
         :return:
         """
-        for season_num in range(1, self.number_of_seasons+1):
+        for season_num in range(1, self.number_of_seasons+1): # plus one is added to generate the correct number of season folder(s).
             os.mkdir('{}/{}/Season {}'.format(self.directory, self.media_title, season_num))
 
     def generate_extra_folders(self):
