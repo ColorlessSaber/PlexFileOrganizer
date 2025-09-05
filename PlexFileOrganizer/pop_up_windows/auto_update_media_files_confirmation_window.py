@@ -27,10 +27,16 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
             """
             Please read the following before proceeding to select a directory to Auto-Update Media Files in a selected
             directory and the available options.
-            The program will make the following assumptions.
-            1. The files in the TV season folder are in the correct chronological order by episode—from top to bottom.
-            2. All files are single episodes; there isn’t a file that represents two or more episodes.
-            3. When selecting ‘Update media files in Extra Folder(s)’ the program will override any custom naming you
+            The program will make the following assumptions:
+            
+            1. The folder structure follows Plex's recommended structure. And the name of the folders follow what Plex
+            recommends them to be.
+            \t1.1 Every media file has their own media folder; ie, all movie files aren't thrown into the same folder,
+            they are in separate folders.
+            2. The files in the TV season folder are in the correct chronological order by episode—from top to bottom.
+            3. All files are single episodes; there isn’t a file that represents two or more episodes.
+            4. There aren't single episode file or a movie file are split cross two or more media files.
+            5. When selecting ‘Update media files in Extra Folder(s)’ the program will override any custom naming you
             gave to a file in a Extra Folder to the default naming convention for the folder they are in.
             EX: files in a Trailers folder will get ‘Trailer #.'
             
