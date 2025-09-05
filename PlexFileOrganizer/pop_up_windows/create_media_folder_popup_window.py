@@ -141,7 +141,6 @@ class CreateMediaFolder(qtw.QDialog):
         Runs when user clicks the cancel button or the x-button.
         """
         self._reset_user_values()
-
         super().reject()
 
     @qtc.Slot()
