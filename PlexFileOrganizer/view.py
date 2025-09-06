@@ -87,16 +87,8 @@ class View(qtw.QWidget):
 
         :return:
         """
-        response = qtw.QMessageBox.information(
-            self,
-            'Feature coming in V1.0.0!',
-            'The feature to modified existing media folder will be coming in version 1.0.0.'
-        )
-        if response == qtw.QMessageBox.Ok:
-            self.log_window.insertPlainText('\nFeature "Modified Existing Media Folder" coming soon')
-
-        #self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
-        #self.modified_media_folder_window.exec()
+        self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
+        self.modified_media_folder_window.exec()
 
     @qtc.Slot()
     def launch_auto_update_media_files_conformation_window(self):
