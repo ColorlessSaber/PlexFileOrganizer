@@ -2,7 +2,7 @@
 Thread for Auto Update Media Files
 """
 from PySide6 import QtCore as qtc
-from ..classes import FolderAndFilePatterns
+from ..classes import FolderAndFilePatterns, DefaultThreadSignals
 from ..functions import (
     update_files_in_directory,
     generate_correct_video_file_format,
@@ -12,13 +12,11 @@ from ..functions import (
     default_folder_condition
 )
 
-class ThreadSignals(qtc.QObject):
+class ThreadSignals(DefaultThreadSignals):
     """
     The signals for the thread
     """
-    error = qtc.Signal(object)
-    finished = qtc.Signal(str)
-    progress = qtc.Signal(int, str)
+    finished = qtc.Signal(str) # overwritten to emit a string
 
 class AutoUpdateMediaFilesThread(qtc.QRunnable):
 

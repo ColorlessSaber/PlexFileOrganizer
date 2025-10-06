@@ -3,15 +3,13 @@ Thread for creating the media folders in the selected directory
 """
 from PySide6 import QtCore as qtc
 from ..functions import video_file_condition
-from ..classes import correct_media_file_format
+from ..classes import correct_media_file_format, DefaultThreadSignals
 import os
 
-class ThreadSignals(qtc.QObject):
+class ThreadSignals(DefaultThreadSignals):
     """
     The signals for thread
     """
-    error = qtc.Signal(str)
-    progress = qtc.Signal(int, str)
     scan_failed = qtc.Signal()
     scan_completed = qtc.Signal(object)
 

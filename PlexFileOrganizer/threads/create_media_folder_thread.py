@@ -2,13 +2,12 @@
 Thread for creating the media folders in the selected directory
 """
 from PySide6 import QtCore as qtc
+from ..classes import DefaultThreadSignals
 
-class ThreadSignals(qtc.QObject):
+class ThreadSignals(DefaultThreadSignals):
     """
     The signals for thread
     """
-    error = qtc.Signal(str)
-    progress = qtc.Signal(int, str)
     request_user_input_signal = qtc.Signal()
 
 class CreateMediaFolderThread(qtc.QRunnable):
