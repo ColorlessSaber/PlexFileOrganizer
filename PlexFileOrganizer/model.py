@@ -1,3 +1,5 @@
+import copy
+
 from PySide6 import QtCore as qtc
 from .threads import (
     CreateMediaFolderThread,

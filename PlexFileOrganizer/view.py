@@ -27,6 +27,7 @@ class View(qtw.QWidget):
 
         # pop-up windows
         # Prepped and signals connected to their respective slots.
+        # TODO make these be created inside the function versus outside to avoid dealing with clearing window
         self.create_media_folder_window = CreateMediaFolder(self.generate_media_folder_data_class, self)
         self.create_media_folder_window.accepted.connect(self.initiate_create_media_folder_thread)
 

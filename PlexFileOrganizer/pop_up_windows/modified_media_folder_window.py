@@ -91,5 +91,6 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         )
 
         if media_folder_dir: # confirm the user selected a directory
+            #TODO reset the existing_media_folder_info to avoid carrying old data
             self.existing_media_folder_info.directory = media_folder_dir
             self.signal_initiate_scan_of_media_folder.emit(self.existing_media_folder_info)
