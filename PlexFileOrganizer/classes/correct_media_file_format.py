@@ -42,7 +42,7 @@ class FolderAndFilePatterns:
     ^(trailers)|(behind\sthe\sscenes)|(deleted\sscenes)|(featurettes)|(interviews)|(scenes)|(shorts)|(other)$
     """, re.VERBOSE | re.IGNORECASE)
 
-    def tv_show_episode_pattern_check(self, file_name):
+    def tv_show_episode_pattern_check(self, file_name: str) -> bool:
         """
         Checks to see if the given video file matches the correct tv show episode file format.
         
@@ -54,7 +54,7 @@ class FolderAndFilePatterns:
         else:
             return False
 
-    def movie_media_file_check(self, file_name, folder_name):
+    def movie_media_file_check(self, file_name: str, folder_name: str) -> bool:
         """
         Checks to see if the given video file matches the correct movie file format.
         
@@ -67,7 +67,7 @@ class FolderAndFilePatterns:
         else:
             return False
 
-    def extra_media_file_check(self, file_name, folder_name):
+    def extra_media_file_check(self, file_name: str, folder_name: str) -> bool:
         """
         Checks to see if the given video file matches the correct extra file format.
 
@@ -89,7 +89,7 @@ class FolderAndFilePatterns:
         else:
             return False
 
-    def tv_show_season_folder_check(self, folder_name):
+    def tv_show_season_folder_check(self, folder_name: str) -> bool:
         """
         Checks to see if the given folder matches the correct TV show season folder format.
 
@@ -101,7 +101,7 @@ class FolderAndFilePatterns:
         else:
             return False
 
-    def extra_folder_check(self, folder_name):
+    def extra_folder_check(self, folder_name: str) -> bool:
         """
         Checks to see if the given folder matches the correct extra folder format.
 
@@ -113,7 +113,7 @@ class FolderAndFilePatterns:
         else:
             return False
 
-    def check_files_in_list(self, list_of_files):
+    def check_files_in_list(self, list_of_files: str) -> bool:
         """
         Checks if the media files in the given list are all formated correctly for the media folder they are in
 
