@@ -9,21 +9,17 @@ from PySide6 import (
 class ModifiedMediaFolderWindow(qtw.QDialog):
     signal_initiate_scan_of_media_folder = qtc.Signal(object)
 
-    def __init__(self, existing_media_folder_info, parent=None):
+    def __init__(self, parent=None):
         """
         Dialog window to allow user to select an existing Media Folder and then after the scan of the folder, select
         what new folders to add to it--Extra folders and or another TV show season folder--or remove folders from the
         Media Folder.
 
-        :param existing_media_folder_info: A class that will hold the information for the existing Media Folder
         :param parent: The parent window the dialog window will be linked to.
         """
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
         self.setWindowTitle('Modified Existing Media Folder')
-
-        # variables
-        self.existing_media_folder_info = existing_media_folder_info
 
         # widgets
         select_directory_layout = qtw.QGridLayout()
@@ -83,6 +79,11 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         main_layout.addWidget(self.btn_cancel)
         self.setLayout(main_layout)
 
+    @qtc.Slot(object)
+    def load_existing_media_folder_info(self, media_file_information):
+        print("Loading Existing Media Folder")
+        print(media_file_information)
+
     def select_media_folder(self):
         media_folder_dir = qtw.QFileDialog.getExistingDirectory(
             self,
@@ -91,6 +92,4 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         )
 
         if media_folder_dir: # confirm the user selected a directory
-            #TODO reset the existing_media_folder_info to avoid carrying old data
-            self.existing_media_folder_info.directory = media_folder_dir
-            self.signal_initiate_scan_of_media_folder.emit(self.existing_media_folder_info)
+            self.signal_initiate_scan_of_media_folder.emit(media_folder_dir)

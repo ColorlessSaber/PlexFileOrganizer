@@ -11,3 +11,4 @@ from .folder_condition_functions import (
     skip_extra_folders
 )
 from .find_media_files_in_dir import find_media_files_in_dir
+from .scan_media_folder import scan_media_folder

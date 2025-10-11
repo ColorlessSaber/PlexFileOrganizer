@@ -1,4 +1,4 @@
-from .classes import GenerateMediaFolder, ModifiedMediaFolder
+from .classes import GenerateMediaFolder
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc
@@ -15,7 +15,7 @@ class View(qtw.QWidget):
 
     signal_initiate_creating_media_folder = qtc.Signal(object)
     signal_initiate_auto_update_media_files = qtc.Signal(object)
-    signal_initiate_scan_of_media_folder = qtc.Signal(object)
+    signal_initiate_scan_of_media_folder = qtc.Signal(str)
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_reset_progress_bar = qtc.Signal()
 
@@ -27,7 +27,6 @@ class View(qtw.QWidget):
 
         # Variables
         self.generate_media_folder_data_class = GenerateMediaFolder()
-        self.modified_media_folder_class = ModifiedMediaFolder()
         self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False} # contains information for the AutoUpdateMediaFilesThread
 
         # widgets
@@ -84,8 +83,9 @@ class View(qtw.QWidget):
 
         :return:
         """
-        modified_media_folder_window = ModifiedMediaFolderWindow(self.modified_media_folder_class, self)
-        modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.signal_initiate_scan_of_media_folder)
+        modified_media_folder_window = ModifiedMediaFolderWindow(self)
+        modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.initiate_scan_of_media_folder_thread)
+        self.data_pass_through_media_folder_scan_result.emit(modified_media_folder_window.load_existing_media_folder_info)
         self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
         modified_media_folder_window.exec()
 
@@ -135,6 +135,16 @@ class View(qtw.QWidget):
         :return:
         """
         self.signal_initiate_auto_update_media_files.emit(self.auto_update_media_files_options)
+
+    @qtc.Slot(str)
+    def initiate_scan_of_media_folder_thread(self, media_folder_directory):
+        """
+        The view-side to initiate the process to scan the media folder.
+
+        :param media_folder_directory: the folder location of the media folder to scan.
+        :return:
+        """
+        self.signal_initiate_scan_of_media_folder.emit(media_folder_directory)
 
 # *** Methods that launches messageboxes ***
     @qtc.Slot()
