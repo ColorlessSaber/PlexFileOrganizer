@@ -17,8 +17,9 @@ class Model(qtc.QObject):
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_error_message = qtc.Signal(object)
     signal_update_progress = qtc.Signal(int, str)
-    signal_finished = qtc.Signal(str)
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
+    signal_auto_update_finished = qtc.Signal()
+    signal_create_media_folder_finished = qtc.Signal()
 
 # *** The creation and start of thread methods ***
     @qtc.Slot(object)
@@ -32,6 +33,7 @@ class Model(qtc.QObject):
         create_media_folder_thread = CreateMediaFolderThread(media_folder_selection)
         create_media_folder_thread.signals.request_user_input_signal.connect(self.signal_inform_user_of_existing_media_folder)
         create_media_folder_thread.signals.progress.connect(self.slot_thread_update_progress_status)
+        create_media_folder_thread.signals.finished.connect(self.signal_create_media_folder_finished)
         self.signal_user_confirmation_of_existing_media_folder.connect(create_media_folder_thread.user_confirmation) # signal from model to thread
         self.thread_pool.start(create_media_folder_thread)
 
@@ -47,7 +49,7 @@ class Model(qtc.QObject):
         auto_update_media_files_threads = AutoUpdateMediaFilesThread(user_selected_options)
         auto_update_media_files_threads.signals.progress.connect(self.slot_thread_update_progress_status)
         auto_update_media_files_threads.signals.error.connect(self.slot_thread_error_message)
-        auto_update_media_files_threads.signals.finished.connect(self.slot_thread_finished)
+        auto_update_media_files_threads.signals.finished.connect(self.signal_auto_update_finished)
         self.thread_pool.start(auto_update_media_files_threads)
 
     @qtc.Slot(object)
@@ -75,17 +77,6 @@ class Model(qtc.QObject):
         :return:
         """
         self.signal_update_progress.emit(progress_bar_percentage, message)
-
-    @qtc.Slot(str)
-    def slot_thread_finished(self, completed_task):
-        """
-        The slot on the model side for all threads' signals.finished to connect to for commanding the view
-        what messagebox to display to inform user the task is completed
-
-        :param completed_task: The task that was completed, string form
-        :return:
-        """
-        self.signal_finished.emit(completed_task)
 
     @qtc.Slot(object)
     def slot_thread_error_message(self, error_message):

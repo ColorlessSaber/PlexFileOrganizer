@@ -12,13 +12,11 @@ from ..functions import (
     default_folder_condition
 )
 
-class ThreadSignals(DefaultThreadSignals):
-    """
-    The signals for the thread
-    """
-    finished = qtc.Signal(str) # overwritten to emit a string
-
 class AutoUpdateMediaFilesThread(qtc.QRunnable):
+    class ThreadSignals(DefaultThreadSignals):
+        """
+        The signals for the thread
+        """
 
     def __init__(self, directory_and_options):
         """
@@ -27,7 +25,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         """
         super().__init__()
         self.directory_and_options = directory_and_options
-        self.signals = ThreadSignals()
+        self.signals = self.ThreadSignals()
 
     @qtc.Slot()
     def run(self):
@@ -61,7 +59,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                 self.signals.progress.emit(50, '-- No files found that needed to be updated')
             # print('finished the check') # for debugging
             self.signals.progress.emit(100, 'Finished scanning.')
-            self.signals.finished.emit('auto_update')
+            self.signals.finished.emit()
 
         except OSError as e:
             self.signals.error.emit(e)

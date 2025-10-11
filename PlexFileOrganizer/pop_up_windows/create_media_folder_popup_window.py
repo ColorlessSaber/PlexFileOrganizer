@@ -115,34 +115,6 @@ class CreateMediaFolder(qtw.QDialog):
             self.select_directory_label.setText(directory)
             self.enable_or_disable_accept_btn()
 
-    def _reset_user_values(self):
-        """
-        Clear all entries and selectable values and disable.
-        """
-        self.selected_directory = ''
-        self.select_directory_label.setText('')
-        self.le_media_title.setText('')
-        self.rb_media_type_movie_select.setChecked(True)
-        self.rb_media_type_tv_select.setChecked(False)
-        self.number_of_seasons.setEnabled(False)
-        self.number_of_seasons.setValue(1)
-        self.cb_trailers.setChecked(False)
-        self.cb_behind_the_scenes.setChecked(False)
-        self.cb_deleted_scenes.setChecked(False)
-        self.cb_featurettes.setChecked(False)
-        self.cb_interviews.setChecked(False)
-        self.cb_scenes.setChecked(False)
-        self.cb_shorts.setChecked(False)
-        self.cb_other.setChecked(False)
-
-    @qtc.Slot()
-    def reject(self):
-        """
-        Runs when user clicks the cancel button or the x-button.
-        """
-        self._reset_user_values()
-        super().reject()
-
     @qtc.Slot()
     def accept(self):
         """
@@ -161,5 +133,4 @@ class CreateMediaFolder(qtw.QDialog):
         self.new_media_folder_info.extra_folders['shorts'] = self.cb_shorts.isChecked()
         self.new_media_folder_info.extra_folders['other'] = self.cb_other.isChecked()
 
-        self._reset_user_values()
         super().accept()

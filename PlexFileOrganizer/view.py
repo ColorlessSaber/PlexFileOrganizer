@@ -12,10 +12,15 @@ from .pop_up_windows import (
 
 class View(qtw.QWidget):
     """The front-end of the program"""
+
     signal_initiate_creating_media_folder = qtc.Signal(object)
     signal_initiate_auto_update_media_files = qtc.Signal(object)
+    signal_initiate_scan_of_media_folder = qtc.Signal(object)
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_reset_progress_bar = qtc.Signal()
+
+    # Data pass-through to pop-up windows
+    data_pass_through_media_folder_scan_result = qtc.Signal(object)
 
     def __init__(self):
         super().__init__()
@@ -24,17 +29,6 @@ class View(qtw.QWidget):
         self.generate_media_folder_data_class = GenerateMediaFolder()
         self.modified_media_folder_class = ModifiedMediaFolder()
         self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False} # contains information for the AutoUpdateMediaFilesThread
-
-        # pop-up windows
-        # Prepped and signals connected to their respective slots.
-        # TODO make these be created inside the function versus outside to avoid dealing with clearing window
-        self.create_media_folder_window = CreateMediaFolder(self.generate_media_folder_data_class, self)
-        self.create_media_folder_window.accepted.connect(self.initiate_create_media_folder_thread)
-
-        self.modified_media_folder_window = ModifiedMediaFolderWindow(self.modified_media_folder_class, self)
-
-        self.auto_update_media_files_conformation_window = AutoUpdateMediaFilesWindow(self.auto_update_media_files_options, self)
-        self.auto_update_media_files_conformation_window.accepted.connect(self.initiate_auto_update_media_files_thread)
 
         # widgets
         self.btn_create_media_folder = qtw.QPushButton('Create Media Folder', self)
@@ -78,8 +72,10 @@ class View(qtw.QWidget):
 
         :return:
         """
+        create_media_folder_window = CreateMediaFolder(self.generate_media_folder_data_class, self)
+        create_media_folder_window.accepted.connect(self.initiate_create_media_folder_thread)
         self.log_window.insertPlainText('\nOpening Create Media Folder window')
-        self.create_media_folder_window.exec()
+        create_media_folder_window.exec()
 
     @qtc.Slot()
     def launch_modified_media_folder_window(self):
@@ -88,8 +84,10 @@ class View(qtw.QWidget):
 
         :return:
         """
+        modified_media_folder_window = ModifiedMediaFolderWindow(self.modified_media_folder_class, self)
+        modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.signal_initiate_scan_of_media_folder)
         self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
-        self.modified_media_folder_window.exec()
+        modified_media_folder_window.exec()
 
     @qtc.Slot()
     def launch_auto_update_media_files_conformation_window(self):
@@ -98,8 +96,10 @@ class View(qtw.QWidget):
 
         :return:
         """
+        auto_update_media_files_conformation_window = AutoUpdateMediaFilesWindow(self.auto_update_media_files_options, self)
+        auto_update_media_files_conformation_window.accepted.connect(self.initiate_auto_update_media_files_thread)
         self.log_window.insertPlainText('\nOpening "Auto-Update Media Files Conformation" window')
-        self.auto_update_media_files_conformation_window.exec()
+        auto_update_media_files_conformation_window.exec()
 
     @qtc.Slot()
     def launch_manual_update_media_files_window(self):
@@ -160,6 +160,21 @@ class View(qtw.QWidget):
             self,
             'Auto Update Media Files Complete!',
             'Finished scanning the selected directory. Please see console window for information on if any files were updated during the scan.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+
+    @qtc.Slot()
+    def messagebox_create_media_folder_complete(self):
+        """
+        Launches the messagebox to inform user the create media folder is complete,
+        and reset the progress bar once user closes the window.
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Create Media Folder Complete!',
+            'Finished creating the media folder in the directory.'
         )
 
         if response == qtw.QMessageBox.Ok:

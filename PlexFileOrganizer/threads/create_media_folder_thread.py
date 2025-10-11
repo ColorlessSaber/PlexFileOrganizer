@@ -4,20 +4,19 @@ Thread for creating the media folders in the selected directory
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 
-class ThreadSignals(DefaultThreadSignals):
-    """
-    The signals for thread
-    """
-    request_user_input_signal = qtc.Signal()
-
 class CreateMediaFolderThread(qtc.QRunnable):
+    class ThreadSignals(DefaultThreadSignals):
+        """
+        The signals for thread
+        """
+        request_user_input_signal = qtc.Signal()
 
     def __init__(self, media_folder_information):
         super().__init__()
         self.media_folder_information = media_folder_information
         self.wait_condition = qtc.QWaitCondition()
         self.mutex = qtc.QMutex()
-        self.signals = ThreadSignals()
+        self.signals = self.ThreadSignals()
         self.user_confirmed_directory_exists = False
 
     @qtc.Slot()
@@ -51,6 +50,7 @@ class CreateMediaFolderThread(qtc.QRunnable):
                 if an_extra_folder_was_created:
                     self.signals.progress.emit(80, '...Extra folder(s) created.')
 
+                self.signals.finished.emit()
                 self.signals.progress.emit(100, 'Finished making Media Folder!')
 
         except OSError as e:
