@@ -1,6 +1,8 @@
 import os
+from typing import Generator
 
-def directory_scanner(directory_path):
+
+def directory_scanner(directory_path: str) -> Generator[os.DirEntry, None, None]:
     """
     A generator that drills into a directory with multiple directories, subdirectories, etc.
     Yields any files it finds.
@@ -14,7 +16,3 @@ def directory_scanner(directory_path):
                 yield from directory_scanner(entry.path)
             elif not entry.name.startswith('.') and entry.is_file():
                 yield entry
-
-
-if __name__ == '__main__':
-    pass

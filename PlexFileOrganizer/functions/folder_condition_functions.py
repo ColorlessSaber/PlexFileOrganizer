@@ -3,7 +3,7 @@ Contains functions to test if a folder or a set of folders meets the conditions.
 """
 from ..classes import FolderAndFilePatterns
 
-def default_folder_condition(_):
+def default_folder_condition(_) -> bool:
     """
     Allow any folder to be scanned.
 
@@ -11,7 +11,7 @@ def default_folder_condition(_):
     """
     return True
 
-def skip_extra_folders(folder_name):
+def skip_extra_folders(folder_name: str) -> bool:
     """
     Skip extra folders from being scanned.
 

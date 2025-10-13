@@ -11,9 +11,6 @@ def scan_media_folder(media_folder_path: str) -> tuple[ModifiedMediaFolder, str]
     :param media_folder_path: the folder location of the media folder to scan.
     :return: A tuple of the media folder object and an error message, if any were found.
     """
-    #TODO Add in error catching
-    #TODO Add in detection of TV show
-    error = None # to hold the error message if found
     folder_and_file_patterns = correct_media_file_format.FolderAndFilePatterns()
     media_folder_information = ModifiedMediaFolder()
 
@@ -25,7 +22,7 @@ def scan_media_folder(media_folder_path: str) -> tuple[ModifiedMediaFolder, str]
                 media_folder_information.movie_or_tv = 'movie'
             elif entry.is_dir():
                 if folder_and_file_patterns.extra_folder_check(entry.name):
-                    media_folder_information.extra_folders[entry.name] = True
+                    media_folder_information.extra_folders[entry.name.lower()] = True
                 elif folder_and_file_patterns.tv_show_season_folder_check(entry.name):
                     media_folder_information.number_of_seasons += 1
                 else:
@@ -33,4 +30,10 @@ def scan_media_folder(media_folder_path: str) -> tuple[ModifiedMediaFolder, str]
             else:
                 pass
 
-    return media_folder_information, "hello"
+    if media_folder_information.movie_or_tv is None and media_folder_information.number_of_seasons > 0:
+        media_folder_information.movie_or_tv = 'tv'
+
+    if media_folder_information.movie_or_tv is None and media_folder_information.number_of_seasons == 0:
+        return media_folder_information, "not media folder"
+
+    return media_folder_information, "no error"
