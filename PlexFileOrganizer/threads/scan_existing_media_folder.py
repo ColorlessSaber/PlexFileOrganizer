@@ -25,7 +25,10 @@ class ScanExistingMediaFolder(qtc.QRunnable):
         """
         self.signals.progress.emit(25, "Scanning existing media folder...")
 
-        media_folder_information, error_message = scan_media_folder(self.media_folder_directory)
+        media_folder_information, folder_is_a_media_folder = scan_media_folder(self.media_folder_directory)
 
         self.signals.progress.emit(100, "Scan complete!")
-        self.signals.finished.emit(media_folder_information)
+        if folder_is_a_media_folder:
+            self.signals.finished.emit(media_folder_information)
+        else:
+            self.signals.not_media_folder.emit()

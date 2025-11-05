@@ -85,7 +85,7 @@ class View(qtw.QWidget):
         """
         modified_media_folder_window = ModifiedMediaFolderWindow(self)
         modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.initiate_scan_of_media_folder_thread)
-        self.data_pass_through_media_folder_scan_result.emit(modified_media_folder_window.load_existing_media_folder_info)
+        self.data_pass_through_media_folder_scan_result.connect(modified_media_folder_window.load_existing_media_folder_info)
         self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
         modified_media_folder_window.exec()
 
@@ -178,7 +178,7 @@ class View(qtw.QWidget):
     @qtc.Slot()
     def messagebox_create_media_folder_complete(self):
         """
-        Launches the messagebox to inform user the create media folder is complete,
+        Launches the messagebox to inform user the creation of the media folder is complete,
         and reset the progress bar once user closes the window.
         """
         response = qtw.QMessageBox.information(
@@ -187,6 +187,19 @@ class View(qtw.QWidget):
             'Finished creating the media folder in the directory.'
         )
 
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+
+    @qtc.Slot()
+    def messagebox_inform_user_of_folder_not_media_folder(self):
+        """
+        Launches the messagebox to inform user the folder is not media folder.
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Selected Folder is not Media Folder!',
+            'The folder you selected to analyze is not a Media Folder.'
+        )
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
 

@@ -7,7 +7,7 @@ from PySide6 import (
     QtCore as qtc)
 
 class ModifiedMediaFolderWindow(qtw.QDialog):
-    signal_initiate_scan_of_media_folder = qtc.Signal(object)
+    signal_initiate_scan_of_media_folder = qtc.Signal(str)
 
     def __init__(self, parent=None):
         """

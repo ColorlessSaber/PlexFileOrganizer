@@ -20,6 +20,7 @@ class Model(qtc.QObject):
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
     signal_auto_update_finished = qtc.Signal()
     signal_create_media_folder_finished = qtc.Signal()
+    signal_inform_user_folder_not_media_folder = qtc.Signal()
 
 # *** The creation and start of thread methods ***
     @qtc.Slot(object)
@@ -63,6 +64,8 @@ class Model(qtc.QObject):
         scan_existing_media_folder = ScanExistingMediaFolder(media_folder_directory)
         scan_existing_media_folder.signals.progress.connect(self.slot_thread_update_progress_status)
         scan_existing_media_folder.signals.error.connect(self.slot_thread_error_message)
+        scan_existing_media_folder.signals.finished.connect(self.signal_analysis_of_media_folder_complete)
+        scan_existing_media_folder.signals.not_media_folder.connect(self.signal_inform_user_folder_not_media_folder)
         self.thread_pool.start(scan_existing_media_folder)
 
 # *** Signals to inform or request input from user methods ***
