@@ -34,9 +34,9 @@ class TestScanMediaFolder(TestCase):
         """
         Validate scan_media_folder returns correct media folder object for tv media folder.
         """
-        media_folder_info, error_message = scan_media_folder("/foo/tv show")
+        media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/tv show")
 
-        assert error_message == "no error", "Failed to detect tv media folder"
+        assert folder_is_a_media_folder, "Failed to detect tv media folder"
         assert media_folder_info.movie_or_tv == "tv", "Failed to detect media folder is tv show"
         assert media_folder_info.extra_folders['trailers'] == True, "Failed to detect extra folder - trailers"
         assert media_folder_info.extra_folders['behind the scenes'] == True, "Failed to detect extra folder - behind the scenes"
@@ -51,9 +51,9 @@ class TestScanMediaFolder(TestCase):
         """
         Validate scan_media_folder returns correct media folder object for movie media folder.
         """
-        media_folder_info, error_message = scan_media_folder("/foo/movie")
+        media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/movie")
 
-        assert error_message == "no error", "Failed to detect movie media folder"
+        assert folder_is_a_media_folder, "Failed to detect movie media folder"
         assert media_folder_info.movie_or_tv == "movie", "Failed to detect media folder is tv show"
         assert media_folder_info.extra_folders['trailers'] == True, "Failed to detect extra folder - trailers"
         assert media_folder_info.extra_folders['behind the scenes'] == True, "Failed to detect extra folder - behind the scenes"
@@ -68,5 +68,5 @@ class TestScanMediaFolder(TestCase):
         """
         Validate scan_media_folder returns an error when folder isn't a media folder.
         """
-        media_folder_info, error_message = scan_media_folder("/foo/misc")
-        assert error_message == "not media folder", "Failed to detect folder is not a media folder"
+        media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/misc")
+        assert folder_is_a_media_folder == False, "Failed to detect folder is not a media folder"
