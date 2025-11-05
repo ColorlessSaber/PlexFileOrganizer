@@ -26,7 +26,7 @@ class View(qtw.QWidget):
         super().__init__()
 
         # Variables
-        self.generate_media_folder_data_class = GenerateMediaFolder()
+        self.generate_media_folder_data_class = GenerateMediaFolder() # TODO have the window create the class versus created here
         self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False} # contains information for the AutoUpdateMediaFilesThread
 
         # widgets
@@ -85,6 +85,7 @@ class View(qtw.QWidget):
         """
         modified_media_folder_window = ModifiedMediaFolderWindow(self)
         modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.initiate_scan_of_media_folder_thread)
+        modified_media_folder_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
         self.data_pass_through_media_folder_scan_result.connect(modified_media_folder_window.load_existing_media_folder_info)
         self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
         modified_media_folder_window.exec()

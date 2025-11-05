@@ -13,12 +13,14 @@ class MediaFolderData:
     number_of_seasons: int = field(default=0)
     extra_folders: dict = field(default_factory=ExtraFolders)
 
+@dataclass
 class ModifiedMediaFolder(MediaFolderData):
     """
     Holds methods to generate more folders for or remove folders from an existing media folder
 
     Inheritance MediaFolderData.
     """
+    number_of_new_seasons: int = field(default=0)
 
     def generate_new_season_folders(self):
         """

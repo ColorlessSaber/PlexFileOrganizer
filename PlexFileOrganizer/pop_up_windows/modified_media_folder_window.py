@@ -8,6 +8,7 @@ from PySide6 import (
 
 class ModifiedMediaFolderWindow(qtw.QDialog):
     signal_initiate_scan_of_media_folder = qtc.Signal(str)
+    signal_reset_progress_bar = qtc.Signal()
 
     def __init__(self, parent=None):
         """
@@ -29,20 +30,25 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
         select_directory_layout.addWidget(self.select_directory_label, 0, 1, 0, 2)
 
-        self.media_type_group = qtw.QGroupBox('Media Type')
-        self.media_type_movie_select = qtw.QRadioButton('Movie', self)
-        self.media_type_tv_select = qtw.QRadioButton('TV Show', self)
-        self.media_type_group.setLayout(qtw.QHBoxLayout())
-        self.media_type_group.layout().addWidget(self.media_type_movie_select)
-        self.media_type_group.layout().addWidget(self.media_type_tv_select)
-
         media_inform_form = qtw.QFormLayout()
-        self.media_title = qtw.QLineEdit(self)
-        self.number_of_seasons = qtw.QLineEdit(self)
-        self.number_of_seasons.setValidator(qtg.QIntValidator(0, 100))
-        self.number_of_seasons.setEnabled(False)
-        media_inform_form.addRow('Title:', self.media_title)
-        media_inform_form.addRow('Number of Seasons:', self.number_of_seasons)
+        self.media_title = qtw.QLabel('', self)
+        self.media_type = qtw.QLabel('', self)
+        media_inform_form.addRow('Media Title:', self.media_title)
+        media_inform_form.addRow('Media Type:', self.media_type)
+        media_inform_form.setFormAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+
+        self.season_inform_form = qtw.QFormLayout()
+        self.highest_season_number = qtw.QLabel('', self)
+        self.number_of_new_seasons = qtw.QSpinBox(
+            self,
+            value=0,
+            minimum=0,
+            maximum=100,
+            singleStep=1
+        )
+        self.season_inform_form.addRow('Highest Season Number found:', self.highest_season_number)
+        self.season_inform_form.addRow('How many more Season to add?', self.number_of_new_seasons)
+        self.season_inform_form.setFormAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
 
         self.cb_trailers = qtw.QCheckBox('Trailers', self)
         self.cb_behind_the_scenes = qtw.QCheckBox('Behind The Scenes', self)
@@ -72,19 +78,87 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
         main_layout.addLayout(select_directory_layout)
-        main_layout.addWidget(self.media_type_group)
         main_layout.addLayout(media_inform_form)
         main_layout.addLayout(extra_folder_layout)
+        main_layout.addLayout(self.season_inform_form)
         main_layout.addWidget(self.btn_accept)
         main_layout.addWidget(self.btn_cancel)
         self.setLayout(main_layout)
 
     @qtc.Slot(object)
-    def load_existing_media_folder_info(self, media_file_information):
-        print("Loading Existing Media Folder")
-        print(media_file_information)
+    def load_existing_media_folder_info(self, media_file_information) -> None:
+        """
+        Load in the existing media folder information and update the dialog window with this
+        information.
 
-    def select_media_folder(self):
+        :param media_file_information: The media folder information.
+        """
+        self.signal_reset_progress_bar.emit()
+        self.select_directory_label.setText(media_file_information.directory)
+        self.media_title.setText(media_file_information.media_title)
+        self.media_type.setText(media_file_information.movie_or_tv)
+
+        if media_file_information.movie_or_tv == 'tv':
+            self.season_inform_form.setRowVisible(0, True)
+            self.highest_season_number.setText(f'{media_file_information.number_of_seasons}')
+            self.season_inform_form.setRowVisible(1, True)
+            self.number_of_new_seasons.setValue(0)
+        else:
+            self.season_inform_form.setRowVisible(0, False)
+            self.highest_season_number.setText('')
+            self.season_inform_form.setRowVisible(1, False)
+            self.number_of_new_seasons.setValue(0)
+
+        if media_file_information.extra_folders['trailers']:
+            self.cb_trailers.setChecked(True)
+            self.cb_trailers.setEnabled(False)
+        else:
+            self.cb_trailers.setChecked(False)
+            self.cb_trailers.setEnabled(True)
+
+        if media_file_information.extra_folders['behind the scenes']:
+            self.cb_behind_the_scenes.setChecked(True)
+            self.cb_behind_the_scenes.setEnabled(False)
+        else:
+            self.cb_behind_the_scenes.setChecked(False)
+            self.cb_behind_the_scenes.setEnabled(True)
+
+        if media_file_information.extra_folders['deleted scenes']:
+            self.cb_deleted_scenes.setChecked(True)
+            self.cb_deleted_scenes.setEnabled(False)
+        else:
+            self.cb_deleted_scenes.setChecked(False)
+            self.cb_deleted_scenes.setEnabled(True)
+
+        if media_file_information.extra_folders['featurettes']:
+            self.cb_featurettes.setChecked(True)
+            self.cb_featurettes.setEnabled(False)
+        else:
+            self.cb_featurettes.setChecked(False)
+            self.cb_featurettes.setEnabled(True)
+
+        if media_file_information.extra_folders['interviews']:
+            self.cb_interviews.setChecked(True)
+            self.cb_interviews.setEnabled(False)
+        else:
+            self.cb_interviews.setChecked(False)
+            self.cb_interviews.setEnabled(True)
+
+        if media_file_information.extra_folders['shorts']:
+            self.cb_shorts.setChecked(True)
+            self.cb_shorts.setEnabled(False)
+        else:
+            self.cb_shorts.setChecked(False)
+            self.cb_shorts.setEnabled(True)
+
+        if media_file_information.extra_folders['other']:
+            self.cb_other.setChecked(True)
+            self.cb_other.setEnabled(False)
+        else:
+            self.cb_other.setChecked(False)
+            self.cb_other.setEnabled(True)
+
+    def select_media_folder(self) -> None:
         media_folder_dir = qtw.QFileDialog.getExistingDirectory(
             self,
             'Select Media Folder...',

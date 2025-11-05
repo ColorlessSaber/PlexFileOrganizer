@@ -1,9 +1,9 @@
 import os
 from ..functions import video_file_condition
-from ..classes import ModifiedMediaFolder, correct_media_file_format
+from ..classes import MediaFolderData, correct_media_file_format
 
 
-def scan_media_folder(media_folder_path: str) -> tuple[ModifiedMediaFolder, bool]:
+def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
     """
     Scans the media folder directory and figures out if it's a TV show or movie folder, and if there are any
     extra folders. The function also validates the given directory is a media folder.
@@ -12,8 +12,9 @@ def scan_media_folder(media_folder_path: str) -> tuple[ModifiedMediaFolder, bool
     :return: A tuple of the media folder object and bool value if folder is a media folder--True for it is.
     """
     folder_and_file_patterns = correct_media_file_format.FolderAndFilePatterns()
-    media_folder_information = ModifiedMediaFolder()
+    media_folder_information = MediaFolderData()
 
+    media_folder_information.media_title = media_folder_path.split('/')[-1]
     media_folder_information.directory = media_folder_path
 
     with os.scandir(media_folder_information.directory) as directory_to_scan:
