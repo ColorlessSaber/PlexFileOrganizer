@@ -3,12 +3,13 @@ Pop-up window to allow user to add more folders to an existing media folder
 """
 from PySide6 import (
     QtWidgets as qtw,
-    QtGui as qtg,
     QtCore as qtc)
+from ..classes import ModifiedMediaFolder
 
 class ModifiedMediaFolderWindow(qtw.QDialog):
     signal_initiate_scan_of_media_folder = qtc.Signal(str)
     signal_reset_progress_bar = qtc.Signal()
+    signal_media_folder_update_information = qtc.Signal(object)
 
     def __init__(self, parent=None):
         """
@@ -72,8 +73,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.btn_accept.setEnabled(False)
         self.btn_accept.clicked.connect(self.accept)
 
-        self.btn_cancel = qtw.QPushButton('Cancel', self)
-        self.btn_cancel.clicked.connect(self.reject)
+        btn_cancel = qtw.QPushButton('Cancel', self)
 
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
@@ -82,7 +82,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         main_layout.addLayout(extra_folder_layout)
         main_layout.addLayout(self.season_inform_form)
         main_layout.addWidget(self.btn_accept)
-        main_layout.addWidget(self.btn_cancel)
+        main_layout.addWidget(btn_cancel)
         self.setLayout(main_layout)
 
     @qtc.Slot(object)
@@ -158,6 +158,8 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             self.cb_other.setChecked(False)
             self.cb_other.setEnabled(True)
 
+        self.btn_accept.setEnabled(True)
+
     def select_media_folder(self) -> None:
         media_folder_dir = qtw.QFileDialog.getExistingDirectory(
             self,
@@ -167,3 +169,26 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
 
         if media_folder_dir: # confirm the user selected a directory
             self.signal_initiate_scan_of_media_folder.emit(media_folder_dir)
+
+    @qtc.Slot()
+    def accept(self) -> None:
+        """
+        Create the object to hold the user's selection and send it off before closing the window.
+        """
+        modified_media_folder_info = ModifiedMediaFolder()
+        modified_media_folder_info.directory = self.select_directory_label.text()
+        modified_media_folder_info.media_title = self.media_title.text()
+        modified_media_folder_info.movie_or_tv = self.media_type.text()
+        modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text())
+        modified_media_folder_info.number_of_new_seasons = int(self.number_of_new_seasons.text())
+        modified_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked() if self.cb_trailers.isEnabled() else False
+        modified_media_folder_info.extra_folders['behind the scenes'] = self.cb_behind_the_scenes.isChecked() if self.cb_behind_the_scenes.isEnabled() else False
+        modified_media_folder_info.extra_folders['deleted scenes'] = self.cb_deleted_scenes.isChecked() if self.cb_deleted_scenes.isEnabled() else False
+        modified_media_folder_info.extra_folders['featurettes'] = self.cb_featurettes.isChecked() if self.cb_featurettes.isEnabled() else False
+        modified_media_folder_info.extra_folders['interviews '] = self.cb_interviews.isChecked() if self.cb_interviews.isEnabled() else False
+        modified_media_folder_info.extra_folders['scenes'] = self.cb_scenes.isChecked() if self.cb_scenes.isEnabled() else False
+        modified_media_folder_info.extra_folders['shorts'] = self.cb_shorts.isChecked() if self.cb_shorts.isEnabled() else False
+        modified_media_folder_info.extra_folders['other'] = self.cb_other.isChecked() if self.cb_other.isEnabled() else False
+
+        self.signal_media_folder_update_information.emit(modified_media_folder_info)
+        super().accept()

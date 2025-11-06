@@ -86,6 +86,7 @@ class View(qtw.QWidget):
         modified_media_folder_window = ModifiedMediaFolderWindow(self)
         modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.initiate_scan_of_media_folder_thread)
         modified_media_folder_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
+        modified_media_folder_window.signal_media_folder_update_information.connect(self.initiate_update_of_media_folder_thread)
         self.data_pass_through_media_folder_scan_result.connect(modified_media_folder_window.load_existing_media_folder_info)
         self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
         modified_media_folder_window.exec()
@@ -146,6 +147,15 @@ class View(qtw.QWidget):
         :return:
         """
         self.signal_initiate_scan_of_media_folder.emit(media_folder_directory)
+
+    @qtc.Slot(object)
+    def initiate_update_of_media_folder_thread(self, media_folder_info):
+        """
+        The view-side to initiate the process to update the media folder.
+
+        :param media_folder_info: the information of the media folder to update.
+        """
+        print(media_folder_info)
 
 # *** Methods that launches messageboxes ***
     @qtc.Slot()
