@@ -27,6 +27,7 @@ class MainWindow(qtw.QMainWindow):
         self.view.signal_user_confirmation_of_existing_media_folder.connect(self.model.signal_user_confirmation_of_existing_media_folder)
         self.view.signal_initiate_auto_update_media_files.connect(self.model.start_auto_update_media_files_thread)
         self.view.signal_initiate_scan_of_media_folder.connect(self.model.start_scan_of_existing_media_folder_thread)
+        self.view.signal_initiate_update_of_media_folder.connect(self.model.start_update_of_existing_media_folder_thread)
 
         # model signals to be connected to view slots
         self.model.signal_inform_user_of_existing_media_folder.connect(self.view.messagebox_inform_user_of_existing_media_file)
@@ -34,6 +35,7 @@ class MainWindow(qtw.QMainWindow):
         self.model.signal_create_media_folder_finished.connect(self.view.messagebox_create_media_folder_complete)
         self.model.signal_inform_user_folder_not_media_folder.connect(self.view.messagebox_inform_user_of_folder_not_media_folder)
         self.model.signal_analysis_of_media_folder_complete.connect(self.view.data_pass_through_media_folder_scan_result)
+        self.model.signal_update_of_media_folder_finished.connect(self.view.messagebox_update_of_media_folder_complete)
 
         # view signals to be connected to main_window slots
         self.view.signal_reset_progress_bar.connect(self.slot_reset_progress_bar)

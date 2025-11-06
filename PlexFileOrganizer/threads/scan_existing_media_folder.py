@@ -5,6 +5,7 @@ from PySide6 import QtCore as qtc
 from ..functions import scan_media_folder
 from ..classes import DefaultThreadSignals
 
+# TODO tack on 'Thread' to name of class object.
 class ScanExistingMediaFolder(qtc.QRunnable):
     class ThreadSignals(DefaultThreadSignals):
         """

@@ -29,7 +29,18 @@ class ModifiedMediaFolder(MediaFolderData):
 
         :return:
         """
-        pass
+        # added plus one to start range so it doesn't use an existing number;
+        # added plus one to end range to generate the correct number of new season folder(s)
+        for season_num in range(self.number_of_seasons+1, self.number_of_seasons+self.number_of_new_seasons+1):
+            os.mkdir('{}/Season {}'.format(self.directory, season_num))
+
+    def generate_new_extra_folders(self) -> None:
+        """
+        Creates the extra folder(s) the user selected
+        """
+        for key in self.extra_folders:
+            if self.extra_folders[key]:
+                os.mkdir('{}/{}'.format(self.directory, key.title()))
 
 
 class GenerateMediaFolder(MediaFolderData):

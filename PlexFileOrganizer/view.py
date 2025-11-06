@@ -16,6 +16,7 @@ class View(qtw.QWidget):
     signal_initiate_creating_media_folder = qtc.Signal(object)
     signal_initiate_auto_update_media_files = qtc.Signal(object)
     signal_initiate_scan_of_media_folder = qtc.Signal(str)
+    signal_initiate_update_of_media_folder = qtc.Signal(object)
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_reset_progress_bar = qtc.Signal()
 
@@ -155,7 +156,7 @@ class View(qtw.QWidget):
 
         :param media_folder_info: the information of the media folder to update.
         """
-        print(media_folder_info)
+        self.signal_initiate_update_of_media_folder.emit(media_folder_info)
 
 # *** Methods that launches messageboxes ***
     @qtc.Slot()
@@ -211,6 +212,21 @@ class View(qtw.QWidget):
             'Selected Folder is not Media Folder!',
             'The folder you selected to analyze is not a Media Folder.'
         )
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+
+    @qtc.Slot()
+    def messagebox_update_of_media_folder_complete(self):
+        """
+        Launches a messagebox to inform user the update of the media folder is complete,
+        and reset the progress bar once user closes the window.
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Update Media Folder Complete!',
+            'Finished updating the media folder in the directory.'
+        )
+
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
 

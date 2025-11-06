@@ -4,7 +4,8 @@ from PySide6 import QtCore as qtc
 from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
-    ScanExistingMediaFolder
+    ScanExistingMediaFolder,
+    UpdateExistingMediaFolderThread
 )
 
 
@@ -20,6 +21,7 @@ class Model(qtc.QObject):
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
     signal_auto_update_finished = qtc.Signal()
     signal_create_media_folder_finished = qtc.Signal()
+    signal_update_of_media_folder_finished = qtc.Signal()
     signal_inform_user_folder_not_media_folder = qtc.Signal()
 
 # *** The creation and start of thread methods ***
@@ -67,6 +69,19 @@ class Model(qtc.QObject):
         scan_existing_media_folder.signals.finished.connect(self.signal_analysis_of_media_folder_complete)
         scan_existing_media_folder.signals.not_media_folder.connect(self.signal_inform_user_folder_not_media_folder)
         self.thread_pool.start(scan_existing_media_folder)
+
+    @qtc.Slot(object)
+    def start_update_of_existing_media_folder_thread(self, media_folder_info):
+        """
+        Creates and starts the thread to update the existing media folder per user's input.
+
+        :param media_folder_info: Information of the existing media folder and what the user wishes to add.
+        """
+        update_existing_media_folder = UpdateExistingMediaFolderThread(media_folder_info)
+        update_existing_media_folder.signals.progress.connect(self.slot_thread_update_progress_status)
+        update_existing_media_folder.signals.error.connect(self.slot_thread_error_message)
+        update_existing_media_folder.signals.finished.connect(self.signal_update_of_media_folder_finished)
+        self.thread_pool.start(update_existing_media_folder)
 
 # *** Signals to inform or request input from user methods ***
     @qtc.Slot(int, str)
