@@ -37,7 +37,7 @@ class TestScanMediaFolder(TestCase):
         media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/tv show")
 
         assert folder_is_a_media_folder, "Failed to detect tv media folder"
-        assert media_folder_info.movie_or_tv == "tv", "Failed to detect media folder is tv show"
+        assert media_folder_info.media_type == "tv", "Failed to detect media folder is tv show"
         assert media_folder_info.extra_folders['trailers'] == True, "Failed to detect extra folder - trailers"
         assert media_folder_info.extra_folders['behind the scenes'] == True, "Failed to detect extra folder - behind the scenes"
         assert media_folder_info.extra_folders['deleted scenes'] == True, "Failed to detect extra folder - deleted scenes"
@@ -54,7 +54,7 @@ class TestScanMediaFolder(TestCase):
         media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/movie")
 
         assert folder_is_a_media_folder, "Failed to detect movie media folder"
-        assert media_folder_info.movie_or_tv == "movie", "Failed to detect media folder is tv show"
+        assert media_folder_info.media_type == "movie", "Failed to detect media folder is tv show"
         assert media_folder_info.extra_folders['trailers'] == True, "Failed to detect extra folder - trailers"
         assert media_folder_info.extra_folders['behind the scenes'] == True, "Failed to detect extra folder - behind the scenes"
         assert media_folder_info.extra_folders['deleted scenes'] == True, "Failed to detect extra folder - deleted scenes"
