@@ -19,11 +19,12 @@ class ScanExistingMediaFolderThread(qtc.QRunnable):
         self.signals = self.ThreadSignals()
 
     @qtc.Slot()
-    def run(self):
+    def run(self) -> None:
         """
         Initialize the thread
         """
         self.signals.progress.emit(25, "Scanning existing media folder...")
+        # TODO add in try-except method
 
         media_folder_information, folder_is_a_media_folder = scan_media_folder(self.media_folder_directory)
 

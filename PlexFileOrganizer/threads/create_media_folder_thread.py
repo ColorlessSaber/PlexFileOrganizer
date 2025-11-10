@@ -20,7 +20,7 @@ class CreateMediaFolderThread(qtc.QRunnable):
         self.user_confirmed_directory_exists = False
 
     @qtc.Slot()
-    def run(self):
+    def run(self) -> None:
         """
         Initialize the thread
         :return:
@@ -56,11 +56,13 @@ class CreateMediaFolderThread(qtc.QRunnable):
         except OSError as e:
             self.signals.error.emit(e)
 
+        # TODO add in BaseException for covering other errors
+
         finally:
             self.mutex.unlock()
 
     @qtc.Slot()
-    def user_confirmation(self):
+    def user_confirmation(self) -> None:
         """
         Receives confirmation from user that they understand directory exists.
 

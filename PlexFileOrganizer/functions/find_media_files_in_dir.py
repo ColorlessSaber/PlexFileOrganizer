@@ -1,6 +1,6 @@
 import pathlib
 from typing import Callable, Generator
-from . import directory_scanner, video_file_condition, default_folder_condition
+from . import directory_scanner
 
 def find_media_files_in_dir(
         file_condition: Callable[..., bool],

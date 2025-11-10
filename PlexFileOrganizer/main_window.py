@@ -48,7 +48,7 @@ class MainWindow(qtw.QMainWindow):
 
     # *** Slots for model/view inputs***
     @qtc.Slot(int, str)
-    def slot_update_progress_bar_and_print_message(self, progress_bar_percentage, status_message):
+    def slot_update_progress_bar_and_print_message(self, progress_bar_percentage: int, status_message: str) -> None:
         """
         Update the progress bar and print message on Log Window
 
@@ -60,7 +60,7 @@ class MainWindow(qtw.QMainWindow):
         self.view.write_to_log_window(status_message)
 
     @qtc.Slot(object)
-    def slot_display_error_message(self, error_message):
+    def slot_display_error_message(self, error_message: object) -> None:
         """
         Write the error message to the Log Window and reset the progress bar.
 
@@ -68,10 +68,10 @@ class MainWindow(qtw.QMainWindow):
         :return:
         """
         self.progress_bar.reset()
-        self.view.write_to_log_window('\n!!Error has been detected!! -> {}'.format(repr(error_message)))
+        self.view.write_to_log_window('\n!!Error has been detected!! -> {}'.format(str(error_message)))
 
     @qtc.Slot()
-    def slot_reset_progress_bar(self):
+    def slot_reset_progress_bar(self) -> None:
         """
         Reset the progress bar
 

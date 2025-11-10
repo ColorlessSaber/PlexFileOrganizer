@@ -83,7 +83,7 @@ class CreateMediaFolder(qtw.QDialog):
         self.setLayout(main_layout)
 
     @qtc.Slot()
-    def enable_or_disable_accept_btn(self):
+    def enable_or_disable_accept_btn(self) -> None:
         if (self.rb_media_type_tv_select.isChecked() or self.rb_media_type_tv_select) and (len(self.le_media_title.text()) > 0) \
                 and (self.select_directory_label.text() != ''):
             self.btn_accept.setEnabled(True)
@@ -91,7 +91,7 @@ class CreateMediaFolder(qtw.QDialog):
             self.btn_accept.setEnabled(False)
 
     @qtc.Slot()
-    def enable_or_disable_season_number_line_edit(self):
+    def enable_or_disable_season_number_line_edit(self) -> None:
         if self.rb_media_type_movie_select.isChecked():
             self.number_of_seasons.setEnabled(False)
         elif self.rb_media_type_tv_select.isChecked():
@@ -100,7 +100,7 @@ class CreateMediaFolder(qtw.QDialog):
             pass
 
     @qtc.Slot()
-    def select_directory_popup(self):
+    def select_directory_popup(self) -> None:
         directory = qtw.QFileDialog.getExistingDirectory(
             self,
             'Select folder...',
@@ -112,7 +112,7 @@ class CreateMediaFolder(qtw.QDialog):
             self.enable_or_disable_accept_btn()
 
     @qtc.Slot()
-    def accept(self):
+    def accept(self) -> None:
         """
         Create the object that holds the information about the new media folder and send it off before
         closing the window.

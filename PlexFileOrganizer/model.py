@@ -1,5 +1,3 @@
-import copy
-
 from PySide6 import QtCore as qtc
 from .threads import (
     CreateMediaFolderThread,
@@ -26,7 +24,7 @@ class Model(qtc.QObject):
 
 # *** The creation and start of thread methods ***
     @qtc.Slot(object)
-    def start_create_media_folder_thread(self, media_folder_selection):
+    def start_create_media_folder_thread(self, media_folder_selection: object) -> None:
         """
         Starts the thread to create the folder(s) the user wishes to make.
 
@@ -41,7 +39,7 @@ class Model(qtc.QObject):
         self.thread_pool.start(create_media_folder_thread)
 
     @qtc.Slot(object)
-    def start_auto_update_media_files_thread(self, user_selected_options):
+    def start_auto_update_media_files_thread(self, user_selected_options: dict) -> None:
         """
         Creates and starts the thread to Auto Update Media Files.
 
@@ -56,7 +54,7 @@ class Model(qtc.QObject):
         self.thread_pool.start(auto_update_media_files_threads)
 
     @qtc.Slot(str)
-    def start_scan_of_existing_media_folder_thread(self, media_folder_directory):
+    def start_scan_of_existing_media_folder_thread(self, media_folder_directory: str) -> None:
         """
         Creates and starts the thread to scan an existing media folder.
 
@@ -71,7 +69,7 @@ class Model(qtc.QObject):
         self.thread_pool.start(scan_existing_media_folder)
 
     @qtc.Slot(object)
-    def start_update_of_existing_media_folder_thread(self, media_folder_info):
+    def start_update_of_existing_media_folder_thread(self, media_folder_info: object) -> None:
         """
         Creates and starts the thread to update the existing media folder per user's input.
 
@@ -85,7 +83,7 @@ class Model(qtc.QObject):
 
 # *** Signals to inform or request input from user methods ***
     @qtc.Slot(int, str)
-    def slot_thread_update_progress_status(self, progress_bar_percentage, message):
+    def slot_thread_update_progress_status(self, progress_bar_percentage: int, message: str) -> None:
         """
         The slot on the model side for all threads' signals.progress to connect to for sending out a progress update--change to progress
         bar and message to print to user.
@@ -97,7 +95,7 @@ class Model(qtc.QObject):
         self.signal_update_progress.emit(progress_bar_percentage, message)
 
     @qtc.Slot(object)
-    def slot_thread_error_message(self, error_message):
+    def slot_thread_error_message(self, error_message: object) -> None:
         """
         The slot on the model side for all threads' signals.error to connect to for sending out an error message
         to the user.

@@ -1,7 +1,7 @@
 import os
 
 
-def update_files_in_directory(list_of_files_to_update):
+def update_files_in_directory(list_of_files_to_update: list[tuple[str, str]]) -> None:
     """
     Takes a list were each element is a tuple--tuples contain the following: (old file name, new file name)--and iterate
     through the list and update the file names to the new one.

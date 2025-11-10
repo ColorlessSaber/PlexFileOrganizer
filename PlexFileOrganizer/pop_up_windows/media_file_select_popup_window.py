@@ -35,7 +35,7 @@ class MediaFileSelect(qtw.QDialog):
         self.layout().addWidget(self.cancel_btn)
 
     @qtc.Slot()
-    def select_directory_popup(self):
+    def select_directory_popup(self) -> None:
         directory = qtw.QFileDialog.getExistingDirectory(
             self,
             'Select folder...',

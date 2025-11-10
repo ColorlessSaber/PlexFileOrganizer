@@ -64,7 +64,7 @@ class View(qtw.QWidget):
 
 # *** Methods that launch popup windows ***
     @qtc.Slot()
-    def launch_create_media_folder_window(self):
+    def launch_create_media_folder_window(self) -> None:
         """
         Launches the Create Media Folder window.
 
@@ -76,7 +76,7 @@ class View(qtw.QWidget):
         create_media_folder_window.exec()
 
     @qtc.Slot()
-    def launch_modified_media_folder_window(self):
+    def launch_modified_media_folder_window(self) -> None:
         """
         Launches the "Modified Existing Media Folder" window.
 
@@ -91,7 +91,7 @@ class View(qtw.QWidget):
         modified_media_folder_window.exec()
 
     @qtc.Slot()
-    def launch_auto_update_media_files_conformation_window(self):
+    def launch_auto_update_media_files_conformation_window(self) -> None:
         """
         Launches pop-up window Auto-Update Media Files Confirmation.
 
@@ -103,7 +103,7 @@ class View(qtw.QWidget):
         auto_update_media_files_conformation_window.exec()
 
     @qtc.Slot()
-    def launch_manual_update_media_files_window(self):
+    def launch_manual_update_media_files_window(self) -> None:
         """
         Launches the Manual Update Media Files window.
 
@@ -119,7 +119,7 @@ class View(qtw.QWidget):
 
 # *** Methods that start threads ***
     @qtc.Slot(object)
-    def initiate_create_media_folder_thread(self, media_folder_info):
+    def initiate_create_media_folder_thread(self, media_folder_info: object) -> None:
         """
         The view-side to initiates the process to launch the thread to create the media folder.
 
@@ -139,7 +139,7 @@ class View(qtw.QWidget):
         self.signal_initiate_auto_update_media_files.emit(self.auto_update_media_files_options)
 
     @qtc.Slot(str)
-    def initiate_scan_of_media_folder_thread(self, media_folder_directory):
+    def initiate_scan_of_media_folder_thread(self, media_folder_directory: str) -> None:
         """
         The view-side to initiate the process to scan the media folder.
 
@@ -149,7 +149,7 @@ class View(qtw.QWidget):
         self.signal_initiate_scan_of_media_folder.emit(media_folder_directory)
 
     @qtc.Slot(object)
-    def initiate_update_of_media_folder_thread(self, media_folder_info):
+    def initiate_update_of_media_folder_thread(self, media_folder_info: object) -> None:
         """
         The view-side to initiate the process to update the media folder.
 
@@ -159,7 +159,7 @@ class View(qtw.QWidget):
 
 # *** Methods that launches messageboxes ***
     @qtc.Slot()
-    def messagebox_inform_user_of_existing_media_file(self):
+    def messagebox_inform_user_of_existing_media_file(self) -> None:
         response = qtw.QMessageBox.information(
             self,
             'Media Folder Already Exists',
@@ -170,7 +170,7 @@ class View(qtw.QWidget):
             self.signal_user_confirmation_of_existing_media_folder.emit()
 
     @qtc.Slot()
-    def messagebox_auto_update_media_files_complete(self):
+    def messagebox_auto_update_media_files_complete(self) -> None:
         """
         Launches the messagebox to inform user the auto update media file(s) is complete.
         And reset the progress bar once user closes the window
@@ -187,7 +187,7 @@ class View(qtw.QWidget):
             self.signal_reset_progress_bar.emit()
 
     @qtc.Slot()
-    def messagebox_create_media_folder_complete(self):
+    def messagebox_create_media_folder_complete(self) -> None:
         """
         Launches the messagebox to inform user the creation of the media folder is complete,
         and reset the progress bar once user closes the window.
@@ -202,7 +202,7 @@ class View(qtw.QWidget):
             self.signal_reset_progress_bar.emit()
 
     @qtc.Slot()
-    def messagebox_inform_user_of_folder_not_media_folder(self):
+    def messagebox_inform_user_of_folder_not_media_folder(self) -> None:
         """
         Launches the messagebox to inform user the folder is not media folder.
         """
@@ -215,7 +215,7 @@ class View(qtw.QWidget):
             self.signal_reset_progress_bar.emit()
 
     @qtc.Slot()
-    def messagebox_update_of_media_folder_complete(self):
+    def messagebox_update_of_media_folder_complete(self) -> None:
         """
         Launches a messagebox to inform user the update of the media folder is complete,
         and reset the progress bar once user closes the window.
@@ -231,7 +231,7 @@ class View(qtw.QWidget):
 
 # *** Methods for Log Window ***
     @qtc.Slot()
-    def clear_log_window(self):
+    def clear_log_window(self) -> None:
         """
         Clear the list, reset media_label and show_title_label, and disable buttons.
 
@@ -241,7 +241,7 @@ class View(qtw.QWidget):
         self.log_window.insertPlainText('Media Log Window')
 
     @qtc.Slot(str)
-    def write_to_log_window(self, message):
+    def write_to_log_window(self, message: str) -> None:
         """
         Writes into the Media Log Window.
 

@@ -77,7 +77,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         self.setLayout(main_layout)
 
     @qtc.Slot()
-    def select_directory_window(self):
+    def select_directory_window(self) -> None:
         """
         Open a directory selector window
 
@@ -95,7 +95,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
             self.user_selected_dir_and_options['directory'] = directory_selected_by_user
             self.label_selected_directory.setText(directory_selected_by_user)
 
-    def accept(self):
+    def accept(self) -> None:
         """
         Update the auto_update_media_files_options with user's selections before closing window.
 

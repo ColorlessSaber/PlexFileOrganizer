@@ -113,11 +113,11 @@ class FolderAndFilePatterns:
         else:
             return False
 
-    def check_files_in_list(self, list_of_files: str) -> bool:
+    def check_files_in_list(self, list_of_files: tuple[str]) -> bool:
         """
         Checks if the media files in the given list are all formated correctly for the media folder they are in
 
-        :param list_of_files: a list where each element is the full-path to a file in a directory
+        :param list_of_files: a tuple list where each element is the full-path to a file in a directory
         :return: Bool value. True -- all media files in folder are formated correctly. False -- at lest one media file in the folder isn't formated correctly
         """
         for file_path in list_of_files:

@@ -21,13 +21,13 @@ class ExtraFolders(UserDict):
                 'other': False
             }
 
-    def pop(self, s = None):
+    def pop(self, s = None) -> None:
         raise RuntimeError("Deletion not allowed")
 
-    def popitem(self, s= None):
+    def popitem(self, s = None) -> None:
         raise RuntimeError("Deletion not allowed")
 
-    def update(self, m, /, **kwargs):
+    def update(self, m, /, **kwargs) -> None:
         raise RuntimeError("Adding new entry not allowed")
 
 class MediaFile(UserString):
@@ -39,7 +39,7 @@ class MediaFile(UserString):
     def __add__(self, other):
         raise RuntimeError("Adding not allowed")
 
-    def file_name(self, with_extension=True):
+    def file_name(self, with_extension=True) -> str:
         """
         Returns the name of the file, with the option to showing the file extension with the file name.
 
@@ -52,14 +52,14 @@ class MediaFile(UserString):
         else:
             return file_path.name.replace(file_path.suffix, "")
 
-    def file_extension(self):
+    def file_extension(self) -> str:
         """
         Strips the path and file name, leaving only the extension.
         :return: A string. file's extension
         """
         return pathlib.Path(self.data).suffix
 
-    def directory_path(self):
+    def directory_path(self) -> str:
         """
         Strips the file name, leaving only the directory path the file is in.
         :return: A string. The directory path file is located
@@ -67,7 +67,7 @@ class MediaFile(UserString):
         # str() is needed to convert PosixPath to string
         return str(pathlib.Path(self.data).parent)
 
-    def folder_file_is_in(self):
+    def folder_file_is_in(self) -> str:
         """
         Strips away everything, leaving only the folder the file is in.
         :return: A string. The folder file is in.
