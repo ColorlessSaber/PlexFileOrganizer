@@ -45,42 +45,40 @@ def generate_correct_video_file_format(list_of_video_files):
             else:
                 unformatted_media_files.append(file)
 
-        # Only proceed if there are files that need to be updated.
-        if unformatted_media_files:
-            # now having the highest episode number, the next step is to generate the correct file format name for each video file
-            # that need to be updated. The directory is included to make it easer when using Python library os
-            #
-            # The correct file format for a tv show video file is the follow:
-            # show_name - sxxeyy.extension
-            #
-            # xx - the season number, found by looking at the folder it is in. for Specials folder, the season number is 00.
-            # yy - episode number.
-            #
-            tv_show_name = first_file_in_list.split('/')[-3]
-            season_folder = first_file_in_list.folder_file_is_in()
+        # now having the highest episode number, the next step is to generate the correct file format name for each video file
+        # that need to be updated. The directory is included to make it easer when using Python library os
+        #
+        # The correct file format for a tv show video file is the follow:
+        # show_name - sxxeyy.extension
+        #
+        # xx - the season number, found by looking at the folder it is in. for Specials folder, the season number is 00.
+        # yy - episode number.
+        #
+        tv_show_name = first_file_in_list.split('/')[-3]
+        season_folder = first_file_in_list.folder_file_is_in()
 
-            # If the season folder is "Specials" then the season number is 00.
-            # else, grab the season number from the folder name
-            if season_folder.lower() == "specials":
-                season_number = "00"
-            elif int(season_folder.split(' ')[1]) > 9:
-                season_number = season_folder.split(' ')[1]
-            else:
-                season_number = '0' + season_folder.split(' ')[1]
+        # If the season folder is "Specials" then the season number is 00.
+        # else, grab the season number from the folder name
+        if season_folder.lower() == "specials":
+            season_number = "00"
+        elif int(season_folder.split(' ')[1]) > 9:
+            season_number = season_folder.split(' ')[1]
+        else:
+            season_number = '0' + season_folder.split(' ')[1]
 
-            for file in unformatted_media_files:
-                highest_episode_number += 1
-                episode_number_string = str(highest_episode_number) if highest_episode_number > 9 else ('0' + str(highest_episode_number))
+        for file in unformatted_media_files:
+            highest_episode_number += 1
+            episode_number_string = str(highest_episode_number) if highest_episode_number > 9 else ('0' + str(highest_episode_number))
 
-                # A '.' is not needed for the extension for .file_extension() returns the dot with the extension
-                new_file_name = f"{file.directory_path()}/{tv_show_name} - s{season_number}e{episode_number_string}{file.file_extension()}"
+            # A '.' is not needed for the extension for .file_extension() returns the dot with the extension
+            new_file_name = f"{file.directory_path()}/{tv_show_name} - s{season_number}e{episode_number_string}{file.file_extension()}"
 
-                # The str() is needed to revert the MediaFile class to a string, or it will cause errors for certain situations.
-                # like using os.rename.
-                media_files_to_be_updated.append((str(file), new_file_name))
+            # The str() is needed to revert the MediaFile class to a string, or it will cause errors for certain situations.
+            # like using os.rename.
+            media_files_to_be_updated.append((str(file), new_file_name))
 
-            # create a string message to user so they know what folder has files to be updated
-            status_message = f'\t-- Folder: {tv_show_name}/{season_folder} -> # of Update Files: {len(media_files_to_be_updated)}'
+        # create a string message to user so they know what folder has files to be updated
+        status_message = f'\t-- Folder: {tv_show_name}/{season_folder} -> # of Update Files: {len(media_files_to_be_updated)}'
 
     elif folder_and_files_patterns.extra_folder_check(first_file_in_list.folder_file_is_in()):
         # print("extra folder") # for debugging
@@ -104,24 +102,22 @@ def generate_correct_video_file_format(list_of_video_files):
             else:
                 unformatted_media_files.append(file)
 
-        # only proceed to the second step if there is files that need to be updated.
-        if unformatted_media_files:
-            # Now having the highest number, the next step is to create the correct file format name for each media files
-            # that need to be updated. The directory is included to make it easer when using Python library os
-            #
-            # the correct file format for a media file in an extra folder is it has the folder name followed by
-            # a number that increments up by one.
-            for file in unformatted_media_files:
-                highest_file_number += 1
-                # A '.' is not needed for the extension for .file_extension() returns the dot with the extension
-                new_file_name = f"{file.directory_path()}/{modified_folder_name} {highest_file_number}{file.file_extension()}"
-                # The str() is needed to revert the MediaFile class to a string, or it will cause errors for certain situations.
-                # like using os.rename.
-                media_files_to_be_updated.append((str(file), new_file_name))
+        # Now having the highest number, the next step is to create the correct file format name for each media files
+        # that need to be updated. The directory is included to make it easer when using Python library os
+        #
+        # the correct file format for a media file in an extra folder is it has the folder name followed by
+        # a number that increments up by one.
+        for file in unformatted_media_files:
+            highest_file_number += 1
+            # A '.' is not needed for the extension for .file_extension() returns the dot with the extension
+            new_file_name = f"{file.directory_path()}/{modified_folder_name} {highest_file_number}{file.file_extension()}"
+            # The str() is needed to revert the MediaFile class to a string, or it will cause errors for certain situations.
+            # like using os.rename.
+            media_files_to_be_updated.append((str(file), new_file_name))
 
-            # create a string message to user so they know what folder has files to be updated
-            show_name = first_file_in_list.split('/')[-3]
-            status_message = f'\t-- Folder: {show_name}/{modified_folder_name}s -> # of Update Files: {len(media_files_to_be_updated)}'
+        # create a string message to user so they know what folder has files to be updated
+        show_name = first_file_in_list.split('/')[-3]
+        status_message = f'\t-- Folder: {show_name}/{modified_folder_name}s -> # of Update Files: {len(media_files_to_be_updated)}'
 
     else: # movie folder
         # print('movie update') # for debugging

@@ -64,7 +64,7 @@ pyinstaller --windowed setup.py
 ## Roadmap
 _Version 1 Features_
 - [x] Create a media folder for a new movie or TV show, along with sub-folders for miscellaneous content--trailers, extra, etc.
-- [ ] Add a new season folder and or extra folder to an existing TV show media folder.
+- [X] Add a new season folder and or extra folder to an existing TV show media folder.
 - [X] Automatically go through the selected folder and identify the media files that need to be updated and rename the file accordingly.
   - [X] know what episode number to start from for new media files if there are existing ones already in the folder.
 - [ ] Allow the user to manually rename media files--new or existing--in an existing folder.

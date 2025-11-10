@@ -4,7 +4,7 @@ folder_and_file_patterns = FolderAndFilePatterns()
 
 class TestFolderAndFilePatterns:
     """
-    This class contains only unit tests to test the basic functionality of the FolderAndFilePatterns class
+    Contains only unit tests to test the basic functionality of the FolderAndFilePatterns class
     """
     def test_move_file_regex_check(self):
         """
@@ -147,7 +147,7 @@ class TestFolderAndFilePatterns:
 
     def test_extra_folder_func_check(self):
         """
-        Validate that the extra folder function that validates the folder is a extra folder
+        Validate that the extra folder function that validates the folder is an extra folder
         is working correctly
         """
         errors = []
@@ -167,10 +167,75 @@ class TestFolderAndFilePatterns:
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
+class TestCheckFilesInList:
+    """
+    Contains unit tests for testing the check_files_in_list function.
+    """
+
+    def test_tv_show_list_yield_true(self):
+        """
+        Validates that the function returns True for list of TV show episodes that are formated
+        correctly
+        """
+        episode_list = (
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e01.txt',
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e02.txt',
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e03.txt',
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e04.txt',
+        )
+        assert folder_and_file_patterns.check_files_in_list(episode_list) is True
+
+    def test_tv_show_list_yield_false(self):
+        """
+        Validates that the function returns False when there is at lest one episode not formated correctly in the list
+        """
+        episode_list = (
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e01.txt',
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e02.txt',
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e03.txt',
+            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero_s01e04.txt',
+        )
+        assert folder_and_file_patterns.check_files_in_list(episode_list) is False
+
+    def test_extra_folder_list_yield_true(self):
+        """
+        Validates that the function returns True for list of extra folders that are formated correctly
+        """
+        extra_list = (
+            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 1.txt',
+            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 2.txt',
+            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 3.txt',
+        )
+        assert folder_and_file_patterns.check_files_in_list(extra_list) is True
+
+    def test_extra_folder_list_yield_false(self):
+        """
+        Validates that the function returns False when there is at lest one extra file not formated correctly in the list
+        """
+        files_to_update = (
+            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 1.txt',
+            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 2.txt',
+            '/dir/dir1/Zenless Zone Zero/Trailers/new trailer.txt',
+        )
+        assert folder_and_file_patterns.check_files_in_list(files_to_update) is False
+
+    def test_movie_folder_list_yield_true(self):
+        """
+        Validates that the function returns True for when the movie file is formated correctly
+        """
+        file = ('/dir/dir1/Zenless Zone Zero/Zenless Zone Zero.txt',)
+        assert folder_and_file_patterns.check_files_in_list(file) is True
+
+    def test_movie_folder_list_yield_false(self):
+        """
+        Validates that the function returns False when the movie file is not formated correctly
+        """
+        file = ('/dir/dir1/Zenless Zone Zero/movie.txt',)
+        assert folder_and_file_patterns.check_files_in_list(file) is False
 
 class TestFilePatterns:
     """
-    this class contains unit tests for testing situations that caused bug/issues
+    Contains unit tests for testing situations that caused bug/issues
     """
 
     def test_close_to_movie_folder_name(self):
@@ -179,6 +244,6 @@ class TestFilePatterns:
         caused a false positive.
         """
         folder_name = "Evangelion 1.0 You Are (Not) Alone"
-        movie_file = "Evangelion 1.0 You Are (Not) Alone_01.mkv"
+        movie_file = "Evangelion 1.0 You Are (Not) Alone_t01.mkv"
 
         assert folder_and_file_patterns.movie_media_file_check(movie_file, folder_name) == False, "Failed nearly identical file name to folder name; yielded false positive when it should be yielded false."

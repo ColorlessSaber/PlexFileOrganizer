@@ -1,8 +1,11 @@
 import pathlib
-from . import directory_scanner, video_file_condition
+from typing import Callable, Generator
+from . import directory_scanner, video_file_condition, default_folder_condition
 
-
-def find_media_files_in_dir(file_condition, folder_condition, directory):
+def find_media_files_in_dir(
+        file_condition: Callable[..., bool],
+        folder_condition: Callable[..., bool],
+        directory: str) -> Generator[tuple[str], None, None]:
     """
     A generator that returns all files in a given directory that meet the condition given by the
     file_condition function.
@@ -34,8 +37,3 @@ def find_media_files_in_dir(file_condition, folder_condition, directory):
 
     # this is necessary for when scanning a folder with just files or reaching the final folder of the directory
     yield tuple(files_in_directory)
-
-if __name__ == '__main__':
-    dir_path = "/Volumes/Media Library/Anime TV Shows/Frieren Beyond Journey's End"
-    for file_list in find_media_files_in_dir(video_file_condition, dir_path):
-        print(file_list)

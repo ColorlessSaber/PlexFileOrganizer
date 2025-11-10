@@ -2,7 +2,7 @@
 Thread for Auto Update Media Files
 """
 from PySide6 import QtCore as qtc
-from ..classes import FolderAndFilePatterns
+from ..classes import FolderAndFilePatterns, DefaultThreadSignals
 from ..functions import (
     update_files_in_directory,
     generate_correct_video_file_format,
@@ -12,15 +12,11 @@ from ..functions import (
     default_folder_condition
 )
 
-class ThreadSignals(qtc.QObject):
-    """
-    The signals for the thread
-    """
-    error = qtc.Signal(object)
-    finished = qtc.Signal(str)
-    progress = qtc.Signal(int, str)
-
 class AutoUpdateMediaFilesThread(qtc.QRunnable):
+    class ThreadSignals(DefaultThreadSignals):
+        """
+        The signals for the thread
+        """
 
     def __init__(self, directory_and_options):
         """
@@ -29,7 +25,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         """
         super().__init__()
         self.directory_and_options = directory_and_options
-        self.signals = ThreadSignals()
+        self.signals = self.ThreadSignals()
 
     @qtc.Slot()
     def run(self):
@@ -63,7 +59,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                 self.signals.progress.emit(50, '-- No files found that needed to be updated')
             # print('finished the check') # for debugging
             self.signals.progress.emit(100, 'Finished scanning.')
-            self.signals.finished.emit('auto_update')
+            self.signals.finished.emit()
 
         except OSError as e:
             self.signals.error.emit(e)
