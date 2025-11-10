@@ -9,10 +9,9 @@ class MediaFolderData:
     """
     directory: str = field(default=None)
     media_title: str = field(default=None)
-    movie_or_tv: str = field(default=None) # Either 'movie' or 'tv'
+    media_type: str = field(default=None) # Either 'movie' or 'tv'
     number_of_seasons: int = field(default=0)
     extra_folders: dict = field(default_factory=ExtraFolders)
-    # TODO look into changing 'movie_or_tv' to 'media_type'
 
 @dataclass
 class ModifiedMediaFolder(MediaFolderData):

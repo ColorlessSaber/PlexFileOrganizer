@@ -4,7 +4,7 @@ from PySide6 import QtCore as qtc
 from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
-    ScanExistingMediaFolder,
+    ScanExistingMediaFolderThread,
     UpdateExistingMediaFolderThread
 )
 
@@ -63,7 +63,7 @@ class Model(qtc.QObject):
         :param media_folder_directory: the folder location of the media folder to scan.
         :return:
         """
-        scan_existing_media_folder = ScanExistingMediaFolder(media_folder_directory)
+        scan_existing_media_folder = ScanExistingMediaFolderThread(media_folder_directory)
         scan_existing_media_folder.signals.progress.connect(self.slot_thread_update_progress_status)
         scan_existing_media_folder.signals.error.connect(self.slot_thread_error_message)
         scan_existing_media_folder.signals.finished.connect(self.signal_analysis_of_media_folder_complete)

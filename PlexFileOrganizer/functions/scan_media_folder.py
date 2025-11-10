@@ -20,7 +20,7 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
     with os.scandir(media_folder_information.directory) as directory_to_scan:
         for entry in directory_to_scan:
             if entry.is_file() and video_file_condition(entry.path) and not entry.name.startswith('.'):
-                media_folder_information.movie_or_tv = 'movie'
+                media_folder_information.media_type = 'movie'
             elif entry.is_dir():
                 if folder_and_file_patterns.extra_folder_check(entry.name):
                     media_folder_information.extra_folders[entry.name.lower()] = True
@@ -31,10 +31,10 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
             else:
                 pass
 
-    if media_folder_information.movie_or_tv is None and media_folder_information.number_of_seasons > 0:
-        media_folder_information.movie_or_tv = 'tv'
+    if media_folder_information.media_type is None and media_folder_information.number_of_seasons > 0:
+        media_folder_information.media_type = 'tv'
 
-    if media_folder_information.movie_or_tv is None and media_folder_information.number_of_seasons == 0:
+    if media_folder_information.media_type is None and media_folder_information.number_of_seasons == 0:
         return media_folder_information, False
 
     return media_folder_information, True

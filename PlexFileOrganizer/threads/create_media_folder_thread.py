@@ -42,7 +42,7 @@ class CreateMediaFolderThread(qtc.QRunnable):
                 self.media_folder_information.generate_media_folder()
                 self.signals.progress.emit(40, '...Media folder created.')
 
-                if self.media_folder_information.movie_or_tv == 'tv':
+                if self.media_folder_information.media_type == 'tv':
                     self.media_folder_information.generate_seasons()
                     self.signals.progress.emit(60, '...Season folder(s) created.')
 

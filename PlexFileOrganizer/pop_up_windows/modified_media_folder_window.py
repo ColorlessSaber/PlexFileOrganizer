@@ -74,6 +74,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.btn_accept.clicked.connect(self.accept)
 
         btn_cancel = qtw.QPushButton('Cancel', self)
+        btn_cancel.clicked.connect(self.reject)
 
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
@@ -96,9 +97,9 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.signal_reset_progress_bar.emit()
         self.select_directory_label.setText(media_file_information.directory)
         self.media_title.setText(media_file_information.media_title)
-        self.media_type.setText(media_file_information.movie_or_tv)
+        self.media_type.setText(media_file_information.media_type)
 
-        if media_file_information.movie_or_tv == 'tv':
+        if media_file_information.media_type == 'tv':
             self.season_inform_form.setRowVisible(0, True)
             self.highest_season_number.setText(f'{media_file_information.number_of_seasons}')
             self.season_inform_form.setRowVisible(1, True)
@@ -178,7 +179,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         modified_media_folder_info = ModifiedMediaFolder()
         modified_media_folder_info.directory = self.select_directory_label.text()
         modified_media_folder_info.media_title = self.media_title.text()
-        modified_media_folder_info.movie_or_tv = self.media_type.text()
+        modified_media_folder_info.media_type = self.media_type.text()
         modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text())
         modified_media_folder_info.number_of_new_seasons = int(self.number_of_new_seasons.text())
         modified_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked() if self.cb_trailers.isEnabled() else False

@@ -22,7 +22,7 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
         """
         self.signals.progress.emit(25, "Starting to update existing media folder:")
         try:
-            if self.info_of_media_folder.movie_or_tv == 'tv':
+            if self.info_of_media_folder.media_type == 'tv':
                 self.info_of_media_folder.generate_new_season_folders()
                 self.signals.progress.emit(50, "...New Season folder(s) generated.")
 
