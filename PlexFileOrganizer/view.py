@@ -1,4 +1,3 @@
-from .classes import GenerateMediaFolder
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc
@@ -27,7 +26,6 @@ class View(qtw.QWidget):
         super().__init__()
 
         # Variables
-        self.generate_media_folder_data_class = GenerateMediaFolder() # TODO have the window create the class versus created here
         self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False} # contains information for the AutoUpdateMediaFilesThread
 
         # widgets
@@ -72,8 +70,8 @@ class View(qtw.QWidget):
 
         :return:
         """
-        create_media_folder_window = CreateMediaFolder(self.generate_media_folder_data_class, self)
-        create_media_folder_window.accepted.connect(self.initiate_create_media_folder_thread)
+        create_media_folder_window = CreateMediaFolder(self)
+        create_media_folder_window.signal_initiate_create_media_folder.connect(self.initiate_create_media_folder_thread)
         self.log_window.insertPlainText('\nOpening Create Media Folder window')
         create_media_folder_window.exec()
 
@@ -120,14 +118,15 @@ class View(qtw.QWidget):
             self.log_window.insertPlainText('\nFeature "Manual Update Media Files" coming soon')
 
 # *** Methods that start threads ***
-    @qtc.Slot()
-    def initiate_create_media_folder_thread(self):
+    @qtc.Slot(object)
+    def initiate_create_media_folder_thread(self, media_folder_info):
         """
         The view-side to initiates the process to launch the thread to create the media folder.
 
+        :param media_folder_info: Information about the new media folder to create.
         :return:
         """
-        self.signal_initiate_creating_media_folder.emit(self.generate_media_folder_data_class)
+        self.signal_initiate_creating_media_folder.emit(media_folder_info)
 
     @qtc.Slot()
     def initiate_auto_update_media_files_thread(self):
