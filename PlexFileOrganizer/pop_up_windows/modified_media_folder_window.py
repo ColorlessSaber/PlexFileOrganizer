@@ -4,7 +4,7 @@ Pop-up window to allow user to add more folders to an existing media folder
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc)
-from ..classes import ModifiedMediaFolder
+from ..classes import ModifyMediaFolder
 
 class ModifiedMediaFolderWindow(qtw.QDialog):
     signal_initiate_scan_of_media_folder = qtc.Signal(str)
@@ -176,7 +176,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         """
         Create the object to hold the user's selection and send it off before closing the window.
         """
-        modified_media_folder_info = ModifiedMediaFolder()
+        modified_media_folder_info = ModifyMediaFolder()
         modified_media_folder_info.directory = self.select_directory_label.text()
         modified_media_folder_info.media_title = self.media_title.text()
         modified_media_folder_info.media_type = self.media_type.text()

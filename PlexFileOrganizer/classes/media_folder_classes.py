@@ -14,9 +14,9 @@ class MediaFolderData:
     extra_folders: dict = field(default_factory=ExtraFolders)
 
 @dataclass
-class ModifiedMediaFolder(MediaFolderData):
+class ModifyMediaFolder(MediaFolderData):
     """
-    Holds methods to generate more folders for or remove folders from an existing media folder
+    Holds methods to generate more folders for an existing media folder
 
     Inheritance MediaFolderData.
     """
