@@ -8,19 +8,18 @@ from PySide6 import QtGui as qtg
 from PySide6 import QtCore as qtc
 
 class AutoUpdateMediaFilesWindow(qtw.QDialog):
+    signal_initiate_auto_update = qtc.Signal(dict)
 
-    def __init__(self, user_selected_dir_and_options, parent=None):
+    def __init__(self, parent=None):
         """
+        A dialog window that inform the users what happens when the program does an auto update of media files
+        it finds. Also provides options that be selected that govern what the program will scan versus skip over.
 
-        :param user_selected_dir_and_options: A dictionary containing the directory the user has selected,
-        and if they wish to update the media files in the extra folder(s).
         :param parent: The parent window the dialog window will be linked to.
         """
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
         self.setWindowTitle('Auto-Update Media Files Confirmation')
-
-        self.user_selected_dir_and_options = user_selected_dir_and_options
 
         # Labels
         label_information_of_process = qtw.QLabel(
@@ -92,14 +91,18 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         # confirm user selected a directory
         if directory_selected_by_user:
             self.btn_proceed.setEnabled(True) # enable the button given user has selected a directory
-            self.user_selected_dir_and_options['directory'] = directory_selected_by_user
             self.label_selected_directory.setText(directory_selected_by_user)
 
     def accept(self) -> None:
         """
-        Update the auto_update_media_files_options with user's selections before closing window.
+        Create the object that holds the information of what directory to scan and what options were selected
+        and sends it off before closing the window.
 
         :return:
         """
-        self.user_selected_dir_and_options['scan_extra_folder'] = self.cb_extra_folders_to_be_scanned.isChecked()
+        user_selected_dir_and_options = {'directory': self.label_selected_directory.text(),
+                                         'scan_extra_folder': self.cb_extra_folders_to_be_scanned.isChecked()}
+
+        self.signal_initiate_auto_update.emit(user_selected_dir_and_options)
+
         super().accept()

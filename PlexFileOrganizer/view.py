@@ -25,9 +25,6 @@ class View(qtw.QWidget):
     def __init__(self):
         super().__init__()
 
-        # Variables
-        self.auto_update_media_files_options = {'directory': '', 'scan_extra_folder': False} # contains information for the AutoUpdateMediaFilesThread
-
         # widgets
         self.btn_create_media_folder = qtw.QPushButton('Create Media Folder', self)
         self.btn_create_media_folder.clicked.connect(self.launch_create_media_folder_window)
@@ -97,8 +94,8 @@ class View(qtw.QWidget):
 
         :return:
         """
-        auto_update_media_files_conformation_window = AutoUpdateMediaFilesWindow(self.auto_update_media_files_options, self)
-        auto_update_media_files_conformation_window.accepted.connect(self.initiate_auto_update_media_files_thread)
+        auto_update_media_files_conformation_window = AutoUpdateMediaFilesWindow(self)
+        auto_update_media_files_conformation_window.signal_initiate_auto_update.connect(self.initiate_auto_update_media_files_thread)
         self.log_window.insertPlainText('\nOpening "Auto-Update Media Files Conformation" window')
         auto_update_media_files_conformation_window.exec()
 
@@ -128,15 +125,15 @@ class View(qtw.QWidget):
         """
         self.signal_initiate_creating_media_folder.emit(media_folder_info)
 
-    @qtc.Slot()
-    def initiate_auto_update_media_files_thread(self):
+    @qtc.Slot(dict)
+    def initiate_auto_update_media_files_thread(self, dir_and_options: dict) -> None:
         """
         The view-side to initiate the process to launch thread to start
         auto-update media files.
-
+        :param dir_and_options: Holds what directory to scan and what options the user selected
         :return:
         """
-        self.signal_initiate_auto_update_media_files.emit(self.auto_update_media_files_options)
+        self.signal_initiate_auto_update_media_files.emit(dir_and_options)
 
     @qtc.Slot(str)
     def initiate_scan_of_media_folder_thread(self, media_folder_directory: str) -> None:
