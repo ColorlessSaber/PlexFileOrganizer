@@ -3,7 +3,7 @@ from PySide6 import (
     QtCore as qtc
 )
 from .pop_up_windows import (
-    MediaFileSelect,
+    ManualMediaFileUpdate,
     CreateMediaFolder,
     AutoUpdateMediaFilesWindow,
     ModifiedMediaFolderWindow
@@ -106,13 +106,9 @@ class View(qtw.QWidget):
 
         :return:
         """
-        response = qtw.QMessageBox.information(
-            self,
-            'Feature coming in V1.0.0!',
-            'The feature to manual rename media files will be coming in version 1.0.0.'
-        )
-        if response == qtw.QMessageBox.Ok:
-            self.log_window.insertPlainText('\nFeature "Manual Update Media Files" coming soon')
+        manual_update_media_files_window = ManualMediaFileUpdate(self)
+        self.log_window.insertPlainText('\nOpening Manual Update Media Files window')
+        manual_update_media_files_window.exec()
 
 # *** Methods that start threads ***
     @qtc.Slot(object)
