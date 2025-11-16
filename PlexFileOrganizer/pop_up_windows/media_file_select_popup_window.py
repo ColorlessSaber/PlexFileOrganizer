@@ -1,12 +1,14 @@
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
-
+import pathlib
 
 class MediaFileTable(qtc.QAbstractTableModel):
     """A table to allow user to view and modify what the file's new name should be"""
 
-    def __init__(self, read_only_indexes, current_media_file_list: list = None, column_names: list = None):
+    def __init__(self, read_only_indexes: list, current_media_file_list: list = None, column_names: list = None):
         super().__init__()
+        if current_media_file_list is None:
+            current_media_file_list = []
         self.read_only_indexes =  read_only_indexes
         self._data = current_media_file_list
         self._headers = column_names
@@ -55,12 +57,11 @@ class MediaFileTable(qtc.QAbstractTableModel):
         else:
             return super().headerData(section, orientation, role)
 
-    def insert_file(self, position, rows, file_name, parent=qtc.QModelIndex()) -> None:
+    def insert_file(self, position, rows, row_data, parent=qtc.QModelIndex()) -> None:
         """Insert a new row into the table"""
         self.beginInsertRows(parent, position, position + rows - 1)
         for _ in range(rows):
-            new_row = [file_name, ""]
-            self._data.insert(position, new_row)
+            self._data.insert(position, row_data)
         self.endInsertRows()
 
     def remove_file(self, position, rows, parent=qtc.QModelIndex()) -> None:
@@ -69,6 +70,14 @@ class MediaFileTable(qtc.QAbstractTableModel):
         for _ in range(rows):
             del(self._data[position])
         self.endRemoveRows()
+
+    def send_data(self) -> None:
+        """
+        Send the list of files off via a signal to be processed.
+        """
+        # TODO write in code later to send it off via signal.
+        for row in self._data:
+            print(row)
 
 class ManualMediaFileUpdate(qtw.QDialog):
     """
@@ -81,26 +90,69 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.setWindowTitle("Media File Select")
         self.resize(800, 400)
 
-        #self.table_model = MediaFileTable(None, ['Directory', 'Current File Name', 'New File Name'])
-
         # widgets
-        self.add_files_btn = qtw.QPushButton('Add File(s)', self)
-        self.remove_file_btn = qtw.QPushButton('Remove File(s)', self)
-        self.update_files_btn = qtw.QPushButton('Update File(s)', self)
+        self.btn_add_files = qtw.QPushButton('Add File(s)', self)
+        self.btn_add_files.clicked.connect(self.select_files)
+        self.btn_remove_file = qtw.QPushButton('Remove File(s)', self)
+        self.btn_remove_file.setEnabled(False)
+        self.btn_update_files = qtw.QPushButton('Update File(s)', self)
+        self.btn_update_files.clicked.connect(self.update_files)
+        self.btn_update_files.setEnabled(False)
         cancel_btn = qtw.QPushButton('Cancel', self)
         cancel_btn.clicked.connect(self.close)
 
         self.table_view = qtw.QTableView(self)
-        self.table_view.setSortingEnabled(True)
+        self.table_view.setSortingEnabled(False)
+        self.model =  MediaFileTable(
+            ['Current File Name'],
+            None,
+            ['Directory', 'Current File Name', 'New File Name', 'Format Type']
+        )
+        self.table_view.setModel(self.model)
+        self.table_view.setColumnHidden(0, True)
+        self.table_view.setColumnHidden(3, True)
 
         # layout
         button_layout = qtw.QVBoxLayout()
-        button_layout.addWidget(self.add_files_btn)
-        button_layout.addWidget(self.remove_file_btn)
-        button_layout.addWidget(self.update_files_btn)
+        button_layout.addWidget(self.btn_add_files)
+        button_layout.addWidget(self.btn_remove_file)
+        button_layout.addWidget(self.btn_update_files)
         button_layout.addWidget(cancel_btn)
 
         main_layout = qtw.QHBoxLayout()
         main_layout.addLayout(button_layout)
         main_layout.addWidget(self.table_view)
         self.setLayout(main_layout)
+
+    @qtc.Slot()
+    def select_files(self) -> None:
+        """
+        Opens file dialog to allow user to select media files they wish to update, and
+        adds them to the table.
+        """
+        selected_files, _ = qtw.QFileDialog.getOpenFileNames(
+            self,
+            "Select Files...",
+            qtc.QDir.homePath(),
+        "Media Files (*.mkv *.mp4 *.avi)"
+        )
+
+        if selected_files:
+            for file in selected_files:
+                self.model.insert_file(position=self.model.rowCount(), rows=1, row_data=[
+                    str(pathlib.Path(file).parent),
+                    pathlib.Path(file).stem,
+                    "",
+                    pathlib.Path(file).suffix]
+                                       )
+
+            self.table_view.resizeColumnsToContents()
+            self.btn_remove_file.setEnabled(True)
+            self.btn_update_files.setEnabled(True)
+
+    @qtc.Slot()
+    def update_files(self) -> None:
+        """
+        Sends off the list of files that will be updated and then closes the window.
+        """
+        self.model.send_data()
