@@ -50,7 +50,7 @@ class MediaFile(UserString):
         if with_extension:
             return file_path.name
         else:
-            return file_path.name.replace(file_path.suffix, "")
+            return file_path.stem
 
     def file_extension(self) -> str:
         """
