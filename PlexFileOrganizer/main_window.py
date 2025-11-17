@@ -37,6 +37,7 @@ class MainWindow(qtw.QMainWindow):
         self.model.signal_inform_user_folder_not_media_folder.connect(self.view.messagebox_inform_user_of_folder_not_media_folder)
         self.model.signal_analysis_of_media_folder_complete.connect(self.view.data_pass_through_media_folder_scan_result)
         self.model.signal_update_of_media_folder_finished.connect(self.view.messagebox_update_of_media_folder_complete)
+        self.model.signal_manual_update_finished.connect(self.view.messagebox_manual_update_media_files_complete)
 
         # view signals to be connected to main_window slots
         self.view.signal_reset_progress_bar.connect(self.slot_reset_progress_bar)

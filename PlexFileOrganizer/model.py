@@ -3,7 +3,8 @@ from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
     ScanExistingMediaFolderThread,
-    UpdateExistingMediaFolderThread
+    UpdateExistingMediaFolderThread,
+    ManualUpdateMediaFilesThread
 )
 
 
@@ -14,13 +15,18 @@ class Model(qtc.QObject):
 
     signal_inform_user_of_existing_media_folder = qtc.Signal()
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
+    signal_inform_user_folder_not_media_folder = qtc.Signal()
+
     signal_error_message = qtc.Signal(object)
     signal_update_progress = qtc.Signal(int, str)
+
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
+
     signal_auto_update_finished = qtc.Signal()
     signal_create_media_folder_finished = qtc.Signal()
     signal_update_of_media_folder_finished = qtc.Signal()
-    signal_inform_user_folder_not_media_folder = qtc.Signal()
+    signal_manual_update_finished = qtc.Signal()
+
 
 # *** The creation and start of thread methods ***
     @qtc.Slot(object)
@@ -88,9 +94,13 @@ class Model(qtc.QObject):
 
         :param files_to_update: List of media files to update.
         """
-        print(files_to_update)
+        manual_update_media_files_thread = ManualUpdateMediaFilesThread(files_to_update)
+        manual_update_media_files_thread.signals.progress.connect(self.slot_thread_update_progress_status)
+        manual_update_media_files_thread.signals.error.connect(self.slot_thread_error_message)
+        manual_update_media_files_thread.signals.finished.connect(self.signal_manual_update_finished)
+        self.thread_pool.start(manual_update_media_files_thread)
 
-# *** Signals to inform or request input from user methods ***
+# *** Signals to for threads to connect to pass updates/statues out***
     @qtc.Slot(int, str)
     def slot_thread_update_progress_status(self, progress_bar_percentage: int, message: str) -> None:
         """

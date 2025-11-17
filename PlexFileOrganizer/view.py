@@ -225,6 +225,21 @@ class View(qtw.QWidget):
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
 
+    @qtc.Slot()
+    def messagebox_manual_update_media_files_complete(self) -> None:
+        """
+        Launches a messagebox to inform user the manual update of the media files is complete,
+        and reset the progress bar once user closes the window.
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Manual Update of Media Files Complete!',
+            'Finished updating the media files in the directory. Please see console window for information on if any files were updated during the scan.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+
 # *** Methods for Log Window ***
     @qtc.Slot()
     def clear_log_window(self) -> None:
