@@ -81,6 +81,15 @@ class Model(qtc.QObject):
         update_existing_media_folder.signals.finished.connect(self.signal_update_of_media_folder_finished)
         self.thread_pool.start(update_existing_media_folder)
 
+    @qtc.Slot(list)
+    def start_manual_update_media_files_thread(self, files_to_update: list) -> None:
+        """
+        Creates and starts the thread to update the selected media files.
+
+        :param files_to_update: List of media files to update.
+        """
+        print(files_to_update)
+
 # *** Signals to inform or request input from user methods ***
     @qtc.Slot(int, str)
     def slot_thread_update_progress_status(self, progress_bar_percentage: int, message: str) -> None:

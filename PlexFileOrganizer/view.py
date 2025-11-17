@@ -16,6 +16,7 @@ class View(qtw.QWidget):
     signal_initiate_auto_update_media_files = qtc.Signal(object)
     signal_initiate_scan_of_media_folder = qtc.Signal(str)
     signal_initiate_update_of_media_folder = qtc.Signal(object)
+    signal_initiate_manual_update = qtc.Signal(list)
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_reset_progress_bar = qtc.Signal()
 
@@ -107,10 +108,12 @@ class View(qtw.QWidget):
         :return:
         """
         manual_update_media_files_window = ManualMediaFileUpdate(self)
+        manual_update_media_files_window.signal_initiate_manual_update.connect(self.signal_initiate_manual_update)
         self.log_window.insertPlainText('\nOpening Manual Update Media Files window')
         manual_update_media_files_window.exec()
 
 # *** Methods that start threads ***
+    # TODO remove this functions during V1.0 work given the data can be past directly to the signal
     @qtc.Slot(object)
     def initiate_create_media_folder_thread(self, media_folder_info: object) -> None:
         """

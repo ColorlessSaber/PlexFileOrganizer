@@ -1,3 +1,5 @@
+from typing import Any
+
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 import pathlib
@@ -71,18 +73,17 @@ class MediaFileTable(qtc.QAbstractTableModel):
             del(self._data[position])
         self.endRemoveRows()
 
-    def send_data(self) -> None:
+    def extract_data(self) -> list[Any]:
         """
-        Send the list of files off via a signal to be processed.
+        Returns the data that is stored in the table
         """
-        # TODO write in code later to send it off via signal.
-        for row in self._data:
-            print(row)
+        return self._data
 
 class ManualMediaFileUpdate(qtw.QDialog):
     """
     Pop-up window to allow user to select media files they wish to update.
     """
+    signal_initiate_manual_update = qtc.Signal(list)
 
     def __init__(self, parent=None):
         # The modal=True makes sure the user cannot click the main screen until they close the popup
@@ -168,4 +169,15 @@ class ManualMediaFileUpdate(qtw.QDialog):
         """
         Sends off the list of files that will be updated and then closes the window.
         """
-        self.model.send_data()
+        response = qtw.QMessageBox.warning(
+            self,
+            'Are you sure you want to update?',
+            'The program will not validate that the media files you wish to update are formated correctly. Click Ok to continue.',
+            buttons=qtw.QMessageBox.Ok | qtw.QMessageBox.Cancel,
+            defaultButton=qtw.QMessageBox.Ok
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            data = self.model.extract_data()
+            self.signal_initiate_manual_update.emit(data)
+            self.close()
