@@ -15,7 +15,7 @@ class CreateMediaFolderThread(qtc.QRunnable):
         super().__init__()
         self.media_folder_information = media_folder_information
         self.wait_condition = qtc.QWaitCondition()
-        self.mutex = qtc.QMutex()
+        self.mutex = qtc.QMutex() #TODO see if QMutex can be removed
         self.signals = self.ThreadSignals()
         self.user_confirmed_directory_exists = False
 
