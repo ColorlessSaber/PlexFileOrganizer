@@ -94,6 +94,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.btn_add_files = qtw.QPushButton('Add File(s)', self)
         self.btn_add_files.clicked.connect(self.select_files)
         self.btn_remove_file = qtw.QPushButton('Remove File(s)', self)
+        self.btn_remove_file.clicked.connect(self.remove_files)
         self.btn_remove_file.setEnabled(False)
         self.btn_update_files = qtw.QPushButton('Update File(s)', self)
         self.btn_update_files.clicked.connect(self.update_files)
@@ -109,6 +110,9 @@ class ManualMediaFileUpdate(qtw.QDialog):
             ['Directory', 'Current File Name', 'New File Name', 'Format Type']
         )
         self.table_view.setModel(self.model)
+
+        # Hiding 'Directory' and 'Format Type' from user view for they are storing the respective
+        # information to be used during the processes of updating the files.
         self.table_view.setColumnHidden(0, True)
         self.table_view.setColumnHidden(3, True)
 
@@ -149,6 +153,15 @@ class ManualMediaFileUpdate(qtw.QDialog):
             self.table_view.resizeColumnsToContents()
             self.btn_remove_file.setEnabled(True)
             self.btn_update_files.setEnabled(True)
+
+    @qtc.Slot()
+    def remove_files(self) -> None:
+        """
+        Removes selected file(s) from the table the user selected.
+        """
+        selected_files = self.table_view.selectedIndexes()
+        if selected_files:
+            self.model.remove_file(position=selected_files[0].row(), rows=len(selected_files))
 
     @qtc.Slot()
     def update_files(self) -> None:
