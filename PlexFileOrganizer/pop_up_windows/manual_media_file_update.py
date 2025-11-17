@@ -11,7 +11,7 @@ class MediaFileTable(qtc.QAbstractTableModel):
         super().__init__()
         if current_media_file_list is None:
             current_media_file_list = []
-        self.read_only_indexes =  read_only_indexes
+        self.read_only_indexes = read_only_indexes
         self._data = current_media_file_list
         self._headers = column_names
 
@@ -47,7 +47,7 @@ class MediaFileTable(qtc.QAbstractTableModel):
         if not index.isValid():
             return qtc.Qt.ItemIsEnabled
 
-        if index not in self.read_only_indexes:
+        if index.column() not in self.read_only_indexes:
             return super().flags(index) | qtc.Qt.ItemIsEditable
         else:
             return super().flags(index)
@@ -106,7 +106,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.table_view = qtw.QTableView(self)
         self.table_view.setSortingEnabled(False)
         self.model =  MediaFileTable(
-            ['Current File Name'],
+            [0, 1, 3],
             None,
             ['Directory', 'Current File Name', 'New File Name', 'Format Type']
         )
