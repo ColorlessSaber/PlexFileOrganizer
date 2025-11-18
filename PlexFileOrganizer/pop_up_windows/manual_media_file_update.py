@@ -84,6 +84,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
     Pop-up window to allow user to select media files they wish to update.
     """
     signal_initiate_manual_update = qtc.Signal(list)
+    signal_check_list_of_files_for_duplicates = qtc.Signal(list)
+    signal_reset_progress_bar = qtc.Signal()
 
     def __init__(self, parent=None):
         # The modal=True makes sure the user cannot click the main screen until they close the popup
@@ -98,7 +100,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.btn_remove_file.clicked.connect(self.remove_files)
         self.btn_remove_file.setEnabled(False)
         self.btn_update_files = qtw.QPushButton('Update File(s)', self)
-        self.btn_update_files.clicked.connect(self.update_files)
+        self.btn_update_files.clicked.connect(self.first_stage_update_process)
         self.btn_update_files.setEnabled(False)
         cancel_btn = qtw.QPushButton('Cancel', self)
         cancel_btn.clicked.connect(self.close)
@@ -147,7 +149,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
                 self.model.insert_file(position=self.model.rowCount(), rows=1, row_data=[
                     str(pathlib.Path(file).parent),
                     pathlib.Path(file).stem,
-                    "",
+                    pathlib.Path(file).stem, # The original name is the default. Allowing user to make necessary changes to the original name
                     pathlib.Path(file).suffix]
                                        )
 
@@ -165,9 +167,10 @@ class ManualMediaFileUpdate(qtw.QDialog):
             self.model.remove_file(position=selected_files[0].row(), rows=len(selected_files))
 
     @qtc.Slot()
-    def update_files(self) -> None:
+    def first_stage_update_process(self) -> None:
         """
-        Sends off the list of files that will be updated and then closes the window.
+        First stage of updating the media files.
+        -- Sends the files out and check to see if there are duplicate rename file names.
         """
         response = qtw.QMessageBox.warning(
             self,
@@ -179,5 +182,38 @@ class ManualMediaFileUpdate(qtw.QDialog):
 
         if response == qtw.QMessageBox.Ok:
             data = self.model.extract_data()
+            self.signal_check_list_of_files_for_duplicates.emit(data)
+
+    @qtc.Slot(list)
+    def second_stage_update_process(self, duplicate_result: list) -> None:
+        """
+        Second stage of update the media files.
+        -- If there are no duplicate rename file names, send the data off to be processed. Else, inform user.
+        """
+        if not duplicate_result:
+            data = self.model.extract_data()
             self.signal_initiate_manual_update.emit(data)
+        else:
+            qtw.QMessageBox.warning(
+                self,
+                'There are duplicate rename file names.',
+                'You are two or more files with matching rename file names. Please fix this to be able to manually update the media file name(s).',
+                buttons=qtw.QMessageBox.Ok,
+                defaultButton=qtw.QMessageBox.Ok
+            )
+
+    @qtc.Slot()
+    def messagebox_manual_update_media_files_complete(self) -> None:
+        """
+        Launches a messagebox to inform user the manual update of the media files is complete,
+        and reset the progress bar and close the 'manual update' dialog once user closes the window.
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Manual Update of Media Files Complete!',
+            'Finished updating the media files in the directory. Please see console window for information on if any files were updated during the scan.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
             self.close()

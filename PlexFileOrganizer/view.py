@@ -17,11 +17,16 @@ class View(qtw.QWidget):
     signal_initiate_scan_of_media_folder = qtc.Signal(str)
     signal_initiate_update_of_media_folder = qtc.Signal(object)
     signal_initiate_manual_update = qtc.Signal(list)
+    signal_check_list_of_files_for_duplicates = qtc.Signal(list)
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_reset_progress_bar = qtc.Signal()
 
-    # Data pass-through to pop-up windows
+    # Data pass-through to pop-up window(s)
     data_pass_through_media_folder_scan_result = qtc.Signal(object)
+    data_pass_through_duplicate_check_result = qtc.Signal(list)
+
+    # status pass-through to pop-up window(s)
+    status_pass_through_manual_update_media_files_complete = qtc.Signal()
 
     def __init__(self):
         super().__init__()
@@ -108,7 +113,11 @@ class View(qtw.QWidget):
         :return:
         """
         manual_update_media_files_window = ManualMediaFileUpdate(self)
+        self.data_pass_through_duplicate_check_result.connect(manual_update_media_files_window.second_stage_update_process)
+        self.status_pass_through_manual_update_media_files_complete.connect(manual_update_media_files_window.messagebox_manual_update_media_files_complete)
         manual_update_media_files_window.signal_initiate_manual_update.connect(self.signal_initiate_manual_update)
+        manual_update_media_files_window.signal_check_list_of_files_for_duplicates.connect(self.signal_check_list_of_files_for_duplicates)
+        manual_update_media_files_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
         self.log_window.insertPlainText('\nOpening Manual Update Media Files window')
         manual_update_media_files_window.exec()
 
@@ -220,21 +229,6 @@ class View(qtw.QWidget):
             self,
             'Update Media Folder Complete!',
             'Finished updating the media folder in the directory.'
-        )
-
-        if response == qtw.QMessageBox.Ok:
-            self.signal_reset_progress_bar.emit()
-
-    @qtc.Slot()
-    def messagebox_manual_update_media_files_complete(self) -> None:
-        """
-        Launches a messagebox to inform user the manual update of the media files is complete,
-        and reset the progress bar once user closes the window.
-        """
-        response = qtw.QMessageBox.information(
-            self,
-            'Manual Update of Media Files Complete!',
-            'Finished updating the media files in the directory. Please see console window for information on if any files were updated during the scan.'
         )
 
         if response == qtw.QMessageBox.Ok:

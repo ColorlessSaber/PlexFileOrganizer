@@ -21,12 +21,26 @@ class Model(qtc.QObject):
     signal_update_progress = qtc.Signal(int, str)
 
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
+    signal_duplicate_files_check_complete = qtc.Signal(list)
 
     signal_auto_update_finished = qtc.Signal()
     signal_create_media_folder_finished = qtc.Signal()
     signal_update_of_media_folder_finished = qtc.Signal()
     signal_manual_update_finished = qtc.Signal()
 
+# *** Quick methods that don't require threads ***
+    @qtc.Slot(list)
+    def check_for_duplicates_in_media_file_list(self, media_file_list: list) -> None:
+        """
+        Checks the list of media files and see if there are duplicates rename file names.
+        """
+        # pull out all the rename file names from the list
+        rename_file_list = []
+        for i in media_file_list:
+            rename_file_list.append(i[2])
+
+        duplicate_file_name_list = [i for i in set(rename_file_list) if rename_file_list.count(i) > 1]
+        self.signal_duplicate_files_check_complete.emit(duplicate_file_name_list)
 
 # *** The creation and start of thread methods ***
     @qtc.Slot(object)

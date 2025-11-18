@@ -1,12 +1,11 @@
 """
 Thread for Manual Update Media Files
 """
-import time
-from PySide6 import QtCore as qtc, QtCore
+from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 from ..functions import update_files_in_directory
 
-class ManualUpdateMediaFilesThread(QtCore.QRunnable):
+class ManualUpdateMediaFilesThread(qtc.QRunnable):
     class ThreadSignals(DefaultThreadSignals):
         """
         The signals for the thread
@@ -27,17 +26,17 @@ class ManualUpdateMediaFilesThread(QtCore.QRunnable):
         """
         Starts the thread.
         """
-        prepped_media_files = []
-
         try:
             self.signals.progress.emit(25, 'Starting manual update of media files...')
+
             # Create a list where each element is a tuple and each tuple contains the following
             # (old file name, new file name)
+            prepped_media_files = []
             for media_file in self.media_files_to_update:
                 prepped_media_files.append((media_file[0] + "/" + media_file[1] + media_file[3], media_file[0] + "/" + media_file[2] + media_file[3]))
 
             self.signals.progress.emit(50, "-- Updating media files")
-            #update_files_in_directory(prepped_media_files)
+            update_files_in_directory(prepped_media_files)
 
             self.signals.progress.emit(100, 'Finished manual update of media files.')
             self.signals.finished.emit()
