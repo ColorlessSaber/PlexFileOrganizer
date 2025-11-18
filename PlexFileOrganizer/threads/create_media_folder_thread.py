@@ -15,12 +15,12 @@ class CreateMediaFolderThread(qtc.QRunnable):
         super().__init__()
         self.media_folder_information = media_folder_information
         self.wait_condition = qtc.QWaitCondition()
-        self.mutex = qtc.QMutex()
+        self.mutex = qtc.QMutex() #TODO see if QMutex can be removed
         self.signals = self.ThreadSignals()
         self.user_confirmed_directory_exists = False
 
     @qtc.Slot()
-    def run(self):
+    def run(self) -> None:
         """
         Initialize the thread
         :return:
@@ -56,11 +56,13 @@ class CreateMediaFolderThread(qtc.QRunnable):
         except OSError as e:
             self.signals.error.emit(e)
 
+        # TODO add in BaseException for covering other errors
+
         finally:
             self.mutex.unlock()
 
     @qtc.Slot()
-    def user_confirmation(self):
+    def user_confirmation(self) -> None:
         """
         Receives confirmation from user that they understand directory exists.
 

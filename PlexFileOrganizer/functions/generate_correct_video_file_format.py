@@ -1,14 +1,16 @@
 from ..classes import MediaFile, FolderAndFilePatterns
 
-def generate_correct_video_file_format(list_of_video_files):
+def generate_correct_video_file_format(list_of_video_files: tuple[str])\
+        -> tuple[list[tuple[str, str]], str]:
     """
     Takes the list of video files in a directory and automatically generates the correct file format for each file
     that isn't formatted correctly.
     This program also handles numbering tv shows in a season folder that already has formated files--IE, it will
     figure out the next number(s) to give to the unformatted tv show episodes.
 
-    :param list_of_video_files: A list of video files in a directory
-    :return: A list with tuple elements, each element has the following format: (old file name, new file name), and a list of numbers of files to be updated in directory
+    :param list_of_video_files: A tuple list of video files in a directory
+    :return: A list with tuple elements, each element has the following format: (old file name, new file name); and a status message of
+    how many files will be updated in the directory
     """
     folder_and_files_patterns = FolderAndFilePatterns()
 

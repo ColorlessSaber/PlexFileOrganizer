@@ -16,7 +16,7 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
         self.signals = self.ThreadSignals()
 
     @qtc.Slot()
-    def run(self):
+    def run(self) -> None:
         """
         Initialize the thread
         """
@@ -33,3 +33,4 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
             self.signals.finished.emit()
         except OSError as e:
             self.signals.error.emit(e)
+        # TODO add in BaseException for covering other errors

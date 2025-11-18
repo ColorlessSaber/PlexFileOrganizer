@@ -28,7 +28,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         self.signals = self.ThreadSignals()
 
     @qtc.Slot()
-    def run(self):
+    def run(self) -> None:
         """
         Initialize the thread
 

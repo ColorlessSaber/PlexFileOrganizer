@@ -1,11 +1,10 @@
-import copy
-
 from PySide6 import QtCore as qtc
 from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
     ScanExistingMediaFolderThread,
-    UpdateExistingMediaFolderThread
+    UpdateExistingMediaFolderThread,
+    ManualUpdateMediaFilesThread
 )
 
 
@@ -16,17 +15,36 @@ class Model(qtc.QObject):
 
     signal_inform_user_of_existing_media_folder = qtc.Signal()
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
+    signal_inform_user_folder_not_media_folder = qtc.Signal()
+
     signal_error_message = qtc.Signal(object)
     signal_update_progress = qtc.Signal(int, str)
+
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
+    signal_duplicate_files_check_complete = qtc.Signal(list)
+
     signal_auto_update_finished = qtc.Signal()
     signal_create_media_folder_finished = qtc.Signal()
     signal_update_of_media_folder_finished = qtc.Signal()
-    signal_inform_user_folder_not_media_folder = qtc.Signal()
+    signal_manual_update_finished = qtc.Signal()
+
+# *** Quick methods that don't require threads ***
+    @qtc.Slot(list)
+    def check_for_duplicates_in_media_file_list(self, media_file_list: list) -> None:
+        """
+        Checks the list of media files and see if there are duplicates rename file names.
+        """
+        # pull out all the rename file names from the list
+        rename_file_list = []
+        for i in media_file_list:
+            rename_file_list.append(i[2])
+
+        duplicate_file_name_list = [i for i in set(rename_file_list) if rename_file_list.count(i) > 1]
+        self.signal_duplicate_files_check_complete.emit(duplicate_file_name_list)
 
 # *** The creation and start of thread methods ***
     @qtc.Slot(object)
-    def start_create_media_folder_thread(self, media_folder_selection):
+    def start_create_media_folder_thread(self, media_folder_selection: object) -> None:
         """
         Starts the thread to create the folder(s) the user wishes to make.
 
@@ -41,7 +59,7 @@ class Model(qtc.QObject):
         self.thread_pool.start(create_media_folder_thread)
 
     @qtc.Slot(object)
-    def start_auto_update_media_files_thread(self, user_selected_options):
+    def start_auto_update_media_files_thread(self, user_selected_options: dict) -> None:
         """
         Creates and starts the thread to Auto Update Media Files.
 
@@ -56,7 +74,7 @@ class Model(qtc.QObject):
         self.thread_pool.start(auto_update_media_files_threads)
 
     @qtc.Slot(str)
-    def start_scan_of_existing_media_folder_thread(self, media_folder_directory):
+    def start_scan_of_existing_media_folder_thread(self, media_folder_directory: str) -> None:
         """
         Creates and starts the thread to scan an existing media folder.
 
@@ -71,7 +89,7 @@ class Model(qtc.QObject):
         self.thread_pool.start(scan_existing_media_folder)
 
     @qtc.Slot(object)
-    def start_update_of_existing_media_folder_thread(self, media_folder_info):
+    def start_update_of_existing_media_folder_thread(self, media_folder_info: object) -> None:
         """
         Creates and starts the thread to update the existing media folder per user's input.
 
@@ -83,9 +101,22 @@ class Model(qtc.QObject):
         update_existing_media_folder.signals.finished.connect(self.signal_update_of_media_folder_finished)
         self.thread_pool.start(update_existing_media_folder)
 
-# *** Signals to inform or request input from user methods ***
+    @qtc.Slot(list)
+    def start_manual_update_media_files_thread(self, files_to_update: list) -> None:
+        """
+        Creates and starts the thread to update the selected media files.
+
+        :param files_to_update: List of media files to update.
+        """
+        manual_update_media_files_thread = ManualUpdateMediaFilesThread(files_to_update)
+        manual_update_media_files_thread.signals.progress.connect(self.slot_thread_update_progress_status)
+        manual_update_media_files_thread.signals.error.connect(self.slot_thread_error_message)
+        manual_update_media_files_thread.signals.finished.connect(self.signal_manual_update_finished)
+        self.thread_pool.start(manual_update_media_files_thread)
+
+# *** Signals to for threads to connect to pass updates/statues out***
     @qtc.Slot(int, str)
-    def slot_thread_update_progress_status(self, progress_bar_percentage, message):
+    def slot_thread_update_progress_status(self, progress_bar_percentage: int, message: str) -> None:
         """
         The slot on the model side for all threads' signals.progress to connect to for sending out a progress update--change to progress
         bar and message to print to user.
@@ -97,7 +128,7 @@ class Model(qtc.QObject):
         self.signal_update_progress.emit(progress_bar_percentage, message)
 
     @qtc.Slot(object)
-    def slot_thread_error_message(self, error_message):
+    def slot_thread_error_message(self, error_message: object) -> None:
         """
         The slot on the model side for all threads' signals.error to connect to for sending out an error message
         to the user.
