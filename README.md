@@ -67,16 +67,15 @@ _Version 1 Features_
 - [X] Add a new season folder and or extra folder to an existing TV show media folder.
 - [X] Automatically go through the selected folder and identify the media files that need to be updated and rename the file accordingly.
   - [X] know what episode number to start from for new media files if there are existing ones already in the folder.
-- [ ] Allow the user to manually rename media files--new or existing--in an existing folder.
+- [X] Allow the user to manually rename media files--new or existing--in an existing folder.
 
 _Version 2 Features_
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
 - [ ] Built in media player to allow user to watch to see which episode the media file is.
+- [ ] Allow user to make a list of media folders to generate and have the program run through the list.
 
 _Version 3 Features_
 - [ ] Organize the media folder--AKA, the music folder.
-
-Will work on getting these added to Github Issue section. For now, the up-and-coming features reside here.
 
 **NOTE** If you look at the history of this project, you will notice a commit that say "Version 2.0.0". Please ignore that.
 When I realized that I wanted more features and make this repo public, I made the decision to start over at Version 1.0.0.
