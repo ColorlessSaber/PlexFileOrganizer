@@ -30,6 +30,8 @@ class View(qtw.QWidget):
 
     # status pass-through to pop-up window(s)
     status_pass_through_manual_update_media_files_complete = qtc.Signal()
+    status_pass_through_media_folder_already_exists = qtc.Signal()
+    status_pass_through_media_folder_creation_complete = qtc.Signal()
 
     def __init__(self):
         super().__init__()
@@ -78,6 +80,9 @@ class View(qtw.QWidget):
         """
         create_media_folder_window = CreateMediaFolder(self)
         create_media_folder_window.signal_initiate_create_media_folder.connect(self.signal_initiate_creating_media_folder)
+        create_media_folder_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
+        self.status_pass_through_media_folder_already_exists.connect(create_media_folder_window.messagebox_media_folder_already_exists)
+        self.status_pass_through_media_folder_creation_complete.connect(create_media_folder_window.messagebox_media_folder_creation_complete)
         self.log_window.insertPlainText('\nOpening Create Media Folder window')
         create_media_folder_window.exec()
 
@@ -126,23 +131,6 @@ class View(qtw.QWidget):
 
 # *** Methods that launches messageboxes ***
     @qtc.Slot()
-    def messagebox_inform_user_of_existing_media_file(self) -> None:
-        """
-        Launches the messagebox to inform user the media folder they wish to make already exists.
-        Will reset the progress bar once user closes the messagebox window.
-
-        :return:
-        """
-        response = qtw.QMessageBox.information(
-            self,
-            'Media Folder Already Exists',
-            'The Media Folder you wish to make already exists. Please click "ok" to cancel creation of Media Folder.'
-        )
-
-        if response == qtw.QMessageBox.Ok:
-            self.signal_user_confirmation_of_existing_media_folder.emit()
-
-    @qtc.Slot()
     def messagebox_auto_update_media_files_complete(self) -> None:
         """
         Launches the messagebox to inform user the auto update media file(s) is complete.
@@ -154,23 +142,6 @@ class View(qtw.QWidget):
             self,
             'Auto Update Media Files Complete!',
             'Finished scanning the selected directory. Please see console window for information on if any files were updated during the scan.'
-        )
-
-        if response == qtw.QMessageBox.Ok:
-            self.signal_reset_progress_bar.emit()
-
-    @qtc.Slot()
-    def messagebox_create_media_folder_complete(self) -> None:
-        """
-        Launches the messagebox to inform user the creation of the media folder is complete,
-        and reset the progress bar once user closes the window.
-
-        :return:
-        """
-        response = qtw.QMessageBox.information(
-            self,
-            'Create Media Folder Complete!',
-            'Finished creating the media folder in the directory.'
         )
 
         if response == qtw.QMessageBox.Ok:

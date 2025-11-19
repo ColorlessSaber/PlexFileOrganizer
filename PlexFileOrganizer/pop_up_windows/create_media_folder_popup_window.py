@@ -7,6 +7,7 @@ from PySide6 import QtCore as qtc
 
 class CreateMediaFolder(qtw.QDialog):
     signal_initiate_create_media_folder = qtc.Signal(object)
+    signal_reset_progress_bar = qtc.Signal()
 
     def __init__(self, parent=None):
         """
@@ -31,17 +32,17 @@ class CreateMediaFolder(qtw.QDialog):
         self.rb_media_type_movie_select = qtw.QRadioButton('Movie', self)
         self.rb_media_type_movie_select.setChecked(True)
         self.rb_media_type_movie_select.toggled.connect(self.enable_or_disable_season_number_line_edit)
-        self.rb_media_type_movie_select.toggled.connect(self.enable_or_disable_accept_btn)
+        self.rb_media_type_movie_select.toggled.connect(self.enable_or_disable_create_btn)
         self.rb_media_type_tv_select = qtw.QRadioButton('TV Show', self)
         self.rb_media_type_tv_select.toggled.connect(self.enable_or_disable_season_number_line_edit)
-        self.rb_media_type_tv_select.toggled.connect(self.enable_or_disable_accept_btn)
+        self.rb_media_type_tv_select.toggled.connect(self.enable_or_disable_create_btn)
         self.media_type_group.setLayout(qtw.QHBoxLayout())
         self.media_type_group.layout().addWidget(self.rb_media_type_movie_select)
         self.media_type_group.layout().addWidget(self.rb_media_type_tv_select)
 
         media_inform_form = qtw.QFormLayout()
         self.le_media_title = qtw.QLineEdit(self)
-        self.le_media_title.textChanged.connect(self.enable_or_disable_accept_btn)
+        self.le_media_title.textChanged.connect(self.enable_or_disable_create_btn)
         self.number_of_seasons = qtw.QSpinBox(self, value=1, maximum=100, minimum=1)
         self.number_of_seasons.setEnabled(False)
         media_inform_form.addRow('Title:', self.le_media_title)
@@ -65,9 +66,9 @@ class CreateMediaFolder(qtw.QDialog):
         extra_folder_layout.addWidget(self.cb_shorts, 1, 2)
         extra_folder_layout.addWidget(self.cb_other, 1, 3)
 
-        self.btn_accept = qtw.QPushButton('Accept', self)
-        self.btn_accept.setEnabled(False)
-        self.btn_accept.clicked.connect(self.accept)
+        self.btn_create = qtw.QPushButton('Create', self)
+        self.btn_create.setEnabled(False)
+        self.btn_create.clicked.connect(self.start_folder_generation)
 
         btn_cancel = qtw.QPushButton('Cancel', self)
         btn_cancel.clicked.connect(self.reject)
@@ -78,17 +79,17 @@ class CreateMediaFolder(qtw.QDialog):
         main_layout.addWidget(self.media_type_group)
         main_layout.addLayout(media_inform_form)
         main_layout.addLayout(extra_folder_layout)
-        main_layout.addWidget(self.btn_accept)
+        main_layout.addWidget(self.btn_create)
         main_layout.addWidget(btn_cancel)
         self.setLayout(main_layout)
 
     @qtc.Slot()
-    def enable_or_disable_accept_btn(self) -> None:
+    def enable_or_disable_create_btn(self) -> None:
         if (self.rb_media_type_tv_select.isChecked() or self.rb_media_type_tv_select) and (len(self.le_media_title.text()) > 0) \
                 and (self.select_directory_label.text() != ''):
-            self.btn_accept.setEnabled(True)
+            self.btn_create.setEnabled(True)
         else:
-            self.btn_accept.setEnabled(False)
+            self.btn_create.setEnabled(False)
 
     @qtc.Slot()
     def enable_or_disable_season_number_line_edit(self) -> None:
@@ -109,10 +110,10 @@ class CreateMediaFolder(qtw.QDialog):
 
         if directory:
             self.select_directory_label.setText(directory)
-            self.enable_or_disable_accept_btn()
+            self.enable_or_disable_create_btn()
 
     @qtc.Slot()
-    def accept(self) -> None:
+    def start_folder_generation(self) -> None:
         """
         Create the object that holds the information about the new media folder and send it off before
         closing the window.
@@ -134,4 +135,38 @@ class CreateMediaFolder(qtw.QDialog):
 
 
         self.signal_initiate_create_media_folder.emit(new_media_folder_info)
-        super().accept()
+
+    @qtc.Slot()
+    def messagebox_media_folder_already_exists(self) -> None:
+        """
+        Launches the messagebox to inform user the media folder they wish to make already exists.
+        Will reset the progress bar once user closes the messagebox window.
+
+        :return:
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Media Folder Already Exists',
+            'The Media Folder you wish to make already exists. Please click "ok" to cancel creation of Media Folder.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+
+    @qtc.Slot()
+    def messagebox_media_folder_creation_complete(self) -> None:
+        """
+        Launches the messagebox to inform user the creation of the media folder is complete.
+        Will reset the progress bar and close the "create media folder" window once user closes the messagebox window.
+
+        :return:
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Create Media Folder Complete!',
+            'Finished creating the media folder in the directory.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+            self.close()
