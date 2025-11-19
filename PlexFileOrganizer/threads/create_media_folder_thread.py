@@ -56,7 +56,8 @@ class CreateMediaFolderThread(qtc.QRunnable):
         except OSError as e:
             self.signals.error.emit(e)
 
-        # TODO add in BaseException for covering other errors
+        except BaseException as e:
+            self.signals.error.emit(e)
 
         finally:
             self.mutex.unlock()

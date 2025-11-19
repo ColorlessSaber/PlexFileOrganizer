@@ -33,4 +33,5 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
             self.signals.finished.emit()
         except OSError as e:
             self.signals.error.emit(e)
-        # TODO add in BaseException for covering other errors
+        except BaseException as e:
+            self.signals.error.emit(e)
