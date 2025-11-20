@@ -41,9 +41,9 @@ class MainWindow(qtw.QMainWindow):
 
         self.model.signal_auto_update_finished.connect(self.view.messagebox_auto_update_media_files_complete)
 
-        self.model.signal_inform_user_folder_not_media_folder.connect(self.view.messagebox_inform_user_of_folder_not_media_folder)
+        self.model.signal_inform_user_folder_not_media_folder.connect(self.view.status_pass_through_folder_not_media_folder)
         self.model.signal_analysis_of_media_folder_complete.connect(self.view.data_pass_through_media_folder_scan_result)
-        self.model.signal_update_of_media_folder_finished.connect(self.view.messagebox_update_of_media_folder_complete)
+        self.model.signal_update_of_media_folder_finished.connect(self.view.status_pass_through_media_folder_modification_complete)
 
         self.model.signal_duplicate_files_check_complete.connect(self.view.data_pass_through_duplicate_check_result)
         self.model.signal_manual_update_finished.connect(self.view.status_pass_through_manual_update_media_files_complete)
