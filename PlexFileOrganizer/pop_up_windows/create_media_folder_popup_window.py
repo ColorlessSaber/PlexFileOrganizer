@@ -71,7 +71,7 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_create.clicked.connect(self.start_folder_generation)
 
         btn_cancel = qtw.QPushButton('Cancel', self)
-        btn_cancel.clicked.connect(self.reject)
+        btn_cancel.clicked.connect(self.close)
 
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
