@@ -23,6 +23,7 @@ class View(qtw.QWidget):
 
     # Signal(s) that connect to the main_window
     signal_reset_progress_bar = qtc.Signal()
+    signal_close_application = qtc.Signal()
 
     # Data pass-through to pop-up window(s)
     data_pass_through_media_folder_scan_result = qtc.Signal(object)
@@ -53,7 +54,7 @@ class View(qtw.QWidget):
         self.btn_clear_log.clicked.connect(self.clear_log_window)
 
         self.btn_quit_app = qtw.QPushButton('Quit Application', self)
-        self.btn_quit_app.clicked.connect(qtc.QCoreApplication.instance().quit)
+        self.btn_quit_app.clicked.connect(self.signal_close_application)
 
         self.log_window = qtw.QTextBrowser()
         self.log_window.insertPlainText('Media Log Window')

@@ -48,12 +48,23 @@ class MainWindow(qtw.QMainWindow):
 
         # view signals to be connected to main_window slots
         self.view.signal_reset_progress_bar.connect(self.slot_reset_progress_bar)
+        self.view.signal_close_application.connect(self.close_application)
 
         # model signals to be connected to main_window slots
         self.model.signal_update_progress.connect(self.slot_update_progress_bar_and_print_message)
         self.model.signal_error_message.connect(self.slot_display_error_message)
 
         self.show()
+
+    # *** Main Window Methods ***
+    @qtc.Slot()
+    def close_application(self) -> None:
+        """
+        Close the application gracefully.
+
+        :return:
+        """
+        qtw.QApplication.quit()
 
     # *** Slots for model/view inputs***
     @qtc.Slot(int, str)
