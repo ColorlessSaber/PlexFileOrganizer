@@ -57,7 +57,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         self.btn_proceed.setEnabled(False)
         self.btn_proceed.clicked.connect(self.accept)
         self.btn_cancel = qtw.QPushButton('Cancel', self)
-        self.btn_cancel.clicked.connect(self.close)
+        self.btn_cancel.clicked.connect(self.reject)
 
         # Set up the layout of window
         directory_selected_layout = qtw.QHBoxLayout()

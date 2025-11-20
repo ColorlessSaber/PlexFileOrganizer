@@ -103,7 +103,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.btn_update_files.clicked.connect(self.first_stage_update_process)
         self.btn_update_files.setEnabled(False)
         btn_close = qtw.QPushButton('Cancel', self)
-        btn_close.clicked.connect(self.close)
+        btn_close.clicked.connect(self.reject)
 
         self.table_view = qtw.QTableView(self)
         self.table_view.setSortingEnabled(False)
