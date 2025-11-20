@@ -1,3 +1,5 @@
+from http.client import responses
+
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 
@@ -48,7 +50,7 @@ class MainWindow(qtw.QMainWindow):
 
         # view signals to be connected to main_window slots
         self.view.signal_reset_progress_bar.connect(self.slot_reset_progress_bar)
-        self.view.signal_close_application.connect(self.close_application)
+        self.view.signal_close_application.connect(self.close)
 
         # model signals to be connected to main_window slots
         self.model.signal_update_progress.connect(self.slot_update_progress_bar_and_print_message)
@@ -57,14 +59,22 @@ class MainWindow(qtw.QMainWindow):
         self.show()
 
     # *** Main Window Methods ***
-    @qtc.Slot()
-    def close_application(self) -> None:
+    def closeEvent(self, event):
         """
         Close the application gracefully.
-
-        :return:
         """
-        qtw.QApplication.quit()
+        response = qtw.QMessageBox.question(
+            self,
+            'Close Application?',
+            'Are you sure you want to close the application?',
+            buttons= qtw.QMessageBox.Yes | qtw.QMessageBox.No,
+            defaultButton= qtw.QMessageBox.Yes
+        )
+
+        if response == qtw.QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
     # *** Slots for model/view inputs***
     @qtc.Slot(int, str)

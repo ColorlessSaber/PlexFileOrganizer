@@ -216,4 +216,4 @@ class ManualMediaFileUpdate(qtw.QDialog):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
-            self.close()
+            self.accept()
