@@ -1,4 +1,4 @@
-from ...src.classes import ModifyMediaFolder
+from src.classes import ModifyMediaFolder
 from pyfakefs.fake_filesystem_unittest import TestCase
 import os
 

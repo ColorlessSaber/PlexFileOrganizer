@@ -1,4 +1,4 @@
-from ...src.functions import generate_correct_video_file_format
+from src.functions import generate_correct_video_file_format
 
 class TestTvShowFileFormats:
     def test_update_all_season_folders(self):

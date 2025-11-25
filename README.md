@@ -30,7 +30,7 @@
 
 <!--ABOUT THE PROJECT -->
 ## About The Project
-Creating a program to help the user create folder for new movies/tv shows, properly name media file(s) to match the media they are in while following
+A program to help the user create folder for new movies/tv shows, properly name media file(s) to match the media they are in while following
 Plex approve file naming convention, and organize the media folder(s)--AKA your music folder--if it gets out of hand. Also, it will contain other handy futures:
 rename existing media file(s); and have a built-in media player so the user can see what the media file is, thus allowing them to name it properly.
 
@@ -45,17 +45,22 @@ rename existing media file(s); and have a built-in media player so the user can 
 
 <!--Running the Program-->
 ## Running the Program
-Download a copy of the repo to your local computer, open it in your favorite IDE/IDLE, download the necessary library(s)
-listed below:
-* PySide 6
+Download a copy of the repo to your local computer and open it in your IDE. Next run the following command to 
+install the necessary libraries.
+<br><br>
+```
+pip install -r requirements.txt
+```
+<br><br>
+With the necessary libraries installed we then can simple run the main.py file.
+```
+python main.py
+```
 
-Once you have the listed library(s) installed simply run the setup.py. It should start right up.
-
-If you wish to make an executable, download the latest version of PyInstaller, open a terminal, navigate to where the project
-folder is located, and then run the follow commanded in the terminal.
+If you wish to make an executable of the application run the follow commanded in the terminal.
 
 ```
-pyinstaller --windowed setup.py
+pyinstaller --windowed --name=PlexFileOrganizer main.py
 ```
 
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>

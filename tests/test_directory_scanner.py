@@ -1,4 +1,4 @@
-from ..src.functions import directory_scanner
+from src.functions import directory_scanner
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 class TestDirectoryScanner(TestCase):
