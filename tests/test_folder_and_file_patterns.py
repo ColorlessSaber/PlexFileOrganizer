@@ -1,4 +1,4 @@
-from ..app.classes import FolderAndFilePatterns
+from ..src.classes import FolderAndFilePatterns
 
 folder_and_file_patterns = FolderAndFilePatterns()
 

@@ -1,4 +1,4 @@
-from ..app.functions import (
+from ..src.functions import (
     find_media_files_in_dir,
     skip_extra_folders,
     default_folder_condition

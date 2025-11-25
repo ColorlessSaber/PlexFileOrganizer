@@ -1,4 +1,4 @@
-from ..app.functions import scan_media_folder
+from ..src.functions import scan_media_folder
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 class TestScanMediaFolder(TestCase):

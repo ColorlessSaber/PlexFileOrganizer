@@ -3,7 +3,7 @@ setup file
 """
 import sys
 from PySide6 import QtWidgets as qtw
-from app import MainWindow
+from src import MainWindow
 
 if __name__ == '__main__':
     if (sys.version_info.major >= 3) and (sys.version_info.minor >= 12):

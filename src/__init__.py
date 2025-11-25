@@ -1,4 +1,4 @@
 """
-__init__ file for app folder
+__init__ file for src folder
 """
 from .main_window import MainWindow
