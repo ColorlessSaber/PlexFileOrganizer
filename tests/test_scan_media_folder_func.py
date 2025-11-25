@@ -1,4 +1,4 @@
-from ..PlexFileOrganizer.functions import scan_media_folder
+from ..app.functions import scan_media_folder
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 class TestScanMediaFolder(TestCase):

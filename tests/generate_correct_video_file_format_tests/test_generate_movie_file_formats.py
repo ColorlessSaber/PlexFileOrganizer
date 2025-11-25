@@ -1,4 +1,4 @@
-from ...PlexFileOrganizer.functions import generate_correct_video_file_format
+from ...app.functions import generate_correct_video_file_format
 
 def test_movie_format():
     file = '/dir/dir1/Zenless Zone Zero/movie.txt'

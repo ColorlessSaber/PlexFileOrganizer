@@ -1,4 +1,4 @@
-from ...PlexFileOrganizer.classes import ModifyMediaFolder
+from ...app.classes import ModifyMediaFolder
 from pyfakefs.fake_filesystem_unittest import TestCase
 import os
 

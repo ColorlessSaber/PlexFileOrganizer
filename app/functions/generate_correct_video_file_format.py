@@ -9,7 +9,7 @@ def generate_correct_video_file_format(list_of_video_files: tuple[str])\
     figure out the next number(s) to give to the unformatted tv show episodes.
 
     :param list_of_video_files: A tuple list of video files in a directory
-    :return: A list with tuple elements, each element has the following format: (old file name, new file name); and a status message of
+    :return: A list with each element a tuple with the following format: (old file name, new file name); and a status message of
     how many files will be updated in the directory
     """
     folder_and_files_patterns = FolderAndFilePatterns()

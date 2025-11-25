@@ -1,4 +1,4 @@
-from ..PlexFileOrganizer.classes import MediaFile
+from ..app.classes import MediaFile
 
 class TestMediaFileObject:
 

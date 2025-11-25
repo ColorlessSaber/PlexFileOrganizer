@@ -1,4 +1,4 @@
-from ..PlexFileOrganizer.functions import (
+from ..app.functions import (
     find_media_files_in_dir,
     skip_extra_folders,
     default_folder_condition

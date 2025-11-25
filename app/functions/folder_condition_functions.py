@@ -8,6 +8,7 @@ def default_folder_condition(_) -> bool:
     Allow any folder to be scanned.
 
     :param _: Accepts a variable but does not use it.
+    :return: A boolean indicating if the folder needs to be scanned.
     """
     return True
 
@@ -16,6 +17,7 @@ def skip_extra_folders(folder_name: str) -> bool:
     Skip extra folders from being scanned.
 
     :param folder_name: The name of the folder to be checked.
+    :return: A boolean indicating if the folder needs to be scanned.
     """
     folder_and_file_patterns = FolderAndFilePatterns()
 

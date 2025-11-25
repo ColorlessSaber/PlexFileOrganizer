@@ -1,4 +1,4 @@
-from ..PlexFileOrganizer.functions import video_file_condition
+from ..app.functions import video_file_condition
 
 class TestFileConditionFunctions:
     def test_video_file_condition(self):

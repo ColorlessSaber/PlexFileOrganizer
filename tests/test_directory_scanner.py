@@ -1,4 +1,4 @@
-from ..PlexFileOrganizer.functions import directory_scanner
+from ..app.functions import directory_scanner
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 class TestDirectoryScanner(TestCase):

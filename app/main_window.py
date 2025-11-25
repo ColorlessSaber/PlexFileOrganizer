@@ -1,5 +1,3 @@
-from http.client import responses
-
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 
@@ -59,7 +57,7 @@ class MainWindow(qtw.QMainWindow):
         self.show()
 
     # *** Main Window Methods ***
-    def closeEvent(self, event):
+    def closeEvent(self, event) -> None:
         """
         Close the application gracefully.
         """

@@ -73,7 +73,7 @@ class View(qtw.QWidget):
         grid_layout.addWidget(self.btn_quit_app, 8, 3)
         self.setLayout(grid_layout)
 
-# *** Methods that launch popup windows ***
+# *** Method(s) that launch popup windows ***
     @qtc.Slot()
     def launch_create_media_folder_window(self) -> None:
         """
@@ -134,7 +134,7 @@ class View(qtw.QWidget):
         self.log_window.insertPlainText('\nOpening Manual Update Media Files window')
         manual_update_media_files_window.exec()
 
-# *** Methods that launches messageboxes ***
+# *** Method(s) that launch a messagebox ***
     @qtc.Slot()
     def messagebox_auto_update_media_files_complete(self) -> None:
         """

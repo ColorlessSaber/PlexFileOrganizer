@@ -1,4 +1,4 @@
-from ..PlexFileOrganizer.classes import FolderAndFilePatterns
+from ..app.classes import FolderAndFilePatterns
 
 folder_and_file_patterns = FolderAndFilePatterns()
 
