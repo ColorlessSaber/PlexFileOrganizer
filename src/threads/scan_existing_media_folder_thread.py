@@ -24,12 +24,17 @@ class ScanExistingMediaFolderThread(qtc.QRunnable):
         Initialize the thread
         """
         self.signals.progress.emit(25, "Scanning existing media folder...")
-        # TODO add in try-except method
+        try:
+            media_folder_information, folder_is_a_media_folder = scan_media_folder(self.media_folder_directory)
 
-        media_folder_information, folder_is_a_media_folder = scan_media_folder(self.media_folder_directory)
+            self.signals.progress.emit(100, "Scan complete!")
+            if folder_is_a_media_folder:
+                self.signals.finished.emit(media_folder_information)
+            else:
+                self.signals.not_media_folder.emit()
 
-        self.signals.progress.emit(100, "Scan complete!")
-        if folder_is_a_media_folder:
-            self.signals.finished.emit(media_folder_information)
-        else:
-            self.signals.not_media_folder.emit()
+        except OSError as e:
+            self.signals.error.emit(e)
+
+        except BaseException as e:
+            self.signals.error.emit(e)

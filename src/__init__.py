@@ -1,4 +1,4 @@
 """
-__init__ file for PlexFileOrganizer folder
+__init__ file for src folder
 """
 from .main_window import MainWindow

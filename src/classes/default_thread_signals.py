@@ -6,8 +6,7 @@ class DefaultThreadSignals(qtc.QObject):
 
     error -- Signal to indicate an error has occurred
     progress -- Signal to update the progress bar and display a message
-    finished -- Signal to indicate the thread is finished. Can be overwritten to
-    output an object or a specific datatype
+    finished -- Signal to indicate the thread is finished. Can be overwritten to output an object or a specific datatype
     """
     error = qtc.Signal(object)
     progress = qtc.Signal(int, str)

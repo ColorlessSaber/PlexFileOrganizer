@@ -1,4 +1,4 @@
-from ...PlexFileOrganizer.functions import generate_correct_video_file_format
+from src.functions import generate_correct_video_file_format
 
 class TestExtraFileFormats:
     def test_extra_file_trailer_format(self):

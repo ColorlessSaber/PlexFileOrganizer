@@ -13,16 +13,18 @@ class Model(qtc.QObject):
 
     thread_pool = qtc.QThreadPool()
 
-    signal_inform_user_of_existing_media_folder = qtc.Signal()
+    # Signal(s) to inform the user of something
+    signal_inform_user_media_folder_already_exists = qtc.Signal()
     signal_user_confirmation_of_existing_media_folder = qtc.Signal()
     signal_inform_user_folder_not_media_folder = qtc.Signal()
 
+    # Signal(s) connect to the main_window
     signal_error_message = qtc.Signal(object)
     signal_update_progress = qtc.Signal(int, str)
 
+    # Signal(s) connect to model
     signal_analysis_of_media_folder_complete = qtc.Signal(object)
     signal_duplicate_files_check_complete = qtc.Signal(list)
-
     signal_auto_update_finished = qtc.Signal()
     signal_create_media_folder_finished = qtc.Signal()
     signal_update_of_media_folder_finished = qtc.Signal()
@@ -52,10 +54,9 @@ class Model(qtc.QObject):
         :return:
         """
         create_media_folder_thread = CreateMediaFolderThread(media_folder_selection)
-        create_media_folder_thread.signals.request_user_input_signal.connect(self.signal_inform_user_of_existing_media_folder)
+        create_media_folder_thread.signals.media_folder_already_exists.connect(self.signal_inform_user_media_folder_already_exists)
         create_media_folder_thread.signals.progress.connect(self.slot_thread_update_progress_status)
         create_media_folder_thread.signals.finished.connect(self.signal_create_media_folder_finished)
-        self.signal_user_confirmation_of_existing_media_folder.connect(create_media_folder_thread.user_confirmation) # signal from model to thread
         self.thread_pool.start(create_media_folder_thread)
 
     @qtc.Slot(object)

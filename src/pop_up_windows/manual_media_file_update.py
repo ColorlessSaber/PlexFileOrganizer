@@ -102,8 +102,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.btn_update_files = qtw.QPushButton('Update File(s)', self)
         self.btn_update_files.clicked.connect(self.first_stage_update_process)
         self.btn_update_files.setEnabled(False)
-        cancel_btn = qtw.QPushButton('Cancel', self)
-        cancel_btn.clicked.connect(self.close)
+        btn_close = qtw.QPushButton('Cancel', self)
+        btn_close.clicked.connect(self.reject)
 
         self.table_view = qtw.QTableView(self)
         self.table_view.setSortingEnabled(False)
@@ -124,7 +124,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
         button_layout.addWidget(self.btn_add_files)
         button_layout.addWidget(self.btn_remove_file)
         button_layout.addWidget(self.btn_update_files)
-        button_layout.addWidget(cancel_btn)
+        button_layout.addWidget(btn_close)
 
         main_layout = qtw.QHBoxLayout()
         main_layout.addLayout(button_layout)
@@ -216,4 +216,4 @@ class ManualMediaFileUpdate(qtw.QDialog):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
-            self.close()
+            self.accept()

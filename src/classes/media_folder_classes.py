@@ -35,7 +35,9 @@ class ModifyMediaFolder(MediaFolderData):
 
     def generate_new_extra_folders(self) -> None:
         """
-        Creates the extra folder(s) the user selected
+        Creates the extra folder(s) the user selected.
+
+        :return:
         """
         for key in self.extra_folders:
             if self.extra_folders[key]:
@@ -51,7 +53,8 @@ class GenerateMediaFolder(MediaFolderData):
 
     def check_if_media_folder_exists(self) -> bool:
         """
-        Checks to see if media folder already exists in directory
+        Checks to see if media folder already exists in directory.
+
         :return: A bool flag to indicate if the media folder exists or not
         """
         does_directory_exist = os.path.isdir('{}/{}'.format(self.directory, self.media_title))
@@ -62,14 +65,16 @@ class GenerateMediaFolder(MediaFolderData):
 
     def generate_media_folder(self) -> None:
         """
-        Create the media folder in selected directory
+        Create the media folder in selected directory.
+
         :return:
         """
         os.mkdir('{}/{}'.format(self.directory, self.media_title))
 
     def generate_seasons(self) -> None:
         """
-        Creates the number of season folder(s)
+        Creates the number of season folder(s).
+
         :return:
         """
         for season_num in range(1, self.number_of_seasons+1): # plus one is added to generate the correct number of season folder(s).
@@ -77,7 +82,8 @@ class GenerateMediaFolder(MediaFolderData):
 
     def generate_extra_folders(self) -> bool:
         """
-        Creates the extra folder(s) the user selected
+        Creates the extra folder(s) the user selected.
+
         :return: a bool flag to indicate if an extra folder was created
         """
         an_extra_folder_was_created = False # a flag to indicate if an extra folder was created.

@@ -18,9 +18,9 @@ def find_media_files_in_dir(
     files_in_directory = []
 
     for entry in directory_scanner(directory):
-        file_directory_path = pathlib.Path(entry).parent.resolve().name
+        file_folder_is_in = pathlib.Path(entry).parent.resolve().name
 
-        if file_condition(entry.name) and folder_condition(file_directory_path):
+        if file_condition(entry.name) and folder_condition(file_folder_is_in):
             # Compare the new media file to the last appended file in the list to see if they are in
             # the same directory. If they are in the same directory, append the media file to the list.
             # If they aren't in the same directory, yield the list.

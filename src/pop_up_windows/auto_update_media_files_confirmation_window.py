@@ -55,7 +55,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         self.btn_select_directory.clicked.connect(self.select_directory_window)
         self.btn_proceed = qtw.QPushButton('Proceed', self)
         self.btn_proceed.setEnabled(False)
-        self.btn_proceed.clicked.connect(self.accept)
+        self.btn_proceed.clicked.connect(self.start_update_process)
         self.btn_cancel = qtw.QPushButton('Cancel', self)
         self.btn_cancel.clicked.connect(self.reject)
 
@@ -93,7 +93,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
             self.btn_proceed.setEnabled(True) # enable the button given user has selected a directory
             self.label_selected_directory.setText(directory_selected_by_user)
 
-    def accept(self) -> None:
+    def start_update_process(self) -> None:
         """
         Create the object that holds the information of what directory to scan and what options were selected
         and sends it off before closing the window.
@@ -105,4 +105,4 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
 
         self.signal_initiate_auto_update.emit(user_selected_dir_and_options)
 
-        super().accept()
+        self.accept()

@@ -69,9 +69,9 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         extra_folder_layout.addWidget(self.cb_shorts, 1, 2)
         extra_folder_layout.addWidget(self.cb_other, 1, 3)
 
-        self.btn_accept = qtw.QPushButton('Accept', self)
-        self.btn_accept.setEnabled(False)
-        self.btn_accept.clicked.connect(self.accept)
+        self.btn_update = qtw.QPushButton('Update', self)
+        self.btn_update.setEnabled(False)
+        self.btn_update.clicked.connect(self.start_folder_modification)
 
         btn_cancel = qtw.QPushButton('Cancel', self)
         btn_cancel.clicked.connect(self.reject)
@@ -82,7 +82,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         main_layout.addLayout(media_inform_form)
         main_layout.addLayout(extra_folder_layout)
         main_layout.addLayout(self.season_inform_form)
-        main_layout.addWidget(self.btn_accept)
+        main_layout.addWidget(self.btn_update)
         main_layout.addWidget(btn_cancel)
         self.setLayout(main_layout)
 
@@ -159,7 +159,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             self.cb_other.setChecked(False)
             self.cb_other.setEnabled(True)
 
-        self.btn_accept.setEnabled(True)
+        self.btn_update.setEnabled(True)
 
     def select_media_folder(self) -> None:
         media_folder_dir = qtw.QFileDialog.getExistingDirectory(
@@ -172,9 +172,9 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             self.signal_initiate_scan_of_media_folder.emit(media_folder_dir)
 
     @qtc.Slot()
-    def accept(self) -> None:
+    def start_folder_modification(self) -> None:
         """
-        Create the object to hold the user's selection and send it off before closing the window.
+        Create the object to hold the user's selection and sends it off to be
         """
         modified_media_folder_info = ModifyMediaFolder()
         modified_media_folder_info.directory = self.select_directory_label.text()
@@ -192,4 +192,38 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         modified_media_folder_info.extra_folders['other'] = self.cb_other.isChecked() if self.cb_other.isEnabled() else False
 
         self.signal_media_folder_update_information.emit(modified_media_folder_info)
-        super().accept()
+
+    @qtc.Slot()
+    def messagebox_folder_not_media_folder(self) -> None:
+        """
+        Launches the messagebox to inform user the folder is not media folder.
+        Will reset the progress bar once user closes the messagebox window.
+
+        :return:
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Selected Folder is not Media Folder!',
+            'The folder you selected to analyze is not a Media Folder.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+
+    @qtc.Slot()
+    def messagebox_media_folder_modification_complete(self) -> None:
+        """
+        Launches a messagebox to inform user the update of the media folder is complete.
+        Will reset the progress bar and close "modified media folder" window once user closes the messagebox window.
+
+        :return:
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'Update Media Folder Complete!',
+            'Finished updating the media folder in the directory.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.signal_reset_progress_bar.emit()
+            self.accept()

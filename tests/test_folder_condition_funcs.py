@@ -1,4 +1,4 @@
-from ..PlexFileOrganizer.functions import default_folder_condition, skip_extra_folders
+from src.functions import default_folder_condition, skip_extra_folders
 
 class TestFolderConditionFuncs:
     def test_default_folder_condition(self):

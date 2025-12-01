@@ -20,7 +20,7 @@ class MainWindow(qtw.QMainWindow):
         self.progress_bar.setMaximum(100)
         self.statusBar().addPermanentWidget(self.progress_bar)
 
-        self.statusBar().addPermanentWidget(qtw.QLabel('V0.9.0'))
+        self.statusBar().addPermanentWidget(qtw.QLabel('V1.0.0'))
 
         # view signals to be connected to model slots
         self.view.signal_initiate_creating_media_folder.connect(self.model.start_create_media_folder_thread)
@@ -34,25 +34,45 @@ class MainWindow(qtw.QMainWindow):
         self.view.signal_initiate_manual_update.connect(self.model.start_manual_update_media_files_thread)
 
         # model signals to be connected to view slots
-        self.model.signal_inform_user_of_existing_media_folder.connect(self.view.messagebox_inform_user_of_existing_media_file)
-        self.model.signal_auto_update_finished.connect(self.view.messagebox_auto_update_media_files_complete)
-        self.model.signal_create_media_folder_finished.connect(self.view.messagebox_create_media_folder_complete)
+        self.model.signal_inform_user_media_folder_already_exists.connect(self.view.status_pass_through_media_folder_already_exists)
+        self.model.signal_create_media_folder_finished.connect(self.view.status_pass_through_media_folder_creation_complete)
 
-        self.model.signal_inform_user_folder_not_media_folder.connect(self.view.messagebox_inform_user_of_folder_not_media_folder)
+        self.model.signal_auto_update_finished.connect(self.view.messagebox_auto_update_media_files_complete)
+
+        self.model.signal_inform_user_folder_not_media_folder.connect(self.view.status_pass_through_folder_not_media_folder)
         self.model.signal_analysis_of_media_folder_complete.connect(self.view.data_pass_through_media_folder_scan_result)
-        self.model.signal_update_of_media_folder_finished.connect(self.view.messagebox_update_of_media_folder_complete)
+        self.model.signal_update_of_media_folder_finished.connect(self.view.status_pass_through_media_folder_modification_complete)
 
         self.model.signal_duplicate_files_check_complete.connect(self.view.data_pass_through_duplicate_check_result)
         self.model.signal_manual_update_finished.connect(self.view.status_pass_through_manual_update_media_files_complete)
 
         # view signals to be connected to main_window slots
         self.view.signal_reset_progress_bar.connect(self.slot_reset_progress_bar)
+        self.view.signal_close_application.connect(self.close)
 
         # model signals to be connected to main_window slots
         self.model.signal_update_progress.connect(self.slot_update_progress_bar_and_print_message)
         self.model.signal_error_message.connect(self.slot_display_error_message)
 
         self.show()
+
+    # *** Main Window Methods ***
+    def closeEvent(self, event) -> None:
+        """
+        Close the application gracefully.
+        """
+        response = qtw.QMessageBox.question(
+            self,
+            'Close Application?',
+            'Are you sure you want to close the application?',
+            buttons= qtw.QMessageBox.Yes | qtw.QMessageBox.No,
+            defaultButton= qtw.QMessageBox.Yes
+        )
+
+        if response == qtw.QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
     # *** Slots for model/view inputs***
     @qtc.Slot(int, str)

@@ -1,6 +1,7 @@
 """
 Thread for creating the media folders in the selected directory
 """
+import time
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 
@@ -9,15 +10,12 @@ class CreateMediaFolderThread(qtc.QRunnable):
         """
         The signals for thread
         """
-        request_user_input_signal = qtc.Signal()
+        media_folder_already_exists = qtc.Signal()
 
     def __init__(self, media_folder_information):
         super().__init__()
         self.media_folder_information = media_folder_information
-        self.wait_condition = qtc.QWaitCondition()
-        self.mutex = qtc.QMutex() #TODO see if QMutex can be removed
         self.signals = self.ThreadSignals()
-        self.user_confirmed_directory_exists = False
 
     @qtc.Slot()
     def run(self) -> None:
@@ -26,29 +24,28 @@ class CreateMediaFolderThread(qtc.QRunnable):
         :return:
         """
 
-        self.mutex.lock()
         try:
             self.signals.progress.emit(10, 'Checking if Media Folder Exists.')
             if self.media_folder_information.check_if_media_folder_exists():
-                self.signals.progress.emit(15, 'Media Folder found. Informing user.')
-                self.signals.request_user_input_signal.emit()
-                self.wait_condition.wait(self.mutex)
-
-            if self.user_confirmed_directory_exists:
+                time.sleep(1) # delay for one second so user sees the program is working.
                 self.signals.progress.emit(0, 'Canceling creation of Media Folder.')
+                self.signals.media_folder_already_exists.emit()
             else:
                 self.signals.progress.emit(20, 'Starting the process of creating Media Folder for: ' +
                                            self.media_folder_information.media_title)
                 self.media_folder_information.generate_media_folder()
-                self.signals.progress.emit(40, '...Media folder created.')
+                self.signals.progress.emit(40, '...Folder created.')
+                time.sleep(1)  # delay for one second so user sees the program is working.
 
                 if self.media_folder_information.media_type == 'tv':
                     self.media_folder_information.generate_seasons()
                     self.signals.progress.emit(60, '...Season folder(s) created.')
+                    time.sleep(1)  # delay for one second so user sees the program is working.
 
                 an_extra_folder_was_created = self.media_folder_information.generate_extra_folders()
                 if an_extra_folder_was_created:
                     self.signals.progress.emit(80, '...Extra folder(s) created.')
+                    time.sleep(1)  # delay for one second so user sees the program is working.
 
                 self.signals.finished.emit()
                 self.signals.progress.emit(100, 'Finished making Media Folder!')
@@ -56,17 +53,5 @@ class CreateMediaFolderThread(qtc.QRunnable):
         except OSError as e:
             self.signals.error.emit(e)
 
-        # TODO add in BaseException for covering other errors
-
-        finally:
-            self.mutex.unlock()
-
-    @qtc.Slot()
-    def user_confirmation(self) -> None:
-        """
-        Receives confirmation from user that they understand directory exists.
-
-        :return:
-        """
-        self.user_confirmed_directory_exists = True
-        self.wait_condition.wakeAll()
+        except BaseException as e:
+            self.signals.error.emit(e)
