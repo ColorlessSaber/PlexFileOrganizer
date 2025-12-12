@@ -14,6 +14,8 @@ class MainWindow(qtw.QMainWindow):
         self.view = View()
         self.model = Model()
         self.setCentralWidget(self.view)
+        self.setMinimumWidth(800)
+        self.setMinimumHeight(600)
 
         self.progress_bar = qtw.QProgressBar()
         self.progress_bar.setMinimum(0)
