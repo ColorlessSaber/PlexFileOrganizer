@@ -255,6 +255,15 @@ class ManualMediaFileUpdate(qtw.QDialog):
             self._enable_or_disable_buttons(True)
             self.clear_table()
 
+    @qtc.Slot()
+    def enable_buttons_due_to_error(self) -> None:
+        """
+        Enables all button widgets due to error.
+
+        :return:
+        """
+        self._enable_or_disable_buttons(True)
+
     def _enable_or_disable_buttons(self, enable_or_disable: bool) -> None:
         """
         Enables / disables the buttons widgets.

@@ -92,13 +92,15 @@ class MainWindow(qtw.QMainWindow):
     @qtc.Slot(object)
     def slot_display_error_message(self, error_message: object) -> None:
         """
-        Write the error message to the Log Window and reset the progress bar.
+        Write the error message to the Log Window, reset the progress bar, and have view launch messagebox
+        to inform user what happened.
 
         :param error_message: The error that was generated
         :return:
         """
         self.progress_bar.reset()
-        self.view.write_to_log_window('\n!!Error has been detected!! -> {}'.format(str(error_message)))
+        self.view.write_to_log_window('\n!!Error has been detected!! -> {}'.format(error_message))
+        self.view.messagebox_system_error_detected()
 
     @qtc.Slot()
     def slot_reset_progress_bar(self) -> None:

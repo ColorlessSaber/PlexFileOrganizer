@@ -12,7 +12,7 @@ class CreateMediaFolder(qtw.QDialog):
     def __init__(self, parent=None):
         """
         A dialog window to allow user to generate a new Media Folder. Able to selection if it's a movie or tv show,
-        how many seasons if it is a tv show, and which Extra Folders they wish to make.
+        how many seasons if it is a TV show, and which Extra Folders they wish to make.
 
         :param parent: The parent window the dialog window will be linked to.
         """
@@ -172,6 +172,15 @@ class CreateMediaFolder(qtw.QDialog):
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
             self._enable_or_disable_buttons(True)
+
+    @qtc.Slot()
+    def enable_buttons_due_to_error(self) -> None:
+        """
+        Enables all button widgets due to error.
+
+        :return:
+        """
+        self._enable_or_disable_buttons(True)
 
     def _enable_or_disable_buttons(self, enable_or_disable: bool) -> None:
         """

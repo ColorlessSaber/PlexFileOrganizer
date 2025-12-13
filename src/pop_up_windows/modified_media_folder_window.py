@@ -179,7 +179,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         modified_media_folder_info.directory = self.select_directory_label.text()
         modified_media_folder_info.media_title = self.media_title.text()
         modified_media_folder_info.media_type = self.media_type.text()
-        modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text())
+        modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text()) if self.highest_season_number.text() != '' else 0
         modified_media_folder_info.number_of_new_seasons = int(self.number_of_new_seasons.text())
         modified_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked() if self.cb_trailers.isEnabled() else False
         modified_media_folder_info.extra_folders['behind the scenes'] = self.cb_behind_the_scenes.isChecked() if self.cb_behind_the_scenes.isEnabled() else False
@@ -230,6 +230,15 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             self.signal_reset_progress_bar.emit()
             self._clear_scanned_media_folder_information()
             self._enable_or_disable_buttons(True)
+
+    @qtc.Slot()
+    def enable_buttons_due_to_error(self) -> None:
+        """
+        Enables all button widgets due to error.
+
+        :return:
+        """
+        self._enable_or_disable_buttons(True)
 
     def _clear_scanned_media_folder_information(self) -> None:
         """
