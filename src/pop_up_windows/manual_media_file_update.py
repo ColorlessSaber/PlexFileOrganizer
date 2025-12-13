@@ -208,11 +208,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
         )
 
         if response == qtw.QMessageBox.Ok:
-            self.btn_add_files.setEnabled(False)
-            self.btn_remove_file.setEnabled(False)
-            self.btn_clear_table.setEnabled(False)
-            self.btn_update_files.setEnabled(False)
-            self.btn_close.setEnabled(False)
+            self._enable_or_disable_buttons(False)
 
             data = self.model.extract_data()
             self.signal_check_list_of_files_for_duplicates.emit(data)
@@ -238,12 +234,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
                 buttons=qtw.QMessageBox.Ok,
                 defaultButton=qtw.QMessageBox.Ok
             )
-
-            self.btn_add_files.setEnabled(True)
-            self.btn_remove_file.setEnabled(True)
-            self.btn_clear_table.setEnabled(True)
-            self.btn_update_files.setEnabled(True)
-            self.btn_close.setEnabled(True)
+            self._enable_or_disable_buttons(True)
 
     @qtc.Slot()
     def messagebox_manual_update_media_files_complete(self) -> None:
@@ -261,11 +252,18 @@ class ManualMediaFileUpdate(qtw.QDialog):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
-
-            self.btn_add_files.setEnabled(True)
-            self.btn_remove_file.setEnabled(True)
-            self.btn_clear_table.setEnabled(True)
-            self.btn_update_files.setEnabled(True)
-            self.btn_close.setEnabled(True)
-
+            self._enable_or_disable_buttons(True)
             self.clear_table()
+
+    def _enable_or_disable_buttons(self, enable_or_disable: bool) -> None:
+        """
+        Enables / disables the buttons widgets.
+
+        :param enable_or_disable: Sets the enable / disable status
+        :return:
+        """
+        self.btn_add_files.setEnabled(enable_or_disable)
+        self.btn_remove_file.setEnabled(enable_or_disable)
+        self.btn_clear_table.setEnabled(enable_or_disable)
+        self.btn_update_files.setEnabled(enable_or_disable)
+        self.btn_close.setEnabled(enable_or_disable)
