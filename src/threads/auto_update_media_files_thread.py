@@ -34,10 +34,10 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
 
         :return:
         """
-        message_number_of_files_affected = ""
-        folder_and_file_pattern = FolderAndFilePatterns()
-
         try:
+            message_number_of_files_affected = ""
+            folder_and_file_pattern = FolderAndFilePatterns()
+
             self.signals.progress.emit(50, 'Scanning directory...')
 
             # set up the generator that will return the media files in a given directory based on option(s) selected by
