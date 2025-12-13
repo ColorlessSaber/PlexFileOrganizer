@@ -115,7 +115,7 @@ class CreateMediaFolder(qtw.QDialog):
     @qtc.Slot()
     def start_folder_generation(self) -> None:
         """
-        Create the object that holds the information about the new media folder and disable all buttons before
+        Create the object that holds the information about the new media folder and disable all button widgets before
         sending it off.
         """
         # Create object that will the information about the media folder to create
@@ -175,8 +175,10 @@ class CreateMediaFolder(qtw.QDialog):
 
     def _enable_or_disable_buttons(self, enable_or_disable: bool) -> None:
         """
-        A private function that enables or disables the buttons on the interface.
-        :param enable_or_disable: Sets the enable or disable status
+        Enables / disables the buttons widgets.
+
+        :param enable_or_disable: Sets the enable / disable status
+        :return:
         """
         self.btn_create.setEnabled(enable_or_disable)
         self.btn_cancel.setEnabled(enable_or_disable)
