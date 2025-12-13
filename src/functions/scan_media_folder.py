@@ -9,7 +9,7 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
     extra folders. The function also validates the given directory is a media folder.
 
     :param media_folder_path: the folder location of the media folder to scan.
-    :return: A media folder object and bool value if folder is a media folder--True for it is.
+    :return: A media folder object and bool value if folder is a media folder (True if it is a media folder)
     """
     folder_and_file_patterns = correct_media_file_format.FolderAndFilePatterns()
     media_folder_information = MediaFolderData()

@@ -55,7 +55,7 @@ class GenerateMediaFolder(MediaFolderData):
         """
         Checks to see if media folder already exists in directory.
 
-        :return: A bool flag to indicate if the media folder exists or not
+        :return: True -- directory exists, False -- directory not exists
         """
         does_directory_exist = os.path.isdir('{}/{}'.format(self.directory, self.media_title))
         if does_directory_exist:
@@ -84,7 +84,7 @@ class GenerateMediaFolder(MediaFolderData):
         """
         Creates the extra folder(s) the user selected.
 
-        :return: a bool flag to indicate if an extra folder was created
+        :return: True -- extra folder(s) were created, False -- no extra folder(s) were created
         """
         an_extra_folder_was_created = False # a flag to indicate if an extra folder was created.
         for key in self.extra_folders:

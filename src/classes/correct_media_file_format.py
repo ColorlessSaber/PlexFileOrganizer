@@ -47,7 +47,7 @@ class FolderAndFilePatterns:
         Checks to see if the given video file matches the correct tv show episode file format.
         
         :param file_name: the file name to check against
-        :return: A Bool value. True - formatted correctly, False - not formatted correctly
+        :return: True - formatted correctly, False - not formatted correctly
         """
         if self.tv_episode_file_format_regex_pattern.match(file_name):
             return True
@@ -60,7 +60,7 @@ class FolderAndFilePatterns:
         
         :param file_name: the file name to check against
         :param folder_name: The name of the folder the media file is in.
-        :return: A bool value. True - formatted correctly, False - not formatted correctly
+        :return: True - formatted correctly, False - not formatted correctly
         """
         if self.movie_file_format_regex_pattern.match(file_name).group('title') == folder_name:
             return True
@@ -94,7 +94,7 @@ class FolderAndFilePatterns:
         Checks to see if the given folder matches the correct TV show season folder format.
 
         :param folder_name: The name of the folder to check against
-        :return: Bool value. True - formatted correctly, False - not formatted correctly
+        :return: True - formatted correctly, False - not formatted correctly
         """
         if self.tv_show_folder_format_regex_pattern.match(folder_name) is not None:
             return True
@@ -106,7 +106,7 @@ class FolderAndFilePatterns:
         Checks to see if the given folder matches the correct extra folder format.
 
         :param folder_name: The name of the folder to check against
-        :return: Bool value. True - formatted correctly, False - not formatted correctly
+        :return: True - formatted correctly, False - not formatted correctly
         """
         if self.extra_folder_format_regex_pattern.match(folder_name) is not None:
             return True
@@ -118,7 +118,7 @@ class FolderAndFilePatterns:
         Checks if the media files in the given list are all formated correctly for the media folder they are in
 
         :param list_of_files: a tuple list where each element is the full-path to a file in a directory
-        :return: Bool value. True -- all media files in folder are formated correctly. False -- at lest one media file in the folder isn't formated correctly
+        :return: True -- all media files in folder are formated correctly. False -- at lest one media file in the folder isn't formated correctly
         """
         for file_path in list_of_files:
             file_name = file_path.split('/')[-1]
