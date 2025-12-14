@@ -1,6 +1,7 @@
 """
 Thread for Auto Update Media Files
 """
+import time
 from PySide6 import QtCore as qtc
 from ..classes import FolderAndFilePatterns, DefaultThreadSignals
 from ..functions import (
@@ -35,10 +36,13 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         :return:
         """
         try:
+            self.signals.progress.emit(10, 'Beginning automatic update of media file(s).')
+            time.sleep(1) # delay for a second so the user sees the program is working.
             message_number_of_files_affected = ""
             folder_and_file_pattern = FolderAndFilePatterns()
 
-            self.signals.progress.emit(50, 'Scanning directory...')
+            self.signals.progress.emit(25, 'Scanning directory and sub-folders...')
+            time.sleep(1)  # delay for a second so the user sees the program is working.
 
             # set up the generator that will return the media files in a given directory based on option(s) selected by
             # user
@@ -54,10 +58,11 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                     files_to_be_updated, message_number_of_files_affected = generate_correct_video_file_format(file_list)
                     update_files_in_directory(files_to_be_updated)
                     self.signals.progress.emit(50, message_number_of_files_affected)
+                    time.sleep(1)  # delay for a second so the user sees the program is working.
 
             if not message_number_of_files_affected: # For when no files that needed updating were found.
-                self.signals.progress.emit(50, '-- No files found that needed to be updated')
-            # print('finished the check') # for debugging
+                self.signals.progress.emit(50, '-- No files were found that needed to be updated')
+
             self.signals.progress.emit(100, 'Finished scanning.')
             self.signals.finished.emit()
 
