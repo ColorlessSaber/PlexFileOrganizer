@@ -39,8 +39,9 @@ class ManualUpdateMediaFilesThread(qtc.QRunnable):
                 prepped_media_files.append((media_file[0] + "/" + media_file[1] + media_file[3], media_file[0] + "/" + media_file[2] + media_file[3]))
             self.signals.progress.emit(41, '-- File(s) prepped for updating')
 
-            time.sleep(1) # delay for a second so the user sees the program is working.
+
             self.signals.progress.emit(58, "-- Updating media file(s).")
+            time.sleep(1)  # delay for a second so the user sees the program is working.
             update_files_in_directory(prepped_media_files)
             self.signals.progress.emit(75, "-- Media file(s) updated.")
 
