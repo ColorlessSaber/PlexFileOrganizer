@@ -46,11 +46,14 @@ class CreateMediaFolderThread(qtc.QRunnable):
                     self.media_folder_information.generate_seasons()
                     self.signals.progress.emit(60, '-- Season folder(s) created.')
 
-                an_extra_folder_was_created = self.media_folder_information.generate_extra_folders()
-                if an_extra_folder_was_created:
+                if self.media_folder_information.check_if_new_extra_folders_are_needed():
                     self.signals.progress.emit(70, '-- Creating extra folder(s).')
                     time.sleep(1)  # delay for one second so user sees the program is working.
+                    self.media_folder_information.generate_new_extra_folders()
                     self.signals.progress.emit(80, '-- Extra folder(s) created.')
+                else:
+                    self.signals.progress.emit(80, '-- No extra folder(s) needed to be created.')
+                    time.sleep(1)  # delay for one second so user sees the program is working.
 
                 self.signals.finished.emit()
                 self.signals.progress.emit(100, 'Finished generating Media Folder!')

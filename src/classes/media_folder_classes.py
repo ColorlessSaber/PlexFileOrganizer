@@ -43,6 +43,18 @@ class ModifyMediaFolder(MediaFolderData):
             if self.extra_folders[key]:
                 os.mkdir('{}/{}'.format(self.directory, key.title()))
 
+    def check_if_new_extra_folders_are_needed(self) -> bool:
+        """
+        Checks to see if there are new extra folder(s) that need to be created.
+
+        :return: True -- There are extra folder(s) that need to be created,
+        False -- no extra folder(s) need to be created
+        """
+        for key in self.extra_folders:
+            if self.extra_folders[key]:
+                return True
+        return False
+
 
 class GenerateMediaFolder(MediaFolderData):
     """
@@ -80,15 +92,24 @@ class GenerateMediaFolder(MediaFolderData):
         for season_num in range(1, self.number_of_seasons+1): # plus one is added to generate the correct number of season folder(s).
             os.mkdir('{}/{}/Season {}'.format(self.directory, self.media_title, season_num))
 
-    def generate_extra_folders(self) -> bool:
+    def generate_extra_folders(self) -> None:
         """
         Creates the extra folder(s) the user selected.
 
-        :return: True -- extra folder(s) were created, False -- no extra folder(s) were created
+        :return:
         """
-        an_extra_folder_was_created = False # a flag to indicate if an extra folder was created.
         for key in self.extra_folders:
             if self.extra_folders[key]:
                 os.mkdir('{}/{}/{}'.format(self.directory, self.media_title, key.title()))
-                an_extra_folder_was_created = True
-        return an_extra_folder_was_created
+
+    def check_if_new_extra_folders_are_needed(self) -> bool:
+        """
+        Checks to see if there are new extra folder(s) that need to be created.
+
+        :return: True -- There are extra folder(s) that need to be created,
+        False -- no extra folder(s) need to be created
+        """
+        for key in self.extra_folders:
+            if self.extra_folders[key]:
+                return True
+        return False
