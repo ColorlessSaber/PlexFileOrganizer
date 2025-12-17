@@ -56,6 +56,7 @@ class Model(qtc.QObject):
         create_media_folder_thread = CreateMediaFolderThread(media_folder_selection)
         create_media_folder_thread.signals.media_folder_already_exists.connect(self.signal_inform_user_media_folder_already_exists)
         create_media_folder_thread.signals.progress.connect(self.slot_thread_update_progress_status)
+        create_media_folder_thread.signals.error.connect(self.slot_thread_error_message)
         create_media_folder_thread.signals.finished.connect(self.signal_create_media_folder_finished)
         self.thread_pool.start(create_media_folder_thread)
 
@@ -119,8 +120,8 @@ class Model(qtc.QObject):
     @qtc.Slot(int, str)
     def slot_thread_update_progress_status(self, progress_bar_percentage: int, message: str) -> None:
         """
-        The slot on the model side for all threads' signals.progress to connect to for sending out a progress update--change to progress
-        bar and message to print to user.
+        The slot on the model side for all threads' signals.progress to connect to for sending out a progress
+        update--change to progress bar and message to print to user.
 
         :param progress_bar_percentage: An int value to set the progress bar position.
         :param message: A string message to be printed out to the user.

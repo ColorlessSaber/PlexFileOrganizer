@@ -35,6 +35,7 @@ class View(qtw.QWidget):
     status_pass_through_media_folder_creation_complete = qtc.Signal()
     status_pass_through_folder_not_media_folder = qtc.Signal()
     status_pass_through_media_folder_modification_complete = qtc.Signal()
+    status_pass_through_reset_do_to_error = qtc.Signal()
 
     def __init__(self):
         super().__init__()
@@ -86,6 +87,7 @@ class View(qtw.QWidget):
         create_media_folder_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
         self.status_pass_through_media_folder_already_exists.connect(create_media_folder_window.messagebox_media_folder_already_exists)
         self.status_pass_through_media_folder_creation_complete.connect(create_media_folder_window.messagebox_media_folder_creation_complete)
+        self.status_pass_through_reset_do_to_error.connect(create_media_folder_window.enable_buttons_due_to_error)
         self.log_window.insertPlainText('\nOpening Create Media Folder window')
         create_media_folder_window.exec()
 
@@ -103,6 +105,7 @@ class View(qtw.QWidget):
         self.data_pass_through_media_folder_scan_result.connect(modified_media_folder_window.load_existing_media_folder_info)
         self.status_pass_through_folder_not_media_folder.connect(modified_media_folder_window.messagebox_folder_not_media_folder)
         self.status_pass_through_media_folder_modification_complete.connect(modified_media_folder_window.messagebox_media_folder_modification_complete)
+        self.status_pass_through_reset_do_to_error.connect(modified_media_folder_window.enable_buttons_due_to_error)
         self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
         modified_media_folder_window.exec()
 
@@ -126,11 +129,12 @@ class View(qtw.QWidget):
         :return:
         """
         manual_update_media_files_window = ManualMediaFileUpdate(self)
-        self.data_pass_through_duplicate_check_result.connect(manual_update_media_files_window.second_stage_update_process)
-        self.status_pass_through_manual_update_media_files_complete.connect(manual_update_media_files_window.messagebox_manual_update_media_files_complete)
         manual_update_media_files_window.signal_initiate_manual_update.connect(self.signal_initiate_manual_update)
         manual_update_media_files_window.signal_check_list_of_files_for_duplicates.connect(self.signal_check_list_of_files_for_duplicates)
         manual_update_media_files_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
+        self.data_pass_through_duplicate_check_result.connect(manual_update_media_files_window.second_stage_update_process)
+        self.status_pass_through_manual_update_media_files_complete.connect(manual_update_media_files_window.messagebox_manual_update_media_files_complete)
+        self.status_pass_through_reset_do_to_error.connect(manual_update_media_files_window.enable_buttons_due_to_error)
         self.log_window.insertPlainText('\nOpening Manual Update Media Files window')
         manual_update_media_files_window.exec()
 
@@ -151,6 +155,22 @@ class View(qtw.QWidget):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
+
+    @qtc.Slot()
+    def messagebox_system_error_detected(self) -> None:
+        """
+        Launches the messagebox to inform user the system error is detected.
+
+        :return:
+        """
+        response = qtw.QMessageBox.information(
+            self,
+            'System Error Detected!',
+            'The program ran into an error when executing the task; the task has been canceled. Please see console window for information on the error.'
+        )
+
+        if response == qtw.QMessageBox.Ok:
+            self.status_pass_through_reset_do_to_error.emit()
 
 # *** Methods for Log Window ***
     @qtc.Slot()

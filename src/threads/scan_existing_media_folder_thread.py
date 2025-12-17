@@ -1,6 +1,7 @@
 """
 Thread for creating the media folders in the selected directory
 """
+import time
 from PySide6 import QtCore as qtc
 from ..functions import scan_media_folder
 from ..classes import DefaultThreadSignals
@@ -23,8 +24,9 @@ class ScanExistingMediaFolderThread(qtc.QRunnable):
         """
         Initialize the thread
         """
-        self.signals.progress.emit(25, "Scanning existing media folder...")
         try:
+            self.signals.progress.emit(25, "Scanning existing media folder...")
+            time.sleep(1)  # delay for a second so the user sees the program is working.
             media_folder_information, folder_is_a_media_folder = scan_media_folder(self.media_folder_directory)
 
             self.signals.progress.emit(100, "Scan complete!")

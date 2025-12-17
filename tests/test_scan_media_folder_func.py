@@ -7,6 +7,7 @@ class TestScanMediaFolder(TestCase):
 
         # test directory for tv media folder
         self.fs.create_dir("/foo/tv show/Season 01")
+        self.fs.create_dir("/foo/tv show/Special")
         self.fs.create_dir("/foo/tv show/Trailers")
         self.fs.create_dir("/foo/tv show/Behind the Scenes")
         self.fs.create_dir("/foo/tv show/Deleted Scenes")
@@ -38,6 +39,7 @@ class TestScanMediaFolder(TestCase):
 
         assert folder_is_a_media_folder, "Failed to detect tv media folder"
         assert media_folder_info.media_type == "tv", "Failed to detect media folder is tv show"
+        assert media_folder_info.number_of_seasons == 1, "Failed to not count Special season folder"
         assert media_folder_info.extra_folders['trailers'] == True, "Failed to detect extra folder - trailers"
         assert media_folder_info.extra_folders['behind the scenes'] == True, "Failed to detect extra folder - behind the scenes"
         assert media_folder_info.extra_folders['deleted scenes'] == True, "Failed to detect extra folder - deleted scenes"

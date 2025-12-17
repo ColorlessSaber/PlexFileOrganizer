@@ -1,6 +1,7 @@
 """
 Thread for updating existing media folder
 """
+import time
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 
@@ -20,14 +21,24 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
         """
         Initialize the thread
         """
-        self.signals.progress.emit(25, "Starting to update existing media folder:")
         try:
+            self.signals.progress.emit(17, "Starting to update existing media folder: " +
+                                       self.info_of_media_folder.media_title)
+            time.sleep(1)  # delay for a second so the user sees the program is working.
             if self.info_of_media_folder.media_type == 'tv':
+                self.signals.progress.emit(24, '-- Generating more season folder(s).')
+                time.sleep(1)  # delay for a second so the user sees the program is working.
                 self.info_of_media_folder.generate_new_season_folders()
-                self.signals.progress.emit(50, "...New Season folder(s) generated.")
+                self.signals.progress.emit(41, "-- New season folder(s) generated.")
 
-            self.info_of_media_folder.generate_new_extra_folders()
-            self.signals.progress.emit(75, "...Extra folder(s) generated.")
+            if self.info_of_media_folder.check_if_new_extra_folder_are_needed():
+                self.signals.progress.emit(58, "-- Generating extra folder(s).")
+                time.sleep(1)  # delay for a second so the user sees the program is working.
+                self.info_of_media_folder.generate_new_extra_folders()
+                self.signals.progress.emit(75, "-- Extra folder(s) generated.")
+            else:
+                self.signals.progress.emit(75, "-- No extra folder(s) needed to be created.")
+                time.sleep(1)  # delay for a second so the user sees the program is working.
 
             self.signals.progress.emit(100, "Update of Media Folder completed!")
             self.signals.finished.emit()

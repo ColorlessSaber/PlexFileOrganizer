@@ -1,6 +1,7 @@
 """
 Thread for Manual Update Media Files
 """
+import time
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 from ..functions import update_files_in_directory
@@ -27,18 +28,25 @@ class ManualUpdateMediaFilesThread(qtc.QRunnable):
         Starts the thread.
         """
         try:
-            self.signals.progress.emit(25, 'Starting manual update of media files...')
+            self.signals.progress.emit(17, 'Starting manual update of media file(s)...')
 
+            self.signals.progress.emit(24, '-- Prepping file(s) for update.')
+            time.sleep(1)  # delay for a second so the user sees the program is working.
             # Create a list where each element is a tuple and each tuple contains the following
             # (old file name, new file name)
             prepped_media_files = []
             for media_file in self.media_files_to_update:
                 prepped_media_files.append((media_file[0] + "/" + media_file[1] + media_file[3], media_file[0] + "/" + media_file[2] + media_file[3]))
+            self.signals.progress.emit(41, '-- File(s) prepped for updating')
 
-            self.signals.progress.emit(50, "-- Updating media files")
+
+            self.signals.progress.emit(58, "-- Updating media file(s).")
+            time.sleep(1)  # delay for a second so the user sees the program is working.
             update_files_in_directory(prepped_media_files)
+            self.signals.progress.emit(75, "-- Media file(s) updated.")
 
-            self.signals.progress.emit(100, 'Finished manual update of media files.')
+            time.sleep(1)  # delay for a second so the user sees the program is working.
+            self.signals.progress.emit(100, 'Finished manual update of media file(s).')
             self.signals.finished.emit()
 
         except OSError as e:

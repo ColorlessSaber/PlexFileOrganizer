@@ -12,7 +12,7 @@ class CreateMediaFolder(qtw.QDialog):
     def __init__(self, parent=None):
         """
         A dialog window to allow user to generate a new Media Folder. Able to selection if it's a movie or tv show,
-        how many seasons if it is a tv show, and which Extra Folders they wish to make.
+        how many seasons if it is a TV show, and which Extra Folders they wish to make.
 
         :param parent: The parent window the dialog window will be linked to.
         """
@@ -22,10 +22,10 @@ class CreateMediaFolder(qtw.QDialog):
 
         # widgets
         select_directory_layout = qtw.QGridLayout()
-        btn_select_directory = qtw.QPushButton('Select Directory', self)
-        btn_select_directory.clicked.connect(self.select_directory_popup)
+        self.btn_select_directory = qtw.QPushButton('Select Directory', self)
+        self.btn_select_directory.clicked.connect(self.select_directory_popup)
         self.select_directory_label = qtw.QLabel('', self)
-        select_directory_layout.addWidget(btn_select_directory, 0, 0)
+        select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
         select_directory_layout.addWidget(self.select_directory_label, 0, 1, 0, 2)
 
         self.media_type_group = qtw.QGroupBox('Media Type')
@@ -70,8 +70,8 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_create.setEnabled(False)
         self.btn_create.clicked.connect(self.start_folder_generation)
 
-        btn_cancel = qtw.QPushButton('Cancel', self)
-        btn_cancel.clicked.connect(self.reject)
+        self.btn_cancel = qtw.QPushButton('Cancel', self)
+        self.btn_cancel.clicked.connect(self.reject)
 
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
@@ -80,7 +80,7 @@ class CreateMediaFolder(qtw.QDialog):
         main_layout.addLayout(media_inform_form)
         main_layout.addLayout(extra_folder_layout)
         main_layout.addWidget(self.btn_create)
-        main_layout.addWidget(btn_cancel)
+        main_layout.addWidget(self.btn_cancel)
         self.setLayout(main_layout)
 
     @qtc.Slot()
@@ -115,11 +115,11 @@ class CreateMediaFolder(qtw.QDialog):
     @qtc.Slot()
     def start_folder_generation(self) -> None:
         """
-        Create the object that holds the information about the new media folder and send it off before
-        closing the window.
+        Create the object that holds the information about the new media folder and disable all button widgets before
+        sending it off.
         """
+        # Create object that will the information about the media folder to create
         new_media_folder_info = GenerateMediaFolder()
-
         new_media_folder_info.directory = self.select_directory_label.text()
         new_media_folder_info.media_title = self.le_media_title.text()
         new_media_folder_info.media_type = 'movie' if self.rb_media_type_movie_select.isChecked() else 'tv'
@@ -133,6 +133,7 @@ class CreateMediaFolder(qtw.QDialog):
         new_media_folder_info.extra_folders['shorts'] = self.cb_shorts.isChecked()
         new_media_folder_info.extra_folders['other'] = self.cb_other.isChecked()
 
+        self._enable_or_disable_buttons(False)
 
         self.signal_initiate_create_media_folder.emit(new_media_folder_info)
 
@@ -140,7 +141,7 @@ class CreateMediaFolder(qtw.QDialog):
     def messagebox_media_folder_already_exists(self) -> None:
         """
         Launches the messagebox to inform user the media folder they wish to make already exists.
-        Will reset the progress bar once user closes the messagebox window.
+        Will reset the progress bar once user closes the messagebox window and enable all buttons.
 
         :return:
         """
@@ -152,12 +153,13 @@ class CreateMediaFolder(qtw.QDialog):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
+            self._enable_or_disable_buttons(True)
 
     @qtc.Slot()
     def messagebox_media_folder_creation_complete(self) -> None:
         """
         Launches the messagebox to inform user the creation of the media folder is complete.
-        Will reset the progress bar and close the "create media folder" window once user closes the messagebox window.
+        Will reset the progress bar and enable all buttons to allow user to enter a new media folder.
 
         :return:
         """
@@ -169,4 +171,35 @@ class CreateMediaFolder(qtw.QDialog):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
-            self.accept()
+            self._enable_or_disable_buttons(True)
+
+    @qtc.Slot()
+    def enable_buttons_due_to_error(self) -> None:
+        """
+        Enables all button widgets due to error.
+
+        :return:
+        """
+        self._enable_or_disable_buttons(True)
+
+    def _enable_or_disable_buttons(self, enable_or_disable: bool) -> None:
+        """
+        Enables / disables the buttons widgets.
+
+        :param enable_or_disable: Sets the enable / disable status
+        :return:
+        """
+        self.btn_create.setEnabled(enable_or_disable)
+        self.btn_cancel.setEnabled(enable_or_disable)
+        self.btn_select_directory.setEnabled(enable_or_disable)
+        self.le_media_title.setEnabled(enable_or_disable)
+        self.number_of_seasons.setEnabled(enable_or_disable)
+        self.cb_trailers.setEnabled(enable_or_disable)
+        self.cb_behind_the_scenes.setEnabled(enable_or_disable)
+        self.cb_deleted_scenes.setEnabled(enable_or_disable)
+        self.cb_featurettes.setEnabled(enable_or_disable)
+        self.cb_shorts.setEnabled(enable_or_disable)
+        self.cb_interviews.setEnabled(enable_or_disable)
+        self.cb_scenes.setEnabled(enable_or_disable)
+        self.cb_other.setEnabled(enable_or_disable)
+        self.media_type_group.setEnabled(enable_or_disable)

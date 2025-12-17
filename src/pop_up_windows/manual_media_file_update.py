@@ -91,7 +91,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
         self.setWindowTitle("Media File Select")
-        self.resize(800, 400)
+        self.setMinimumWidth(800)
+        self.setMinimumHeight(400)
 
         # widgets
         self.btn_add_files = qtw.QPushButton('Add File(s)', self)
@@ -99,11 +100,14 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.btn_remove_file = qtw.QPushButton('Remove File(s)', self)
         self.btn_remove_file.clicked.connect(self.remove_files)
         self.btn_remove_file.setEnabled(False)
+        self.btn_clear_table = qtw.QPushButton('Clear Table', self)
+        self.btn_clear_table.clicked.connect(self.clear_table)
+        self.btn_clear_table.setEnabled(False)
         self.btn_update_files = qtw.QPushButton('Update File(s)', self)
         self.btn_update_files.clicked.connect(self.first_stage_update_process)
         self.btn_update_files.setEnabled(False)
-        btn_close = qtw.QPushButton('Cancel', self)
-        btn_close.clicked.connect(self.reject)
+        self.btn_close = qtw.QPushButton('Cancel', self)
+        self.btn_close.clicked.connect(self.reject)
 
         self.table_view = qtw.QTableView(self)
         self.table_view.setSortingEnabled(False)
@@ -123,8 +127,9 @@ class ManualMediaFileUpdate(qtw.QDialog):
         button_layout = qtw.QVBoxLayout()
         button_layout.addWidget(self.btn_add_files)
         button_layout.addWidget(self.btn_remove_file)
+        button_layout.addWidget(self.btn_clear_table)
         button_layout.addWidget(self.btn_update_files)
-        button_layout.addWidget(btn_close)
+        button_layout.addWidget(self.btn_close)
 
         main_layout = qtw.QHBoxLayout()
         main_layout.addLayout(button_layout)
@@ -136,6 +141,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
         """
         Opens file dialog to allow user to select media files they wish to update, and
         adds them to the table.
+
+        :return:
         """
         selected_files, _ = qtw.QFileDialog.getOpenFileNames(
             self,
@@ -155,22 +162,42 @@ class ManualMediaFileUpdate(qtw.QDialog):
 
             self.table_view.resizeColumnsToContents()
             self.btn_remove_file.setEnabled(True)
+            self.btn_clear_table.setEnabled(True)
             self.btn_update_files.setEnabled(True)
 
     @qtc.Slot()
     def remove_files(self) -> None:
         """
         Removes selected file(s) from the table the user selected.
+
+        :return:
         """
         selected_files = self.table_view.selectedIndexes()
         if selected_files:
             self.model.remove_file(position=selected_files[0].row(), rows=len(selected_files))
 
+    def clear_table(self) -> None:
+        """
+        Clears the table.
+
+        :return:
+        """
+        number_of_rows = self.table_view.model().rowCount()
+        if number_of_rows > 0:
+            self.model.remove_file(position=0, rows=number_of_rows)
+
+        self.btn_remove_file.setEnabled(False)
+        self.btn_clear_table.setEnabled(False)
+        self.btn_update_files.setEnabled(False)
+
     @qtc.Slot()
     def first_stage_update_process(self) -> None:
         """
         First stage of updating the media files.
+        -- Inform the user that the program will not validate the media files that they are formated correctly.
         -- Sends the files out and check to see if there are duplicate rename file names.
+
+        :return:
         """
         response = qtw.QMessageBox.warning(
             self,
@@ -181,6 +208,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
         )
 
         if response == qtw.QMessageBox.Ok:
+            self._enable_or_disable_buttons(False)
+
             data = self.model.extract_data()
             self.signal_check_list_of_files_for_duplicates.emit(data)
 
@@ -188,7 +217,11 @@ class ManualMediaFileUpdate(qtw.QDialog):
     def second_stage_update_process(self, duplicate_result: list) -> None:
         """
         Second stage of update the media files.
-        -- If there are no duplicate rename file names, send the data off to be processed. Else, inform user.
+        -- If there are no duplicate rename file names, send the data off to be processed.
+        -- if there are duplicate rename file names, cancel operation and inform the user.
+
+        :param duplicate_result: The results of the duplication check.
+        :return:
         """
         if not duplicate_result:
             data = self.model.extract_data()
@@ -201,12 +234,15 @@ class ManualMediaFileUpdate(qtw.QDialog):
                 buttons=qtw.QMessageBox.Ok,
                 defaultButton=qtw.QMessageBox.Ok
             )
+            self._enable_or_disable_buttons(True)
 
     @qtc.Slot()
     def messagebox_manual_update_media_files_complete(self) -> None:
         """
-        Launches a messagebox to inform user the manual update of the media files is complete,
-        and reset the progress bar and close the 'manual update' dialog once user closes the window.
+        Launches a messagebox to inform user the manual update of the media files is complete.
+        Will reset the progress bar, enable all button widgets, and clear the table.
+
+        :return:
         """
         response = qtw.QMessageBox.information(
             self,
@@ -216,4 +252,27 @@ class ManualMediaFileUpdate(qtw.QDialog):
 
         if response == qtw.QMessageBox.Ok:
             self.signal_reset_progress_bar.emit()
-            self.accept()
+            self._enable_or_disable_buttons(True)
+            self.clear_table()
+
+    @qtc.Slot()
+    def enable_buttons_due_to_error(self) -> None:
+        """
+        Enables all button widgets due to error.
+
+        :return:
+        """
+        self._enable_or_disable_buttons(True)
+
+    def _enable_or_disable_buttons(self, enable_or_disable: bool) -> None:
+        """
+        Enables / disables the buttons widgets.
+
+        :param enable_or_disable: Sets the enable / disable status
+        :return:
+        """
+        self.btn_add_files.setEnabled(enable_or_disable)
+        self.btn_remove_file.setEnabled(enable_or_disable)
+        self.btn_clear_table.setEnabled(enable_or_disable)
+        self.btn_update_files.setEnabled(enable_or_disable)
+        self.btn_close.setEnabled(enable_or_disable)

@@ -25,30 +25,38 @@ class CreateMediaFolderThread(qtc.QRunnable):
         """
 
         try:
-            self.signals.progress.emit(10, 'Checking if Media Folder Exists.')
+            self.signals.progress.emit(10, 'Checking if Media Folder Exists...')
             if self.media_folder_information.check_if_media_folder_exists():
                 time.sleep(1) # delay for one second so user sees the program is working.
                 self.signals.progress.emit(0, 'Canceling creation of Media Folder.')
                 self.signals.media_folder_already_exists.emit()
             else:
-                self.signals.progress.emit(20, 'Starting the process of creating Media Folder for: ' +
-                                           self.media_folder_information.media_title)
-                self.media_folder_information.generate_media_folder()
-                self.signals.progress.emit(40, '...Folder created.')
                 time.sleep(1)  # delay for one second so user sees the program is working.
+                self.signals.progress.emit(20, 'Folder does not exist. Starting the process of creating Media Folder for: ' +
+                                           self.media_folder_information.media_title)
+
+                self.signals.progress.emit(30, '-- Creating media folder.')
+                time.sleep(1)  # delay for one second so user sees the program is working.
+                self.media_folder_information.generate_media_folder()
+                self.signals.progress.emit(40, '-- Folder created.')
 
                 if self.media_folder_information.media_type == 'tv':
-                    self.media_folder_information.generate_seasons()
-                    self.signals.progress.emit(60, '...Season folder(s) created.')
+                    self.signals.progress.emit(50, '-- Creating season folder(s).')
                     time.sleep(1)  # delay for one second so user sees the program is working.
+                    self.media_folder_information.generate_seasons()
+                    self.signals.progress.emit(60, '-- Season folder(s) created.')
 
-                an_extra_folder_was_created = self.media_folder_information.generate_extra_folders()
-                if an_extra_folder_was_created:
-                    self.signals.progress.emit(80, '...Extra folder(s) created.')
+                if self.media_folder_information.check_if_new_extra_folders_are_needed():
+                    self.signals.progress.emit(70, '-- Creating extra folder(s).')
+                    time.sleep(1)  # delay for one second so user sees the program is working.
+                    self.media_folder_information.generate_new_extra_folders()
+                    self.signals.progress.emit(80, '-- Extra folder(s) created.')
+                else:
+                    self.signals.progress.emit(80, '-- No extra folder(s) needed to be created.')
                     time.sleep(1)  # delay for one second so user sees the program is working.
 
                 self.signals.finished.emit()
-                self.signals.progress.emit(100, 'Finished making Media Folder!')
+                self.signals.progress.emit(100, 'Finished generating Media Folder!')
 
         except OSError as e:
             self.signals.error.emit(e)

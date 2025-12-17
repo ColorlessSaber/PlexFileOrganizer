@@ -7,7 +7,7 @@ def video_file_condition(file: str) -> bool:
     The condition that validates that the file found is a video file.
 
     :param file: The file to check
-    :return: A boolean indicating if the file meets the conditions
+    :return: True -- file has the correct video file extension, False -- file does not have the correct video file extension
     """
     if any(file.endswith(file_extension) for file_extension in ['.mkv', '.mp4', '.avi']):
         return True

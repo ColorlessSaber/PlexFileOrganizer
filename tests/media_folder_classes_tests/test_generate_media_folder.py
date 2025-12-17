@@ -37,6 +37,22 @@ class TestGenerateMediaFolder(TestCase):
         assert os.path.isdir('/media_folder/Extra Test/Shorts')
         assert os.path.isdir('/media_folder/Extra Test/Other')
 
+    def test_check_if_extra_folders_to_be_generated_method(self):
+        """
+        Validates that the GenerateMediaFolder object's check_if_new_extra_folders_are_needed method returns True
+        when there are extra folder(s) to be generated and false otherwise.
+        """
+
+        media_folder = GenerateMediaFolder()
+        media_folder.extra_folders['other'] = True
+
+        assert media_folder.check_if_new_extra_folders_are_needed() is True, 'Failed to detect extra folder(s) to be generated.'
+
+        media_folder = GenerateMediaFolder()
+        media_folder.extra_folders['other'] = False
+
+        assert media_folder.check_if_new_extra_folders_are_needed() is False, 'Failed to detect no extra folder(s) needed to be generated.'
+
     def test_generate_new_tv_show_folder(self):
         """
         Checks to see that it properly generates a new TV show media folder.

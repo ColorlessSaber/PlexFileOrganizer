@@ -44,7 +44,7 @@ class MediaFile(UserString):
         Returns the name of the file, with the option to showing the file extension with the file name.
 
         :param with_extension: Keeps or strips extension from file name. Default True to keep extension
-        :return: A string. The file name with no extension
+        :return: The file name with no extension
         """
         file_path = pathlib.Path(self.data)
         if with_extension:
@@ -56,7 +56,7 @@ class MediaFile(UserString):
         """
         Strips the path and file name, leaving only the extension.
 
-        :return: A string. file's extension
+        :return: The file's extension
         """
         return pathlib.Path(self.data).suffix
 
@@ -64,7 +64,7 @@ class MediaFile(UserString):
         """
         Strips the file name, leaving only the directory path the file is in.
 
-        :return: A string. The directory path file is located
+        :return: The directory path file is located
         """
         # str() is needed to convert PosixPath to string
         return str(pathlib.Path(self.data).parent)
@@ -73,6 +73,6 @@ class MediaFile(UserString):
         """
         Strips away everything, leaving only the folder the file is in.
 
-        :return: A string. The folder file is in.
+        :return: The folder file is in.
         """
         return pathlib.Path(self.data).parent.resolve().name
