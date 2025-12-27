@@ -49,7 +49,7 @@ class CreateMediaFolderThread(qtc.QRunnable):
                 if self.media_folder_information.check_if_new_extra_folders_are_needed():
                     self.signals.progress.emit(70, '-- Creating extra folder(s).')
                     time.sleep(1)  # delay for one second so user sees the program is working.
-                    self.media_folder_information.generate_new_extra_folders()
+                    self.media_folder_information.generate_extra_folders()
                     self.signals.progress.emit(80, '-- Extra folder(s) created.')
                 else:
                     self.signals.progress.emit(80, '-- No extra folder(s) needed to be created.')

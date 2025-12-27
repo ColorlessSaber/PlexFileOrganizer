@@ -31,7 +31,7 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
                 self.info_of_media_folder.generate_new_season_folders()
                 self.signals.progress.emit(41, "-- New season folder(s) generated.")
 
-            if self.info_of_media_folder.check_if_new_extra_folder_are_needed():
+            if self.info_of_media_folder.check_if_new_extra_folders_are_needed():
                 self.signals.progress.emit(58, "-- Generating extra folder(s).")
                 time.sleep(1)  # delay for a second so the user sees the program is working.
                 self.info_of_media_folder.generate_new_extra_folders()
