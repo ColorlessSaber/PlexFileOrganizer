@@ -45,48 +45,14 @@ rename existing media file(s); and have a built-in media player so the user can 
 
 <!--Running the Program-->
 ## Running the Program
-Download a copy of the repo to your local computer and open it in your IDE. Next run the following command to 
-install the necessary libraries.
-<br><br>
-```
-pip install -r requirements.txt
-```
-<br><br>
-With the necessary libraries installed we then can simple run the main.py file.
-```
-python main.py
-```
-
-If you wish to make an executable of the application run the follow commanded in the terminal.
-
-```
-pyinstaller --windowed --name=PlexFileOrganizer main.py
-```
+Download the appropriate executable file for your computer operating system from latest version of the application in
+the release section.
 
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap
-_Version 1 Features_
-- [x] Create a media folder for a new movie or TV show, along with sub-folders for miscellaneous content--trailers, extra, etc.
-- [X] Add a new season folder and or extra folder to an existing TV show media folder.
-- [X] Automatically go through the selected folder and identify the media files that need to be updated and rename the file accordingly.
-  - [X] know what episode number to start from for new media files if there are existing ones already in the folder.
-- [X] Allow the user to manually rename media files--new or existing--in an existing folder.
-
-_Version 1.1 Features_
-- [ ] Create a Special season folder for TV show.
-- [ ] Allow user to make a list of media folders to generate and have the program run through the list.
-
-_Version 1.2 Features_
-- [ ] Built in media player to allow user to watch to see which episode the media file is.
-- [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
-
-_Version 2 Features_
-- [ ] Organize the media folder--AKA, the music folder.
-
-**NOTE** If you look at the history of this project, you will notice a commit that say "Version 2.0.0". Please ignore that.
-When I realized that I wanted more features and make this repo public, I made the decision to start over at Version 1.0.0.
+Please check VERSION_HISTORY.md for detail information on what new features are to come.
 
 <!-- License -->
 ## License
