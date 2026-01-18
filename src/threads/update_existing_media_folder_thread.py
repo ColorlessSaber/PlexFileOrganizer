@@ -25,7 +25,7 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
             self.signals.progress.emit(17, "Starting to update existing media folder: " +
                                        self.info_of_media_folder.media_title)
             time.sleep(1)  # delay for a second so the user sees the program is working.
-            if self.info_of_media_folder.media_type == 'tv':
+            if self.info_of_media_folder.media_type.is_tv():
                 self.signals.progress.emit(24, '-- Generating more season folder(s).')
                 time.sleep(1)  # delay for a second so the user sees the program is working.
                 self.info_of_media_folder.generate_new_season_folders()

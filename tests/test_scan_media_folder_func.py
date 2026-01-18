@@ -1,11 +1,12 @@
 from src.functions import scan_media_folder
+from src.classes import MediaCategory
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 class TestScanMediaFolder(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
 
-        # test directory for tv media folder
+        # test directory for TV media folder
         self.fs.create_dir("/foo/tv show/Season 01")
         self.fs.create_dir("/foo/tv show/Special")
         self.fs.create_dir("/foo/tv show/Trailers")
@@ -38,7 +39,7 @@ class TestScanMediaFolder(TestCase):
         media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/tv show")
 
         assert folder_is_a_media_folder, "Failed to detect tv media folder"
-        assert media_folder_info.media_type == "tv", "Failed to detect media folder is tv show"
+        assert media_folder_info.media_type == MediaCategory.TV, "Failed to detect media folder is tv show"
         assert media_folder_info.number_of_seasons == 1, "Failed to not count Special season folder"
         assert media_folder_info.extra_folders['trailers'] == True, "Failed to detect extra folder - trailers"
         assert media_folder_info.extra_folders['behind the scenes'] == True, "Failed to detect extra folder - behind the scenes"
@@ -56,7 +57,7 @@ class TestScanMediaFolder(TestCase):
         media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/movie")
 
         assert folder_is_a_media_folder, "Failed to detect movie media folder"
-        assert media_folder_info.media_type == "movie", "Failed to detect media folder is tv show"
+        assert media_folder_info.media_type == MediaCategory.MOVIE, "Failed to detect media folder is tv show"
         assert media_folder_info.extra_folders['trailers'] == True, "Failed to detect extra folder - trailers"
         assert media_folder_info.extra_folders['behind the scenes'] == True, "Failed to detect extra folder - behind the scenes"
         assert media_folder_info.extra_folders['deleted scenes'] == True, "Failed to detect extra folder - deleted scenes"

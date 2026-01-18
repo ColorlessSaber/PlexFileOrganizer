@@ -3,6 +3,18 @@ File to hold custom objects--objects that are user control able
 """
 import pathlib
 from collections import UserDict, UserString
+from enum import StrEnum
+
+class MediaCategory(StrEnum):
+    MOVIE = 'movie'
+    TV = 'tv'
+    UNCATEGORIZED = 'uncategorized'
+
+    def is_movie(self) -> bool:
+        return self.value == MediaCategory.MOVIE
+
+    def is_tv(self) -> bool:
+        return self.value == MediaCategory.TV
 
 class ExtraFolders(UserDict):
     """

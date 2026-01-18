@@ -4,7 +4,7 @@ Pop-up window to allow user to add more folders to an existing media folder
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc)
-from ..classes import ModifyMediaFolder
+from ..classes import ModifyMediaFolder, MediaCategory
 
 class ModifiedMediaFolderWindow(qtw.QDialog):
     signal_initiate_scan_of_media_folder = qtc.Signal(str)
@@ -98,12 +98,12 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.media_title.setText(media_file_information.media_title)
         self.media_type.setText(media_file_information.media_type)
 
-        if media_file_information.media_type == 'tv':
+        if media_file_information.media_type.is_tv():
             self.season_inform_form.setRowVisible(0, True)
             self.highest_season_number.setText(f'{media_file_information.number_of_seasons}')
             self.season_inform_form.setRowVisible(1, True)
             self.number_of_new_seasons.setValue(0)
-        else:
+        elif media_file_information.media_type.is_movie():
             self.season_inform_form.setRowVisible(0, False)
             self.highest_season_number.setText('')
             self.season_inform_form.setRowVisible(1, False)
@@ -178,7 +178,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         modified_media_folder_info = ModifyMediaFolder()
         modified_media_folder_info.directory = self.select_directory_label.text()
         modified_media_folder_info.media_title = self.media_title.text()
-        modified_media_folder_info.media_type = self.media_type.text()
+        modified_media_folder_info.media_type = MediaCategory.MOVIE if self.media_type.text().lower() == 'movie' else MediaCategory.TV
         modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text()) if self.highest_season_number.text() != '' else 0
         modified_media_folder_info.number_of_new_seasons = int(self.number_of_new_seasons.text())
         modified_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked() if self.cb_trailers.isEnabled() else False

@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass, field
-from . import ExtraFolders
+from . import ExtraFolders, MediaCategory
 
 @dataclass
 class MediaFolderData:
@@ -9,7 +9,7 @@ class MediaFolderData:
     """
     directory: str = field(default=None)
     media_title: str = field(default=None)
-    media_type: str = field(default=None) # Either 'movie' or 'tv'
+    media_type: MediaCategory = field(default=MediaCategory.UNCATEGORIZED)
     number_of_seasons: int = field(default=0)
     extra_folders: dict = field(default_factory=ExtraFolders)
 

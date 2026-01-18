@@ -1,6 +1,6 @@
 import os
 from ..functions import video_file_condition
-from ..classes import MediaFolderData, correct_media_file_format
+from ..classes import MediaFolderData, correct_media_file_format, MediaCategory
 
 
 def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
@@ -19,8 +19,9 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
 
     with os.scandir(media_folder_information.directory) as directory_to_scan:
         for entry in directory_to_scan:
+            # FIXME Have this logic skip if the file starts with dot
             if entry.is_file() and video_file_condition(entry.path) and not entry.name.startswith('.'):
-                media_folder_information.media_type = 'movie'
+                media_folder_information.media_type = MediaCategory.MOVIE
             elif entry.is_dir():
                 if folder_and_file_patterns.extra_folder_check(entry.name):
                     media_folder_information.extra_folders[entry.name.lower()] = True
@@ -33,10 +34,11 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
             else:
                 pass
 
-    if media_folder_information.media_type is None and media_folder_information.number_of_seasons > 0:
-        media_folder_information.media_type = 'tv'
-
-    if media_folder_information.media_type is None and media_folder_information.number_of_seasons == 0:
+    # Situation when media folder is not a media folder
+    if media_folder_information.media_type is MediaCategory.UNCATEGORIZED and media_folder_information.number_of_seasons == 0:
         return media_folder_information, False
+
+    if media_folder_information.media_type is MediaCategory.UNCATEGORIZED and media_folder_information.number_of_seasons > 0:
+        media_folder_information.media_type = MediaCategory.TV
 
     return media_folder_information, True
