@@ -11,6 +11,7 @@ class MediaFolderData:
     media_title: str = field(default=None)
     media_type: MediaCategory = field(default=MediaCategory.UNCATEGORIZED)
     number_of_seasons: int = field(default=0)
+    specials_season: bool = field(default=False)
     extra_folders: dict = field(default_factory=ExtraFolders)
 
     def check_if_new_extra_folders_are_needed(self) -> bool:
@@ -24,6 +25,14 @@ class MediaFolderData:
             if self.extra_folders[key]:
                 return True
         return False
+
+    def generate_specials_season_folder(self) -> None:
+        """
+        Generates the special season folder.
+
+        :return:
+        """
+        os.mkdir('{}/Specials'.format(self.directory))
 
 @dataclass
 class ModifyMediaFolder(MediaFolderData):
