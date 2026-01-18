@@ -21,6 +21,7 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
         for entry in directory_to_scan:
             if entry.name.startswith('.'): # Assuming all files starting with dot should not be checked.
                 continue
+
             if entry.is_file() and video_file_condition(entry.path):
                 media_folder_information.media_type = MediaCategory.MOVIE
             elif entry.is_dir():
@@ -28,7 +29,7 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
                     media_folder_information.extra_folders[entry.name.lower()] = True
                 elif folder_and_file_patterns.tv_show_season_folder_check(entry.name):
                     # don't want to count the 'Special' season folder
-                    if not entry.name.lower() == 'Special':
+                    if not entry.name.lower() == 'special':
                         media_folder_information.number_of_seasons += 1
                 else:
                     pass

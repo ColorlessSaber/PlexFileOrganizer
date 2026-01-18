@@ -10,9 +10,9 @@ def find_media_files_in_dir(
     A generator that returns all files in a given directory that meet the condition given by the
     file_condition function.
 
-    :param file_condition: A function that specifies that condition the file needs to be met.
+    :param file_condition: A function that specifies that condition the file needs to meet.
     :param directory: The directory to scan for files
-    :param folder_condition: A function that specifies that condition the folder needs to be met.
+    :param folder_condition: A function that specifies that condition the folder needs to meet.
     :return: A tuple of all the files in a given directory
     """
     files_in_directory = []

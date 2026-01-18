@@ -17,7 +17,6 @@ def generate_correct_video_file_format(list_of_video_files: tuple[str])\
     # convert all strings in list to a custom object--MediaFile
     class_based_video_file_list = [MediaFile(file) for file in list_of_video_files]
 
-    status_message = '' # To hold the message to print to the user. Letting them how many files where affected.
     unformatted_media_files = []  # A list to hold the media files that need to be updated.
     media_files_to_be_updated = [] # each element will be a tuple and each tuple will have the following format: (old file name, new file name)
 
@@ -34,7 +33,7 @@ def generate_correct_video_file_format(list_of_video_files: tuple[str])\
         for file in class_based_video_file_list:
             if folder_and_files_patterns.tv_show_episode_pattern_check(file.file_name()):
 
-                # a tv show episode may be multiple episode, which is why we need to check/grab both numbers
+                # a TV show episode may be multiple episode, which is why we need to check/grab both numbers
                 first_episode_number = folder_and_files_patterns.tv_episode_file_format_regex_pattern.match(file.file_name()).group('first_ep')
                 second_episode_number = folder_and_files_patterns.tv_episode_file_format_regex_pattern.match(file.file_name()).group('second_ep')
                 if second_episode_number is not None:
