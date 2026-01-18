@@ -8,7 +8,7 @@ class TestScanMediaFolder(TestCase):
 
         # test directory for TV media folder
         self.fs.create_dir("/foo/tv show/Season 01")
-        self.fs.create_dir("/foo/tv show/Special")
+        self.fs.create_dir("/foo/tv show/Specials")
         self.fs.create_dir("/foo/tv show/Trailers")
         self.fs.create_dir("/foo/tv show/Behind the Scenes")
         self.fs.create_dir("/foo/tv show/Deleted Scenes")
