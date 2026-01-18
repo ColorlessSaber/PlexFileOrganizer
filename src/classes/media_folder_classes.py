@@ -13,6 +13,18 @@ class MediaFolderData:
     number_of_seasons: int = field(default=0)
     extra_folders: dict = field(default_factory=ExtraFolders)
 
+    def check_if_new_extra_folders_are_needed(self) -> bool:
+        """
+        Checks to see if there are new extra folder(s) that need to be created.
+
+        :return: True -- There are extra folder(s) that need to be created,
+        False -- no extra folder(s) need to be created
+        """
+        for key in self.extra_folders:
+            if self.extra_folders[key]:
+                return True
+        return False
+
 @dataclass
 class ModifyMediaFolder(MediaFolderData):
     """
@@ -42,18 +54,6 @@ class ModifyMediaFolder(MediaFolderData):
         for key in self.extra_folders:
             if self.extra_folders[key]:
                 os.mkdir('{}/{}'.format(self.directory, key.title()))
-
-    def check_if_new_extra_folders_are_needed(self) -> bool:
-        """
-        Checks to see if there are new extra folder(s) that need to be created.
-
-        :return: True -- There are extra folder(s) that need to be created,
-        False -- no extra folder(s) need to be created
-        """
-        for key in self.extra_folders:
-            if self.extra_folders[key]:
-                return True
-        return False
 
 
 class GenerateMediaFolder(MediaFolderData):
@@ -101,15 +101,3 @@ class GenerateMediaFolder(MediaFolderData):
         for key in self.extra_folders:
             if self.extra_folders[key]:
                 os.mkdir('{}/{}/{}'.format(self.directory, self.media_title, key.title()))
-
-    def check_if_new_extra_folders_are_needed(self) -> bool:
-        """
-        Checks to see if there are new extra folder(s) that need to be created.
-
-        :return: True -- There are extra folder(s) that need to be created,
-        False -- no extra folder(s) need to be created
-        """
-        for key in self.extra_folders:
-            if self.extra_folders[key]:
-                return True
-        return False
