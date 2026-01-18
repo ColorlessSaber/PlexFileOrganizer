@@ -19,8 +19,9 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
 
     with os.scandir(media_folder_information.directory) as directory_to_scan:
         for entry in directory_to_scan:
-            # FIXME Have this logic skip if the file starts with dot
-            if entry.is_file() and video_file_condition(entry.path) and not entry.name.startswith('.'):
+            if entry.name.startswith('.'): # Assuming all files starting with dot should not be checked.
+                continue
+            if entry.is_file() and video_file_condition(entry.path):
                 media_folder_information.media_type = MediaCategory.MOVIE
             elif entry.is_dir():
                 if folder_and_file_patterns.extra_folder_check(entry.name):

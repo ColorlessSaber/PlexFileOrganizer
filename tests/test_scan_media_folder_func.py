@@ -31,6 +31,7 @@ class TestScanMediaFolder(TestCase):
 
         # test for non media folder
         self.fs.create_dir("/foo/misc")
+        self.fs.create_file("/foo/misc/.movie.yml")
 
     def test_scan_tv_media_folder(self):
         """
