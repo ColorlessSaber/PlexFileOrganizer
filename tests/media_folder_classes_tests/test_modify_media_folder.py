@@ -41,7 +41,7 @@ class TestModifyMediaFolder(TestCase):
         extra_folder.generate_new_extra_folders()
 
         assert os.path.isdir('/media_folder/Extra Folder/Trailers')
-        assert os.path.isdir('/media_folder/Extra Folder/Behind the Scenes')
+        assert os.path.isdir('/media_folder/Extra Folder/Behind The Scenes')
         assert os.path.isdir('/media_folder/Extra Folder/Deleted Scenes')
         assert os.path.isdir('/media_folder/Extra Folder/Featurettes')
         assert os.path.isdir('/media_folder/Extra Folder/Interviews')
