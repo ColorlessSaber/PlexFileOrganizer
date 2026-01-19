@@ -49,36 +49,23 @@ jobs:
           --name "${{ matrix.artifact-name }}" \
           main.py
 
-    - name: Create distribution folder
+    - name: Gather build file
+      id: gather
       run: |
-        mkdir -p dist/${{ matrix.artifact-name }}
-        if [ "${{ matrix.platform }}" != "windows" ]; then
-          mv dist/${{ matrix.artifact-name }} dist/${{ matrix.artifact-name }}/
+        if [[ "${{ matrix.platform }}" == "windows" ]]; then
+        BINARY="dist/${{ matrix.artifact-name }}.exe"
+        else
+        BINARY="dist/${{ matrix.artifact-name }}/${{ matrix.artifact-name }}"
         fi
-        if [ "${{ matrix.platform }}" == "windows" ]; then
-          mkdir -p dist/${{ matrix.artifact-name }}
-          mv "dist/${{ matrix.artifact-name }}.exe" "dist/${{ matrix.artifact-name }}/"
-        fi
+        echo "binary_path=$BINARY" >> $GITHUB_OUTPUT
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v6.0.0
-      with:
-        name: ${{ matrix.artifact-name }}
-        path: dist/${{ matrix.artifact-name }}
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
-
-    steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v6.0.0
-
-    - name: Create Release
+    - name: Create (or update) release & upload asset
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          PlexFileOrganizer-linux/PlexFileOrganizer-linux
-          PlexFileOrganizer-macos/PlexFileOrganizer-macos
-          PlexFileOrganizer-windows/PlexFileOrganizer-windows.exe
+        tag_name: ${{ github.ref_name }}
+        name: ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        files: ${{ steps.gather.outputs.binary_path }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
