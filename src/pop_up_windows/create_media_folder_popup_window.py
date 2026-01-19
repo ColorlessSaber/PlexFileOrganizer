@@ -40,13 +40,20 @@ class CreateMediaFolder(qtw.QDialog):
         self.media_type_group.layout().addWidget(self.rb_media_type_movie_select)
         self.media_type_group.layout().addWidget(self.rb_media_type_tv_select)
 
-        media_inform_form = qtw.QFormLayout()
         self.le_media_title = qtw.QLineEdit(self)
         self.le_media_title.textChanged.connect(self.enable_or_disable_create_btn)
+        media_title_layout = qtw.QHBoxLayout()
+        media_title_layout.addWidget(qtw.QLabel('Title:', self))
+        media_title_layout.addWidget(self.le_media_title)
+
         self.number_of_seasons = qtw.QSpinBox(self, value=1, maximum=100, minimum=1)
         self.number_of_seasons.setEnabled(False)
-        media_inform_form.addRow('Title:', self.le_media_title)
-        media_inform_form.addRow('Number of Seasons:', self.number_of_seasons)
+        self.specials_season_folder = qtw.QCheckBox('Specials Season folder', self)
+        self.specials_season_folder.setEnabled(False)
+        tv_season_row_layout = qtw.QHBoxLayout()
+        tv_season_row_layout.addWidget(qtw.QLabel('Number of Seasons', self))
+        tv_season_row_layout.addWidget(self.number_of_seasons)
+        tv_season_row_layout.addWidget(self.specials_season_folder)
 
         self.cb_trailers = qtw.QCheckBox('Trailers', self)
         self.cb_behind_the_scenes = qtw.QCheckBox('Behind The Scenes', self)
@@ -56,37 +63,52 @@ class CreateMediaFolder(qtw.QDialog):
         self.cb_scenes = qtw.QCheckBox('Scenes', self)
         self.cb_shorts = qtw.QCheckBox('shorts', self)
         self.cb_other = qtw.QCheckBox('Other', self)
-        extra_folder_layout = qtw.QGridLayout()
-        extra_folder_layout.addWidget(self.cb_trailers, 0, 0)
-        extra_folder_layout.addWidget(self.cb_behind_the_scenes, 0, 1)
-        extra_folder_layout.addWidget(self.cb_deleted_scenes, 0, 2)
-        extra_folder_layout.addWidget(self.cb_featurettes, 0, 3)
-        extra_folder_layout.addWidget(self.cb_interviews, 1, 0)
-        extra_folder_layout.addWidget(self.cb_scenes, 1, 1)
-        extra_folder_layout.addWidget(self.cb_shorts, 1, 2)
-        extra_folder_layout.addWidget(self.cb_other, 1, 3)
+        extra_folder_options_layout = qtw.QGridLayout()
+        extra_folder_options_layout.addWidget(qtw.QLabel('Extra Folder Options', self), 0, 0)
+        extra_folder_options_layout.addWidget(self.cb_trailers, 1, 0)
+        extra_folder_options_layout.addWidget(self.cb_behind_the_scenes, 1, 1)
+        extra_folder_options_layout.addWidget(self.cb_deleted_scenes, 1, 2)
+        extra_folder_options_layout.addWidget(self.cb_featurettes, 1, 3)
+        extra_folder_options_layout.addWidget(self.cb_interviews, 2, 0)
+        extra_folder_options_layout.addWidget(self.cb_scenes, 2, 1)
+        extra_folder_options_layout.addWidget(self.cb_shorts, 2, 2)
+        extra_folder_options_layout.addWidget(self.cb_other, 2, 3)
+        overall_extra_folder_layout = qtw.QFrame()
+        overall_extra_folder_layout.setStyleSheet("""
+                    QFrame {
+                        border: 2px solid grey;
+                        border-radius: 10px;
+                    }
+                    QLabel {
+                        border: 0px;
+                        text-decoration: underline;
+                    }
+                """)
+        overall_extra_folder_layout.setLayout(extra_folder_options_layout)
 
         self.btn_create = qtw.QPushButton('Create', self)
         self.btn_create.setEnabled(False)
         self.btn_create.clicked.connect(self.start_folder_generation)
-
         self.btn_cancel = qtw.QPushButton('Cancel', self)
         self.btn_cancel.clicked.connect(self.reject)
+        create_or_cancel_buttons_layout = qtw.QHBoxLayout()
+        create_or_cancel_buttons_layout.addWidget(self.btn_create)
+        create_or_cancel_buttons_layout.addWidget(self.btn_cancel)
 
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
+        main_layout.setSpacing(20)
         main_layout.addLayout(select_directory_layout)
         main_layout.addWidget(self.media_type_group)
-        main_layout.addLayout(media_inform_form)
-        main_layout.addLayout(extra_folder_layout)
-        main_layout.addWidget(self.btn_create)
-        main_layout.addWidget(self.btn_cancel)
+        main_layout.addLayout(media_title_layout)
+        main_layout.addLayout(tv_season_row_layout)
+        main_layout.addWidget(overall_extra_folder_layout)
+        main_layout.addLayout(create_or_cancel_buttons_layout)
         self.setLayout(main_layout)
 
     @qtc.Slot()
     def enable_or_disable_create_btn(self) -> None:
-        if (self.rb_media_type_tv_select.isChecked() or self.rb_media_type_tv_select) and (len(self.le_media_title.text()) > 0) \
-                and (self.select_directory_label.text() != ''):
+        if (len(self.le_media_title.text()) > 0) and (self.select_directory_label.text() != ''):
             self.btn_create.setEnabled(True)
         else:
             self.btn_create.setEnabled(False)
@@ -95,8 +117,10 @@ class CreateMediaFolder(qtw.QDialog):
     def enable_or_disable_season_number_line_edit(self) -> None:
         if self.rb_media_type_movie_select.isChecked():
             self.number_of_seasons.setEnabled(False)
+            self.specials_season_folder.setEnabled(False)
         elif self.rb_media_type_tv_select.isChecked():
             self.number_of_seasons.setEnabled(True)
+            self.specials_season_folder.setEnabled(True)
         else:
             pass
 
@@ -123,7 +147,8 @@ class CreateMediaFolder(qtw.QDialog):
         new_media_folder_info.directory = self.select_directory_label.text()
         new_media_folder_info.media_title = self.le_media_title.text()
         new_media_folder_info.media_type = MediaCategory.MOVIE if self.rb_media_type_movie_select.isChecked() else MediaCategory.TV
-        new_media_folder_info.number_of_seasons = int(self.number_of_seasons.text()) if self.number_of_seasons.text() else 0
+        new_media_folder_info.number_of_seasons = int(self.number_of_seasons.text())
+        new_media_folder_info.specials_season_folder = True if self.specials_season_folder.isChecked() else False
         new_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked()
         new_media_folder_info.extra_folders['behind the scenes'] = self.cb_behind_the_scenes.isChecked()
         new_media_folder_info.extra_folders['deleted scenes'] = self.cb_deleted_scenes.isChecked()
@@ -194,6 +219,7 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_select_directory.setEnabled(enable_or_disable)
         self.le_media_title.setEnabled(enable_or_disable)
         self.number_of_seasons.setEnabled(enable_or_disable)
+        self.specials_season_folder.setEnabled(enable_or_disable)
         self.cb_trailers.setEnabled(enable_or_disable)
         self.cb_behind_the_scenes.setEnabled(enable_or_disable)
         self.cb_deleted_scenes.setEnabled(enable_or_disable)
