@@ -29,7 +29,7 @@ class TestGenerateMediaFolder(TestCase):
         extra_folder.generate_extra_folders()
 
         assert os.path.isdir('/media_folder/Extra Test/Trailers')
-        assert os.path.isdir('/media_folder/Extra Test/Behind the Scenes')
+        assert os.path.isdir('/media_folder/Extra Test/Behind the Scenes'), print(os.path.isdir('/media_folder/Extra Test/'))
         assert os.path.isdir('/media_folder/Extra Test/Deleted Scenes')
         assert os.path.isdir('/media_folder/Extra Test/Featurettes')
         assert os.path.isdir('/media_folder/Extra Test/Interviews')
