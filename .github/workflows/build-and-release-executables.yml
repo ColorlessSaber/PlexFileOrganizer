@@ -1,4 +1,4 @@
-name: Build and Release Executables
+name: build-and-release-executables.yml
 
 on:
   workflow_dispatch:
