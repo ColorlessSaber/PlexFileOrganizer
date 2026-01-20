@@ -46,9 +46,9 @@ class CreateMediaFolder(qtw.QDialog):
         media_title_layout.addWidget(qtw.QLabel('Title:', self))
         media_title_layout.addWidget(self.le_media_title)
 
-        self.number_of_seasons = qtw.QSpinBox(self, value=1, maximum=100, minimum=1)
+        self.number_of_seasons = qtw.QSpinBox(self, value=1, maximum=100, minimum=1, singleStep=1)
         self.number_of_seasons.setEnabled(False)
-        self.specials_season_folder = qtw.QCheckBox('Specials Season folder', self)
+        self.specials_season_folder = qtw.QCheckBox('Create Specials Season folder', self)
         self.specials_season_folder.setEnabled(False)
         tv_season_row_layout = qtw.QHBoxLayout()
         tv_season_row_layout.addWidget(qtw.QLabel('Number of Seasons', self))

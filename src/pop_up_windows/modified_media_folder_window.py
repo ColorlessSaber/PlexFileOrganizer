@@ -32,23 +32,59 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
 
         media_inform_form = qtw.QFormLayout()
         self.media_title = qtw.QLabel('', self)
+        self.media_title.setStyleSheet("""
+            text-decoration: none;
+        """)
         self.media_type = qtw.QLabel('', self)
-        media_inform_form.addRow('Media Title:', self.media_title)
-        media_inform_form.addRow('Media Type:', self.media_type)
-        media_inform_form.setFormAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
-
-        self.season_inform_form = qtw.QFormLayout()
+        self.media_type.setStyleSheet("""
+            text-decoration: none;
+        """)
         self.highest_season_number = qtw.QLabel('', self)
-        self.number_of_new_seasons = qtw.QSpinBox(
-            self,
-            value=0,
-            minimum=0,
-            maximum=100,
-            singleStep=1
-        )
-        self.season_inform_form.addRow('Highest Season Number found:', self.highest_season_number)
-        self.season_inform_form.addRow('How many more Season to add?', self.number_of_new_seasons)
-        self.season_inform_form.setFormAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+        self.highest_season_number.setStyleSheet("""
+            text-decoration: none;
+        """)
+        self.specials_season_folder_status = qtw.QLabel('', self)
+        self.specials_season_folder_status.setStyleSheet("""
+            text-decoration: none;
+        """)
+        media_inform_form.addRow('Media Title:', self.media_title)
+        media_inform_form.addRow('Media Category:', self.media_type)
+        media_inform_form.addRow('Highest Season Number found:', self.highest_season_number)
+        media_inform_form.addRow('Special Season Folder Status:', self.specials_season_folder_status)
+        media_inform_form.setFormAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
+        media_inform_form.setSpacing(10)
+        overall_media_information_layout = qtw.QFrame()
+        overall_media_information_layout.setStyleSheet("""
+                    QLabel {
+                        border: 0px;
+                        text-decoration: underline;
+                    }
+        """)
+        overall_media_information_layout.setLayout(media_inform_form)
+
+        self.sb_number_of_new_seasons = qtw.QSpinBox(self, value=0, minimum=0, maximum=100, singleStep=1)
+        self.cb_generate_specials_season_folder = qtw.QCheckBox('Generate Specials season folder', self)
+        number_of_new_seasons_label = qtw.QLabel('How many more Season to add?', self)
+        number_of_new_seasons_label.setStyleSheet("""
+                    text-decoration: none;
+        """)
+        season_selection_layout = qtw.QGridLayout()
+        season_selection_layout.addWidget(qtw.QLabel('TV Show Options'), 0, 0)
+        season_selection_layout.addWidget(number_of_new_seasons_label, 1, 0)
+        season_selection_layout.addWidget(self.sb_number_of_new_seasons, 1, 1)
+        season_selection_layout.addWidget(self.cb_generate_specials_season_folder, 1, 2)
+        overall_season_selection_layout = qtw.QFrame()
+        overall_season_selection_layout.setStyleSheet("""
+                    QFrame {
+                        border: 2px solid grey;
+                        border-radius: 10px;
+                    }
+                    QLabel {
+                        border: 0px;
+                        text-decoration: underline;
+                    }
+        """)
+        overall_season_selection_layout.setLayout(season_selection_layout)
 
         self.cb_trailers = qtw.QCheckBox('Trailers', self)
         self.cb_behind_the_scenes = qtw.QCheckBox('Behind The Scenes', self)
@@ -58,31 +94,46 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.cb_scenes = qtw.QCheckBox('Scenes', self)
         self.cb_shorts = qtw.QCheckBox('shorts', self)
         self.cb_other = qtw.QCheckBox('Other', self)
-        extra_folder_layout = qtw.QGridLayout()
-        extra_folder_layout.addWidget(self.cb_trailers, 0, 0)
-        extra_folder_layout.addWidget(self.cb_behind_the_scenes, 0, 1)
-        extra_folder_layout.addWidget(self.cb_deleted_scenes, 0, 2)
-        extra_folder_layout.addWidget(self.cb_featurettes, 0, 3)
-        extra_folder_layout.addWidget(self.cb_interviews, 1, 0)
-        extra_folder_layout.addWidget(self.cb_scenes, 1, 1)
-        extra_folder_layout.addWidget(self.cb_shorts, 1, 2)
-        extra_folder_layout.addWidget(self.cb_other, 1, 3)
+        extra_folder_options_layout = qtw.QGridLayout()
+        extra_folder_options_layout.addWidget(qtw.QLabel('Extra Folder Options', self), 0, 0)
+        extra_folder_options_layout.addWidget(self.cb_trailers, 1, 0)
+        extra_folder_options_layout.addWidget(self.cb_behind_the_scenes, 1, 1)
+        extra_folder_options_layout.addWidget(self.cb_deleted_scenes, 1, 2)
+        extra_folder_options_layout.addWidget(self.cb_featurettes, 1, 3)
+        extra_folder_options_layout.addWidget(self.cb_interviews, 2, 0)
+        extra_folder_options_layout.addWidget(self.cb_scenes, 2, 1)
+        extra_folder_options_layout.addWidget(self.cb_shorts, 2, 2)
+        extra_folder_options_layout.addWidget(self.cb_other, 2, 3)
+        overall_extra_folder_layout = qtw.QFrame()
+        overall_extra_folder_layout.setStyleSheet("""
+                    QFrame {
+                        border: 2px solid grey;
+                        border-radius: 10px;
+                    }
+                    QLabel {
+                        border: 0px;
+                        text-decoration: underline;
+                    }
+                """)
+        overall_extra_folder_layout.setLayout(extra_folder_options_layout)
 
         self.btn_update = qtw.QPushButton('Update', self)
         self.btn_update.setEnabled(False)
         self.btn_update.clicked.connect(self.start_folder_modification)
-
         self.btn_cancel = qtw.QPushButton('Cancel', self)
         self.btn_cancel.clicked.connect(self.reject)
+        create_or_cancel_buttons_layout = qtw.QHBoxLayout()
+        create_or_cancel_buttons_layout.addWidget(self.btn_update)
+        create_or_cancel_buttons_layout.addWidget(self.btn_cancel)
 
         # Set up the layout of window
         main_layout = qtw.QVBoxLayout()
+        main_layout.setSpacing(20)
         main_layout.addLayout(select_directory_layout)
-        main_layout.addLayout(media_inform_form)
-        main_layout.addLayout(self.season_inform_form)
-        main_layout.addLayout(extra_folder_layout)
-        main_layout.addWidget(self.btn_update)
-        main_layout.addWidget(self.btn_cancel)
+        main_layout.addWidget(overall_media_information_layout)
+        main_layout.addWidget(overall_season_selection_layout)
+        main_layout.addWidget(overall_extra_folder_layout)
+        main_layout.addLayout(create_or_cancel_buttons_layout)
         self.setLayout(main_layout)
 
     @qtc.Slot(object)
@@ -99,15 +150,24 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.media_type.setText(media_file_information.media_type)
 
         if media_file_information.media_type.is_tv():
-            self.season_inform_form.setRowVisible(0, True)
             self.highest_season_number.setText(f'{media_file_information.number_of_seasons}')
-            self.season_inform_form.setRowVisible(1, True)
-            self.number_of_new_seasons.setValue(0)
+            if media_file_information.specials_season:
+                self.specials_season_folder_status.setText('Exists')
+                self.cb_generate_specials_season_folder.setChecked(True)
+                self.cb_generate_specials_season_folder.setEnabled(False)
+            else:
+                self.specials_season_folder_status.setText('Does not exist')
+                self.cb_generate_specials_season_folder.setChecked(False)
+                self.cb_generate_specials_season_folder.setEnabled(True)
+            self.sb_number_of_new_seasons.setValue(0)
+            self.sb_number_of_new_seasons.setEnabled(True)
         elif media_file_information.media_type.is_movie():
-            self.season_inform_form.setRowVisible(0, False)
-            self.highest_season_number.setText('')
-            self.season_inform_form.setRowVisible(1, False)
-            self.number_of_new_seasons.setValue(0)
+            self.highest_season_number.setText('N/A')
+            self.specials_season_folder_status.setText('N/A')
+            self.cb_generate_specials_season_folder.setChecked(False)
+            self.cb_generate_specials_season_folder.setEnabled(False)
+            self.sb_number_of_new_seasons.setValue(0)
+            self.sb_number_of_new_seasons.setEnabled(False)
 
         if media_file_information.extra_folders['trailers']:
             self.cb_trailers.setChecked(True)
@@ -180,7 +240,8 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         modified_media_folder_info.media_title = self.media_title.text()
         modified_media_folder_info.media_type = MediaCategory.MOVIE if self.media_type.text().lower() == 'movie' else MediaCategory.TV
         modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text()) if self.highest_season_number.text() != '' else 0
-        modified_media_folder_info.number_of_new_seasons = int(self.number_of_new_seasons.text())
+        modified_media_folder_info.number_of_new_seasons = int(self.sb_number_of_new_seasons.text())
+        modified_media_folder_info.specials_season = self.cb_generate_specials_season_folder.isChecked() if self.cb_generate_specials_season_folder.isEnabled() else False
         modified_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked() if self.cb_trailers.isEnabled() else False
         modified_media_folder_info.extra_folders['behind the scenes'] = self.cb_behind_the_scenes.isChecked() if self.cb_behind_the_scenes.isEnabled() else False
         modified_media_folder_info.extra_folders['deleted scenes'] = self.cb_deleted_scenes.isChecked() if self.cb_deleted_scenes.isEnabled() else False
@@ -250,7 +311,8 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.media_title.setText("")
         self.media_type.setText("")
         self.highest_season_number.setText("")
-        self.number_of_new_seasons.setValue(0)
+        self.sb_number_of_new_seasons.setValue(0)
+        self.cb_generate_specials_season_folder.setChecked(False)
         self.cb_trailers.setChecked(False)
         self.cb_behind_the_scenes.setChecked(False)
         self.cb_deleted_scenes.setChecked(False)
@@ -271,6 +333,8 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.btn_select_directory.setEnabled(enable_or_disable)
         self.btn_cancel.setEnabled(enable_or_disable)
         self.btn_update.setEnabled(enable_or_disable)
+        self.sb_number_of_new_seasons.setEnabled(enable_or_disable)
+        self.cb_generate_specials_season_folder.setEnabled(enable_or_disable)
         self.cb_trailers.setEnabled(enable_or_disable)
         self.cb_behind_the_scenes.setEnabled(enable_or_disable)
         self.cb_deleted_scenes.setEnabled(enable_or_disable)
