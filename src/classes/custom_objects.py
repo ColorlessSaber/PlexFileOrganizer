@@ -4,7 +4,6 @@ File to hold custom objects--objects that are user control able
 import pathlib
 from collections import UserDict, UserString
 from enum import StrEnum
-from typing import Any
 
 
 class MediaCategory(StrEnum):
@@ -35,7 +34,7 @@ class ExtraFolders(UserDict):
                 'other': False
             }
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key, value) -> None:
         if key not in self.data:
             raise KeyError(key)
         self.data[key] = value
