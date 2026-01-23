@@ -4,6 +4,8 @@ File to hold custom objects--objects that are user control able
 import pathlib
 from collections import UserDict, UserString
 from enum import StrEnum
+from typing import Any
+
 
 class MediaCategory(StrEnum):
     MOVIE = 'movie'
@@ -32,6 +34,11 @@ class ExtraFolders(UserDict):
                 'shorts': False,
                 'other': False
             }
+
+    def __setitem__(self, key, value):
+        if key not in self.data:
+            raise KeyError(key)
+        self.data[key] = value
 
     def pop(self, s = None) -> None:
         raise RuntimeError("Deletion not allowed")

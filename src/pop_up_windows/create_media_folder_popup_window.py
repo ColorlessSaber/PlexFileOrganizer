@@ -153,7 +153,7 @@ class CreateMediaFolder(qtw.QDialog):
         new_media_folder_info.extra_folders['behind the scenes'] = self.cb_behind_the_scenes.isChecked()
         new_media_folder_info.extra_folders['deleted scenes'] = self.cb_deleted_scenes.isChecked()
         new_media_folder_info.extra_folders['featurettes'] = self.cb_featurettes.isChecked()
-        new_media_folder_info.extra_folders['interviews '] = self.cb_interviews.isChecked()
+        new_media_folder_info.extra_folders['interviews'] = self.cb_interviews.isChecked()
         new_media_folder_info.extra_folders['scenes'] = self.cb_scenes.isChecked()
         new_media_folder_info.extra_folders['shorts'] = self.cb_shorts.isChecked()
         new_media_folder_info.extra_folders['other'] = self.cb_other.isChecked()

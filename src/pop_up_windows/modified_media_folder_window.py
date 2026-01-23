@@ -204,6 +204,13 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             self.cb_interviews.setChecked(False)
             self.cb_interviews.setEnabled(True)
 
+        if media_file_information.extra_folders['scenes']:
+            self.cb_scenes.setChecked(True)
+            self.cb_scenes.setEnabled(False)
+        else:
+            self.cb_scenes.setChecked(False)
+            self.cb_scenes.setEnabled(True)
+
         if media_file_information.extra_folders['shorts']:
             self.cb_shorts.setChecked(True)
             self.cb_shorts.setEnabled(False)
