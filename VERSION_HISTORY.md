@@ -13,9 +13,12 @@
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
 
 ## _Next Version in the Works_
+N/A
+
+## _Current Version_
 ### _Version 1.1_
 **Features**
-- [ ] Create a Special season folder for TV show.
+- [x] Create a Special season folder for TV show.
 <br><br>
 **Performance**
 - Optimized code for better performance.
@@ -23,13 +26,12 @@
 **Misc.**
 - Added styling to the windows.
 
-## _Current Version_
+## _Previous Versions_
 ### _Version 1.0.1_
 **Bug Fixes**
 - Typo of method name in create_media_folder_thread.py.
 - typo of method name in update_existing_media_folder_thread.py.
 
-## _Previous Versions_
 ### _Version 1_
 **Features**
 - [x] Create a media folder for a new movie or TV show, along with sub-folders for miscellaneous content--trailers, extra, etc.
