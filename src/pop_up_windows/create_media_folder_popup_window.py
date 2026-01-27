@@ -26,10 +26,11 @@ class CreateMediaFolder(qtw.QDialog):
         ## select a directory
         select_directory_layout = qtw.QGridLayout()
         self.btn_select_directory = qtw.QPushButton('Select Directory', self)
+        self.btn_select_directory.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
         self.btn_select_directory.clicked.connect(self.select_directory_popup)
-        self.select_directory_label = qtw.QLabel('', self)
+        self.le_selected_directory = qtw.QLineEdit(self)
         select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
-        select_directory_layout.addWidget(self.select_directory_label, 0, 1, 0, 2)
+        select_directory_layout.addWidget(self.le_selected_directory, 0, 1, 0, 2)
 
         ## media information
         media_type_group = qtw.QGroupBox('Media Type')
@@ -154,7 +155,7 @@ class CreateMediaFolder(qtw.QDialog):
 
     @qtc.Slot()
     def enable_or_disable_create_btn(self) -> None:
-        if (len(self.le_media_title.text()) > 0) and (self.select_directory_label.text() != ''):
+        if (len(self.le_media_title.text()) > 0) and (self.le_selected_directory.text() != ''):
             self.btn_create.setEnabled(True)
         else:
             self.btn_create.setEnabled(False)
@@ -177,7 +178,7 @@ class CreateMediaFolder(qtw.QDialog):
         )
 
         if directory:
-            self.select_directory_label.setText(directory)
+            self.le_selected_directory.setText(directory)
             self.enable_or_disable_create_btn()
 
     @qtc.Slot()
@@ -188,7 +189,7 @@ class CreateMediaFolder(qtw.QDialog):
         """
         # Create object that will the information about the media folder to create
         new_media_folder_info = GenerateMediaFolder()
-        new_media_folder_info.directory = self.select_directory_label.text()
+        new_media_folder_info.directory = self.le_selected_directory.text()
         new_media_folder_info.media_title = self.le_media_title.text()
         new_media_folder_info.media_type = MediaCategory.MOVIE if self.rb_media_type_movie_select.isChecked() else MediaCategory.TV
         new_media_folder_info.number_of_seasons = int(self.sb_number_of_seasons.text())
@@ -220,7 +221,7 @@ class CreateMediaFolder(qtw.QDialog):
             'The Media Folder you wish to make already exists. Please click "ok" to cancel creation of Media Folder.'
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.signal_reset_progress_bar.emit()
             self._enable_or_disable_buttons(True)
 
@@ -238,7 +239,7 @@ class CreateMediaFolder(qtw.QDialog):
             'Finished creating the media folder in the directory.'
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.signal_reset_progress_bar.emit()
             self._enable_or_disable_buttons(True)
 
@@ -261,6 +262,7 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_create.setEnabled(enable_or_disable)
         self.btn_cancel.setEnabled(enable_or_disable)
         self.btn_select_directory.setEnabled(enable_or_disable)
+        self.le_selected_directory.setEnabled(enable_or_disable)
         self.groupbox_media_information.setEnabled(enable_or_disable)
         self.groupbox_tv_show_options.setEnabled(enable_or_disable)
         self.groupbox_extra_folder_options.setEnabled(enable_or_disable)

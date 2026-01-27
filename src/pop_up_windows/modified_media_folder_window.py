@@ -27,10 +27,12 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         ## select a directory
         select_directory_layout = qtw.QGridLayout()
         self.btn_select_directory = qtw.QPushButton('Select Media Folder', self)
-        self.select_directory_label = qtw.QLabel('', self)
+        self.btn_select_directory.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
+        self.le_selected_directory = qtw.QLineEdit(self)
+        self.le_selected_directory.returnPressed.connect(self.user_pasted_in_directory)
         self.btn_select_directory.clicked.connect(self.select_media_folder)
         select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
-        select_directory_layout.addWidget(self.select_directory_label, 0, 1, 0, 2)
+        select_directory_layout.addWidget(self.le_selected_directory, 0, 1, 0, 2)
 
         ## display information about Media Folder
         self.media_title = qtw.QLabel('', self)
@@ -153,7 +155,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         :param media_file_information: The media folder information.
         """
         self.signal_reset_progress_bar.emit()
-        self.select_directory_label.setText(media_file_information.directory)
+        self.le_selected_directory.setText(media_file_information.directory)
         self.media_title.setText(media_file_information.media_title)
         self.media_type.setText(media_file_information.media_type)
 
@@ -245,13 +247,16 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         if media_folder_dir: # confirm the user selected a directory
             self.signal_initiate_scan_of_media_folder.emit(media_folder_dir)
 
+    def user_pasted_in_directory(self) -> None:
+        self.signal_initiate_scan_of_media_folder.emit(self.le_selected_directory.text())
+
     @qtc.Slot()
     def start_folder_modification(self) -> None:
         """
         Create the object to hold the user's selection and disable all button widgets before sending it off.
         """
         modified_media_folder_info = ModifyMediaFolder()
-        modified_media_folder_info.directory = self.select_directory_label.text()
+        modified_media_folder_info.directory = self.le_selected_directory.text()
         modified_media_folder_info.media_title = self.media_title.text()
         modified_media_folder_info.media_type = MediaCategory.MOVIE if self.media_type.text().lower() == 'movie' else MediaCategory.TV
         modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text()) if self.highest_season_number.text() != '' else 0
@@ -284,7 +289,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             'The folder you selected to analyze is not a Media Folder.'
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.signal_reset_progress_bar.emit()
             self._enable_or_disable_buttons(True)
 
@@ -302,7 +307,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             'Finished updating the media folder in the directory.'
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.signal_reset_progress_bar.emit()
             self._clear_scanned_media_folder_information()
             self._enable_or_disable_buttons(True)
@@ -322,7 +327,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
 
         :return:
         """
-        self.select_directory_label.setText("")
+        self.le_selected_directory.setText("")
         self.media_title.setText("")
         self.media_type.setText("")
         self.highest_season_number.setText("")
@@ -356,5 +361,6 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.btn_select_directory.setEnabled(enable_or_disable)
         self.btn_cancel.setEnabled(enable_or_disable)
         self.btn_update.setEnabled(enable_or_disable)
+        self.le_selected_directory.setEnabled(enable_or_disable)
         self.groupbox_tv_show_options.setEnabled(enable_or_disable)
         self.groupbox_extra_folder_options.setEnabled(enable_or_disable)
