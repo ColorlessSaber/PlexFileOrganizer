@@ -45,9 +45,23 @@ rename existing media file(s); and have a built-in media player so the user can 
 
 <!--Running the Program-->
 ## Running the Program
-Download the appropriate executable file for your computer operating system from latest version of the application in
-the release section.
+Download a copy of the repo to your local computer and open it in your IDE. Next run the following command to 
+install the necessary libraries.
+<br><br>
+```
+pip install -r requirements.txt
+```
+<br><br>
+With the necessary libraries installed we then can simple run the main.py file.
+```
+python main.py
+```
 
+If you wish to make an executable of the application run the follow commanded in the terminal.
+
+```
+pyinstaller --windowed --name=PlexFileOrganizer main.py
+```
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>
 
 <!-- ROADMAP -->
