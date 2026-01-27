@@ -60,7 +60,7 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
                     self.signals.progress.emit(50, message_number_of_files_affected)
                     time.sleep(1)  # delay for a second so the user sees the program is working.
 
-            if not message_number_of_files_affected: # For when no files that needed updating were found.
+            if not message_number_of_files_affected: # For when no files were found that needed updating
                 self.signals.progress.emit(50, '-- No files were found that needed to be updated')
 
             self.signals.progress.emit(100, 'Finished scanning.')

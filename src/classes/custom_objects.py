@@ -3,6 +3,19 @@ File to hold custom objects--objects that are user control able
 """
 import pathlib
 from collections import UserDict, UserString
+from enum import StrEnum
+
+
+class MediaCategory(StrEnum):
+    MOVIE = 'movie'
+    TV = 'tv'
+    UNCATEGORIZED = 'uncategorized'
+
+    def is_movie(self) -> bool:
+        return self.value == MediaCategory.MOVIE
+
+    def is_tv(self) -> bool:
+        return self.value == MediaCategory.TV
 
 class ExtraFolders(UserDict):
     """
@@ -20,6 +33,11 @@ class ExtraFolders(UserDict):
                 'shorts': False,
                 'other': False
             }
+
+    def __setitem__(self, key, value) -> None:
+        if key not in self.data:
+            raise KeyError(key)
+        self.data[key] = value
 
     def pop(self, s = None) -> None:
         raise RuntimeError("Deletion not allowed")

@@ -1,4 +1,4 @@
-from src.classes import GenerateMediaFolder
+from src.classes import GenerateMediaFolder, MediaCategory
 from pyfakefs.fake_filesystem_unittest import TestCase
 import os
 
@@ -15,7 +15,7 @@ class TestGenerateMediaFolder(TestCase):
         extra_folder = GenerateMediaFolder()
         extra_folder.directory = '/media_folder'
         extra_folder.media_title = 'Extra Test'
-        extra_folder.media_type = 'movie'
+        extra_folder.media_type = MediaCategory.MOVIE
         extra_folder.extra_folders['trailers'] = True
         extra_folder.extra_folders['behind the scenes'] = True
         extra_folder.extra_folders['deleted scenes'] = True
@@ -62,7 +62,7 @@ class TestGenerateMediaFolder(TestCase):
         # provide the tv show media folder contents
         media_folder.directory = '/media_folder'
         media_folder.media_title = 'Legend of Zelda Series'
-        media_folder.media_type = 'tv'
+        media_folder.media_type = MediaCategory.TV
         media_folder.number_of_seasons = 2
         media_folder.extra_folders['trailers'] = True
         media_folder.extra_folders['shorts'] = True
@@ -84,7 +84,7 @@ class TestGenerateMediaFolder(TestCase):
         media_folder = GenerateMediaFolder()
         media_folder.directory = '/media_folder'
         media_folder.media_title = 'Re:Creators'
-        media_folder.media_type = 'movie'
+        media_folder.media_type = MediaCategory.MOVIE
         media_folder.extra_folders['trailers'] = True
         media_folder.extra_folders['shorts'] = True
 

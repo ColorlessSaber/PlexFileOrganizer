@@ -34,11 +34,8 @@ class ManualUpdateMediaFilesThread(qtc.QRunnable):
             time.sleep(1)  # delay for a second so the user sees the program is working.
             # Create a list where each element is a tuple and each tuple contains the following
             # (old file name, new file name)
-            prepped_media_files = []
-            for media_file in self.media_files_to_update:
-                prepped_media_files.append((media_file[0] + "/" + media_file[1] + media_file[3], media_file[0] + "/" + media_file[2] + media_file[3]))
+            prepped_media_files = [(media_file[0] + "/" + media_file[1] + media_file[3], media_file[0] + "/" + media_file[2] + media_file[3])  for media_file in self.media_files_to_update]
             self.signals.progress.emit(41, '-- File(s) prepped for updating')
-
 
             self.signals.progress.emit(58, "-- Updating media file(s).")
             time.sleep(1)  # delay for a second so the user sees the program is working.
