@@ -22,11 +22,11 @@ class TestFolderConditionFuncs:
             "other"
         ]
 
-        assert skip_extra_folders(extra_folder_format[0]) == False
-        assert skip_extra_folders(extra_folder_format[1]) == False
-        assert skip_extra_folders(extra_folder_format[2]) == False
-        assert skip_extra_folders(extra_folder_format[3]) == False
-        assert skip_extra_folders(extra_folder_format[4]) == False
-        assert skip_extra_folders(extra_folder_format[5]) == False
-        assert skip_extra_folders(extra_folder_format[6]) == False
-        assert skip_extra_folders(extra_folder_format[7]) == False
+        assert skip_extra_folders(extra_folder_format[0]) is False
+        assert skip_extra_folders(extra_folder_format[1]) is False
+        assert skip_extra_folders(extra_folder_format[2]) is False
+        assert skip_extra_folders(extra_folder_format[3]) is False
+        assert skip_extra_folders(extra_folder_format[4]) is False
+        assert skip_extra_folders(extra_folder_format[5]) is False
+        assert skip_extra_folders(extra_folder_format[6]) is False
+        assert skip_extra_folders(extra_folder_format[7]) is False

@@ -58,10 +58,10 @@ class TestFolderAndFilePatterns:
         multiple_episode_file = "test - s01e01-e05.mkv"
 
         if folder_and_file_patterns.tv_episode_file_format_regex_pattern.match(single_episode_file) is None:
-            errors.append(f"Error with single episode file pattern")
+            errors.append("Error with single episode file pattern")
 
         if folder_and_file_patterns.tv_episode_file_format_regex_pattern.match(multiple_episode_file) is None:
-            errors.append(f"Error with multiple episode file pattern")
+            errors.append("Error with multiple episode file pattern")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
@@ -75,10 +75,10 @@ class TestFolderAndFilePatterns:
         multiple_episode_file = "test - s01e01-e05.mkv"
 
         if not folder_and_file_patterns.tv_show_episode_pattern_check(single_episode_file):
-            errors.append(f"Error with single episode file pattern")
+            errors.append("Error with single episode file pattern")
 
         if not folder_and_file_patterns.tv_show_episode_pattern_check(multiple_episode_file):
-            errors.append(f"Error with multiple episode file pattern")
+            errors.append("Error with multiple episode file pattern")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
@@ -123,7 +123,7 @@ class TestFolderAndFilePatterns:
         for i in zip(media_file_names, extra_folder_format):
             file_name, folder_name = i
             if not folder_and_file_patterns.extra_media_file_check(file_name, folder_name):
-                errors.append(f"Error with folder '{folder_name}' pattern match")
+                errors.append("Error with folder '{folder_name}' pattern match")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
@@ -246,4 +246,4 @@ class TestFilePatterns:
         folder_name = "Evangelion 1.0 You Are (Not) Alone"
         movie_file = "Evangelion 1.0 You Are (Not) Alone_t01.mkv"
 
-        assert folder_and_file_patterns.movie_media_file_check(movie_file, folder_name) == False, "Failed nearly identical file name to folder name; yielded false positive when it should be yielded false."
+        assert folder_and_file_patterns.movie_media_file_check(movie_file, folder_name) is False, "Failed nearly identical file name to folder name; yielded false positive when it should be yielded false."
