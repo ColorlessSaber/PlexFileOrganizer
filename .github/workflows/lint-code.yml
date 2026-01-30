@@ -1,12 +1,11 @@
 name: lint-code.yml
 on:
-  pull_request:
-    branches:
-      - master
   push:
     branches:
-      - master
-  workflow_dispatch:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   lint:
