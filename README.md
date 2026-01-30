@@ -45,23 +45,16 @@ rename existing media file(s); and have a built-in media player so the user can 
 
 <!--Running the Program-->
 ## Running the Program
-Download a copy of the repo to your local computer and open it in your IDE. Next run the following command to 
-install the necessary libraries.
+You can download the executable for Windows, Linux, or Mac from the <a href="https://github.com/ColorlessSaber/PlexFileOrganizer/releases">releases page</a>.
+Each executable is a portable version of the application so you can save it anywhere on your system.
 <br><br>
-```
-pip install -r requirements.txt
-```
-<br><br>
-With the necessary libraries installed we then can simple run the main.py file.
-```
-python main.py
-```
+**NOTE**
+* When opening the application on Windows for the first time you might get a popup that says
+"Windows protected your PC." Simply click "more info" button on the popup and then click "run anyway" to start the program.
+* When opening the application on Mac for the first time you might get a popup warning that says
+"\[...] can't be opened because it is from an unidentified developer." To allow the application to run, refer to this
+article from Apple that explains how to allow the application to run: <a href="https://support.apple.com/en-us/102445">Article</a>.
 
-If you wish to make an executable of the application run the follow commanded in the terminal.
-
-```
-pyinstaller --windowed --name=PlexFileOrganizer main.py
-```
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>
 
 <!-- ROADMAP -->
