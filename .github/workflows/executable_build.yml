@@ -32,7 +32,7 @@ jobs:
         with:
           nuitka-version: main
           script-name: main.py
-          mode: standalone
+          mode: app
           enable-plugins: pyside6
 
       - name: Upload Artifacts
