@@ -259,7 +259,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         modified_media_folder_info.directory = self.le_selected_directory.text()
         modified_media_folder_info.media_title = self.media_title.text()
         modified_media_folder_info.media_type = MediaCategory.MOVIE if self.media_type.text().lower() == 'movie' else MediaCategory.TV
-        modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text()) if self.highest_season_number.text() != '' else 0
+        modified_media_folder_info.number_of_seasons = int(self.highest_season_number.text()) if self.highest_season_number.text() != 'N/A' else 0
         modified_media_folder_info.number_of_new_seasons = int(self.sb_number_of_new_seasons.text())
         modified_media_folder_info.specials_season = self.cb_generate_specials_season_folder.isChecked() if self.cb_generate_specials_season_folder.isEnabled() else False
         modified_media_folder_info.extra_folders['trailers'] = self.cb_trailers.isChecked() if self.cb_trailers.isEnabled() else False
