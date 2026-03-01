@@ -70,8 +70,8 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
 
         main_layout = qtw.QVBoxLayout()
         main_layout.addWidget(label_information_of_process)
-        main_layout.addLayout(directory_selected_layout)
         main_layout.addWidget(self.cb_extra_folders_to_be_scanned)
+        main_layout.addLayout(directory_selected_layout)
         main_layout.addLayout(proceed_cancel_button_layout)
         self.setLayout(main_layout)
 
