@@ -16,6 +16,14 @@
 N/A
 
 ## _Current Version_
+### _Version 1.1.1_
+**Bug Fixes**
+- Fixed issue for modified media folder not working when its a movie media folder
+
+**Misc.**
+- Added more process messages when doing auto update media files
+
+## _Previous Versions_
 ### _Version 1.1_
 **Features**
 - [x] Create a Special season folder for TV show.
@@ -26,7 +34,7 @@ N/A
 **Misc.**
 - Added styling to the windows.
 
-## _Previous Versions_
+
 ### _Version 1.0.1_
 **Bug Fixes**
 - Typo of method name in create_media_folder_thread.py.
