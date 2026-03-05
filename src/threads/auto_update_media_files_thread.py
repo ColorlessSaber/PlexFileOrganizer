@@ -36,20 +36,23 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
         :return:
         """
         try:
-            self.signals.progress.emit(10, 'Beginning automatic update of media file(s).')
+            self.signals.progress.emit(10, 'Beginning process of automatic update of media file(s).')
             time.sleep(1) # delay for a second so the user sees the program is working.
             message_number_of_files_affected = ""
             folder_and_file_pattern = FolderAndFilePatterns()
 
-            self.signals.progress.emit(25, 'Scanning directory and sub-folders...')
-            time.sleep(1)  # delay for a second so the user sees the program is working.
-
             # set up the generator that will return the media files in a given directory based on option(s) selected by
             # user
             if self.directory_and_options['scan_extra_folder']:
+                self.signals.progress.emit(25, 'Prepping process to include extra folders in scan...')
                 generator_find_media_files = find_media_files_in_dir(video_file_condition, default_folder_condition, self.directory_and_options['directory'])
             else:
+                self.signals.progress.emit(25, 'Skipping prepping process to include extra folders in scan...')
                 generator_find_media_files = find_media_files_in_dir(video_file_condition, skip_extra_folders, self.directory_and_options['directory'])
+
+            time.sleep(1)  # delay for a second so the user sees the program is working.
+
+            self.signals.progress.emit(30, 'Scanning directory and sub-folders...')
 
             for file_list in generator_find_media_files:
                 all_files_are_formatted_correctly = folder_and_file_pattern.check_files_in_list(file_list)
