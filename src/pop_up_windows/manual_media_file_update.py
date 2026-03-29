@@ -124,16 +124,22 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.table_view.setColumnHidden(3, True)
 
         # layout
-        button_layout = qtw.QVBoxLayout()
-        button_layout.addWidget(self.btn_add_files)
-        button_layout.addWidget(self.btn_remove_file)
-        button_layout.addWidget(self.btn_clear_table)
-        button_layout.addWidget(self.btn_update_files)
-        button_layout.addWidget(self.btn_close)
+        table_buttons_layout = qtw.QHBoxLayout()
+        table_buttons_layout.addWidget(self.btn_add_files)
+        table_buttons_layout.addWidget(self.btn_remove_file)
+        table_buttons_layout.addWidget(self.btn_clear_table)
+
+        table_with_buttons_layout = qtw.QVBoxLayout()
+        table_with_buttons_layout.addLayout(table_buttons_layout)
+        table_with_buttons_layout.addWidget(self.table_view)
+
+        main_buttons_layout = qtw.QVBoxLayout()
+        main_buttons_layout.addWidget(self.btn_update_files)
+        main_buttons_layout.addWidget(self.btn_close)
 
         main_layout = qtw.QHBoxLayout()
-        main_layout.addLayout(button_layout)
-        main_layout.addWidget(self.table_view)
+        main_layout.addLayout(main_buttons_layout)
+        main_layout.addLayout(table_with_buttons_layout)
         self.setLayout(main_layout)
 
     @qtc.Slot()
