@@ -1,19 +1,21 @@
 from src.functions import (
     find_media_files_in_dir,
     skip_extra_folders,
-    default_folder_condition
+    default_folder_condition,
 )
 import os
 from pyfakefs.fake_filesystem_unittest import TestCase
+
 
 def txt_file_condition(file_path):
     """
     Created for this test to work with the test_library
     """
-    if file_path.endswith('.txt'):
+    if file_path.endswith(".txt"):
         return True
     else:
         return False
+
 
 class TestFindMediaFilesInDir(TestCase):
     def setUp(self):
@@ -58,17 +60,22 @@ class TestFindMediaFilesInDir(TestCase):
         Validate the find_media_files_in_dir function find all the files in the given movie folder directory
         """
         errors = []
-        movie_directory = '/foo/movie'
+        movie_directory = "/foo/movie"
 
-        for file_list in find_media_files_in_dir(txt_file_condition, default_folder_condition, movie_directory):
+        for file_list in find_media_files_in_dir(
+            txt_file_condition, default_folder_condition, movie_directory
+        ):
             directory_path = os.path.dirname(os.path.abspath(file_list[0]))
 
             func_file_count = len(file_list)
-            os_scan_file_count = len([name for name in os.listdir(directory_path) if "." in name])
+            os_scan_file_count = len(
+                [name for name in os.listdir(directory_path) if "." in name]
+            )
 
             if not func_file_count == os_scan_file_count:
                 errors.append(
-                    f"Directory: {directory_path} -> func file count: {func_file_count}, os scan file count: {os_scan_file_count}")
+                    f"Directory: {directory_path} -> func file count: {func_file_count}, os scan file count: {os_scan_file_count}"
+                )
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
@@ -77,17 +84,22 @@ class TestFindMediaFilesInDir(TestCase):
         Validate the find_media_files_in_dir function find all the files in the given tv show folder directory
         """
         errors = []
-        tv_show_directory = '/foo/tv show'
+        tv_show_directory = "/foo/tv show"
 
-        for file_list in find_media_files_in_dir(txt_file_condition, default_folder_condition, tv_show_directory):
+        for file_list in find_media_files_in_dir(
+            txt_file_condition, default_folder_condition, tv_show_directory
+        ):
             directory_path = os.path.dirname(os.path.abspath(file_list[0]))
 
             func_file_count = len(file_list)
-            os_scan_file_count = len([name for name in os.listdir(directory_path) if "." in name])
+            os_scan_file_count = len(
+                [name for name in os.listdir(directory_path) if "." in name]
+            )
 
             if not func_file_count == os_scan_file_count:
                 errors.append(
-                    f"Directory: {directory_path} -> func file count: {func_file_count}, os scan file count: {os_scan_file_count}")
+                    f"Directory: {directory_path} -> func file count: {func_file_count}, os scan file count: {os_scan_file_count}"
+                )
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
@@ -96,9 +108,11 @@ class TestFindMediaFilesInDir(TestCase):
         Validate the find_media_files_in_dir function will skip all extra folders then told to do so
         """
         number_of_scanned_folders = 0
-        extra_directory = '/foo/extra'
+        extra_directory = "/foo/extra"
 
-        for file_list in find_media_files_in_dir(txt_file_condition, skip_extra_folders, extra_directory):
+        for file_list in find_media_files_in_dir(
+            txt_file_condition, skip_extra_folders, extra_directory
+        ):
             if file_list:
                 number_of_scanned_folders += 1
 

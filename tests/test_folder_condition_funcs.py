@@ -1,5 +1,6 @@
 from src.functions import default_folder_condition, skip_extra_folders
 
+
 class TestFolderConditionFuncs:
     def test_default_folder_condition(self):
         """
@@ -19,7 +20,7 @@ class TestFolderConditionFuncs:
             "interviews",
             "scenes",
             "shorts",
-            "other"
+            "other",
         ]
 
         assert skip_extra_folders(extra_folder_format[0]) is False

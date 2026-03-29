@@ -2,17 +2,24 @@ from src.classes import FolderAndFilePatterns
 
 folder_and_file_patterns = FolderAndFilePatterns()
 
+
 class TestFolderAndFilePatterns:
     """
     Contains only unit tests to test the basic functionality of the FolderAndFilePatterns class
     """
+
     def test_move_file_regex_check(self):
         """
         Validate that a regex pattern for movie file works correctly
         """
         movie_title = "test"
         movie_filename = "test.mkv"
-        assert folder_and_file_patterns.movie_file_format_regex_pattern.match(movie_filename).group('title') == movie_title
+        assert (
+            folder_and_file_patterns.movie_file_format_regex_pattern.match(
+                movie_filename
+            ).group("title")
+            == movie_title
+        )
 
     def test_extra_file_regex_check(self):
         """
@@ -39,12 +46,17 @@ class TestFolderAndFilePatterns:
             "interviews",
             "scenes",
             "shorts",
-            "other"
+            "other",
         ]
 
         for i in zip(media_file_names, extra_folder_format):
             file_name, folder_name = i
-            if not folder_and_file_patterns.extra_file_format_regex_pattern.match(file_name).group('title') == folder_name:
+            if (
+                not folder_and_file_patterns.extra_file_format_regex_pattern.match(
+                    file_name
+                ).group("title")
+                == folder_name
+            ):
                 errors.append(f"Error with folder '{folder_name}' pattern match")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
@@ -57,10 +69,20 @@ class TestFolderAndFilePatterns:
         single_episode_file = "test - s01e01.mkv"
         multiple_episode_file = "test - s01e01-e05.mkv"
 
-        if folder_and_file_patterns.tv_episode_file_format_regex_pattern.match(single_episode_file) is None:
+        if (
+            folder_and_file_patterns.tv_episode_file_format_regex_pattern.match(
+                single_episode_file
+            )
+            is None
+        ):
             errors.append("Error with single episode file pattern")
 
-        if folder_and_file_patterns.tv_episode_file_format_regex_pattern.match(multiple_episode_file) is None:
+        if (
+            folder_and_file_patterns.tv_episode_file_format_regex_pattern.match(
+                multiple_episode_file
+            )
+            is None
+        ):
             errors.append("Error with multiple episode file pattern")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
@@ -74,10 +96,14 @@ class TestFolderAndFilePatterns:
         single_episode_file = "test - s01e01.mkv"
         multiple_episode_file = "test - s01e01-e05.mkv"
 
-        if not folder_and_file_patterns.tv_show_episode_pattern_check(single_episode_file):
+        if not folder_and_file_patterns.tv_show_episode_pattern_check(
+            single_episode_file
+        ):
             errors.append("Error with single episode file pattern")
 
-        if not folder_and_file_patterns.tv_show_episode_pattern_check(multiple_episode_file):
+        if not folder_and_file_patterns.tv_show_episode_pattern_check(
+            multiple_episode_file
+        ):
             errors.append("Error with multiple episode file pattern")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
@@ -117,12 +143,14 @@ class TestFolderAndFilePatterns:
             "interviews",
             "scenes",
             "shorts",
-            "other"
+            "other",
         ]
 
         for i in zip(media_file_names, extra_folder_format):
             file_name, folder_name = i
-            if not folder_and_file_patterns.extra_media_file_check(file_name, folder_name):
+            if not folder_and_file_patterns.extra_media_file_check(
+                file_name, folder_name
+            ):
                 errors.append("Error with folder '{folder_name}' pattern match")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
@@ -159,13 +187,14 @@ class TestFolderAndFilePatterns:
             "interviews",
             "scenes",
             "shorts",
-            "other"
+            "other",
         ]
         for extra_folder in extra_folder_formats:
             if not folder_and_file_patterns.extra_folder_check(extra_folder):
                 errors.append(f"Error with folder '{extra_folder}' pattern match")
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+
 
 class TestCheckFilesInList:
     """
@@ -178,10 +207,10 @@ class TestCheckFilesInList:
         correctly
         """
         episode_list = (
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e01.txt',
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e02.txt',
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e03.txt',
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e04.txt',
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e01.txt",
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e02.txt",
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e03.txt",
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e04.txt",
         )
         assert folder_and_file_patterns.check_files_in_list(episode_list) is True
 
@@ -190,10 +219,10 @@ class TestCheckFilesInList:
         Validates that the function returns False when there is at lest one episode not formated correctly in the list
         """
         episode_list = (
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e01.txt',
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e02.txt',
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e03.txt',
-            '/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero_s01e04.txt',
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e01.txt",
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e02.txt",
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e03.txt",
+            "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero_s01e04.txt",
         )
         assert folder_and_file_patterns.check_files_in_list(episode_list) is False
 
@@ -202,9 +231,9 @@ class TestCheckFilesInList:
         Validates that the function returns True for list of extra folders that are formated correctly
         """
         extra_list = (
-            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 1.txt',
-            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 2.txt',
-            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 3.txt',
+            "/dir/dir1/Zenless Zone Zero/Trailers/Trailer 1.txt",
+            "/dir/dir1/Zenless Zone Zero/Trailers/Trailer 2.txt",
+            "/dir/dir1/Zenless Zone Zero/Trailers/Trailer 3.txt",
         )
         assert folder_and_file_patterns.check_files_in_list(extra_list) is True
 
@@ -213,9 +242,9 @@ class TestCheckFilesInList:
         Validates that the function returns False when there is at lest one extra file not formated correctly in the list
         """
         files_to_update = (
-            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 1.txt',
-            '/dir/dir1/Zenless Zone Zero/Trailers/Trailer 2.txt',
-            '/dir/dir1/Zenless Zone Zero/Trailers/new trailer.txt',
+            "/dir/dir1/Zenless Zone Zero/Trailers/Trailer 1.txt",
+            "/dir/dir1/Zenless Zone Zero/Trailers/Trailer 2.txt",
+            "/dir/dir1/Zenless Zone Zero/Trailers/new trailer.txt",
         )
         assert folder_and_file_patterns.check_files_in_list(files_to_update) is False
 
@@ -223,15 +252,16 @@ class TestCheckFilesInList:
         """
         Validates that the function returns True for when the movie file is formated correctly
         """
-        file = ('/dir/dir1/Zenless Zone Zero/Zenless Zone Zero.txt',)
+        file = ("/dir/dir1/Zenless Zone Zero/Zenless Zone Zero.txt",)
         assert folder_and_file_patterns.check_files_in_list(file) is True
 
     def test_movie_folder_list_yield_false(self):
         """
         Validates that the function returns False when the movie file is not formated correctly
         """
-        file = ('/dir/dir1/Zenless Zone Zero/movie.txt',)
+        file = ("/dir/dir1/Zenless Zone Zero/movie.txt",)
         assert folder_and_file_patterns.check_files_in_list(file) is False
+
 
 class TestFilePatterns:
     """
@@ -246,4 +276,9 @@ class TestFilePatterns:
         folder_name = "Evangelion 1.0 You Are (Not) Alone"
         movie_file = "Evangelion 1.0 You Are (Not) Alone_t01.mkv"
 
-        assert folder_and_file_patterns.movie_media_file_check(movie_file, folder_name) is False, "Failed nearly identical file name to folder name; yielded false positive when it should be yielded false."
+        assert (
+            folder_and_file_patterns.movie_media_file_check(movie_file, folder_name)
+            is False
+        ), (
+            "Failed nearly identical file name to folder name; yielded false positive when it should be yielded false."
+        )

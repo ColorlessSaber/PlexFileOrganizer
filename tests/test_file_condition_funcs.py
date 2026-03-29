@@ -1,5 +1,6 @@
 from src.functions import video_file_condition
 
+
 class TestFileConditionFunctions:
     def test_video_file_condition(self):
         """

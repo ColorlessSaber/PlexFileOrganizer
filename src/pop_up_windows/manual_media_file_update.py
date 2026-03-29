@@ -4,10 +4,16 @@ from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 import pathlib
 
+
 class MediaFileTable(qtc.QAbstractTableModel):
     """A table to allow user to view and modify what the file's new name should be"""
 
-    def __init__(self, read_only_indexes: list, current_media_file_list: Optional[list] = None, column_names: Optional[list] = None):
+    def __init__(
+        self,
+        read_only_indexes: list,
+        current_media_file_list: Optional[list] = None,
+        column_names: Optional[list] = None,
+    ):
         super().__init__()
         if current_media_file_list is None:
             current_media_file_list = []
@@ -33,7 +39,7 @@ class MediaFileTable(qtc.QAbstractTableModel):
 
         return None
 
-    def setData(self, index, value, role = qtc.Qt.EditRole) -> object | None:
+    def setData(self, index, value, role=qtc.Qt.EditRole) -> object | None:
         """Set the data at the given index for editing"""
         if index.isValid() and role == qtc.Qt.EditRole:
             self._data[index.row()][index.column()] = value
@@ -52,7 +58,9 @@ class MediaFileTable(qtc.QAbstractTableModel):
         else:
             return super().flags(index)
 
-    def headerData(self, section, orientation, role=qtc.Qt.DisplayRole) -> object | str | None:
+    def headerData(
+        self, section, orientation, role=qtc.Qt.DisplayRole
+    ) -> object | str | None:
         """Return the header labels"""
         if role == qtc.Qt.DisplayRole and orientation == qtc.Qt.Horizontal:
             return self._headers[section]
@@ -70,7 +78,7 @@ class MediaFileTable(qtc.QAbstractTableModel):
         """Remove a single row into the table"""
         self.beginRemoveRows(parent, position, position + rows - 1)
         for _ in range(rows):
-            del(self._data[position])
+            del self._data[position]
         self.endRemoveRows()
 
     def extract_data(self) -> list[Any]:
@@ -79,10 +87,12 @@ class MediaFileTable(qtc.QAbstractTableModel):
         """
         return self._data
 
+
 class ManualMediaFileUpdate(qtw.QDialog):
     """
     Pop-up window to allow user to select media files they wish to update.
     """
+
     signal_initiate_manual_update = qtc.Signal(list)
     signal_check_list_of_files_for_duplicates = qtc.Signal(list)
     signal_reset_progress_bar = qtc.Signal()
@@ -95,26 +105,26 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.setMinimumHeight(400)
 
         # widgets
-        self.btn_add_files = qtw.QPushButton('Add File(s)', self)
+        self.btn_add_files = qtw.QPushButton("Add File(s)", self)
         self.btn_add_files.clicked.connect(self.select_files)
-        self.btn_remove_file = qtw.QPushButton('Remove File(s)', self)
+        self.btn_remove_file = qtw.QPushButton("Remove File(s)", self)
         self.btn_remove_file.clicked.connect(self.remove_files)
         self.btn_remove_file.setEnabled(False)
-        self.btn_clear_table = qtw.QPushButton('Clear Table', self)
+        self.btn_clear_table = qtw.QPushButton("Clear Table", self)
         self.btn_clear_table.clicked.connect(self.clear_table)
         self.btn_clear_table.setEnabled(False)
-        self.btn_update_files = qtw.QPushButton('Update File(s)', self)
+        self.btn_update_files = qtw.QPushButton("Update File(s)", self)
         self.btn_update_files.clicked.connect(self.first_stage_update_process)
         self.btn_update_files.setEnabled(False)
-        self.btn_close = qtw.QPushButton('Cancel', self)
+        self.btn_close = qtw.QPushButton("Cancel", self)
         self.btn_close.clicked.connect(self.reject)
 
         self.table_view = qtw.QTableView(self)
         self.table_view.setSortingEnabled(False)
-        self.model =  MediaFileTable(
+        self.model = MediaFileTable(
             [0, 1, 3],
             None,
-            ['Directory', 'Current File Name', 'New File Name', 'Format Type']
+            ["Directory", "Current File Name", "New File Name", "Format Type"],
         )
         self.table_view.setModel(self.model)
 
@@ -154,17 +164,23 @@ class ManualMediaFileUpdate(qtw.QDialog):
             self,
             "Select Files...",
             qtc.QDir.homePath(),
-        "Media Files (*.mkv *.mp4 *.avi)"
+            "Media Files (*.mkv *.mp4 *.avi)",
         )
 
         if selected_files:
             for file in selected_files:
-                self.model.insert_file(position=self.model.rowCount(), rows=1, row_data=[
-                    str(pathlib.Path(file).parent),
-                    pathlib.Path(file).stem,
-                    pathlib.Path(file).stem, # The original name is the default. Allowing user to make necessary changes to the original name
-                    pathlib.Path(file).suffix]
-                                       )
+                self.model.insert_file(
+                    position=self.model.rowCount(),
+                    rows=1,
+                    row_data=[
+                        str(pathlib.Path(file).parent),
+                        pathlib.Path(file).stem,
+                        pathlib.Path(
+                            file
+                        ).stem,  # The original name is the default. Allowing user to make necessary changes to the original name
+                        pathlib.Path(file).suffix,
+                    ],
+                )
 
             self.table_view.resizeColumnsToContents()
             self.btn_remove_file.setEnabled(True)
@@ -180,7 +196,9 @@ class ManualMediaFileUpdate(qtw.QDialog):
         """
         selected_files = self.table_view.selectedIndexes()
         if selected_files:
-            self.model.remove_file(position=selected_files[0].row(), rows=len(selected_files))
+            self.model.remove_file(
+                position=selected_files[0].row(), rows=len(selected_files)
+            )
 
     def clear_table(self) -> None:
         """
@@ -207,10 +225,10 @@ class ManualMediaFileUpdate(qtw.QDialog):
         """
         response = qtw.QMessageBox.warning(
             self,
-            'Are you sure you want to update?',
-            'The program will not validate that the media files you wish to update are formated correctly. Click Ok to continue.',
+            "Are you sure you want to update?",
+            "The program will not validate that the media files you wish to update are formated correctly. Click Ok to continue.",
             buttons=qtw.QMessageBox.Ok | qtw.QMessageBox.Cancel,
-            defaultButton=qtw.QMessageBox.Ok
+            defaultButton=qtw.QMessageBox.Ok,
         )
 
         if response == qtw.QMessageBox.Ok:
@@ -220,7 +238,9 @@ class ManualMediaFileUpdate(qtw.QDialog):
             self.signal_check_list_of_files_for_duplicates.emit(data)
 
     @qtc.Slot(bool)
-    def second_stage_update_process(self, there_are_no_duplicates_in_rename_file_list: bool) -> None:
+    def second_stage_update_process(
+        self, there_are_no_duplicates_in_rename_file_list: bool
+    ) -> None:
         """
         Second stage of update the media files.
         -- If there are no duplicate rename file names, send the data off to be processed.
@@ -235,10 +255,10 @@ class ManualMediaFileUpdate(qtw.QDialog):
         else:
             qtw.QMessageBox.warning(
                 self,
-                'There are duplicate rename file names.',
-                'You are two or more files with matching rename file names. Please fix this to be able to manually update the media file name(s).',
+                "There are duplicate rename file names.",
+                "You are two or more files with matching rename file names. Please fix this to be able to manually update the media file name(s).",
                 buttons=qtw.QMessageBox.Ok,
-                defaultButton=qtw.QMessageBox.Ok
+                defaultButton=qtw.QMessageBox.Ok,
             )
             self._enable_or_disable_buttons(True)
 
@@ -252,8 +272,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
         """
         response = qtw.QMessageBox.information(
             self,
-            'Manual Update of Media Files Complete!',
-            'Finished updating the media files in the directory. Please see console window for information on if any files were updated during the scan.'
+            "Manual Update of Media Files Complete!",
+            "Finished updating the media files in the directory. Please see console window for information on if any files were updated during the scan.",
         )
 
         if response == qtw.QMessageBox.Ok:

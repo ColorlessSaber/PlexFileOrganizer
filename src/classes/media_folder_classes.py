@@ -2,11 +2,13 @@ import os
 from dataclasses import dataclass, field
 from . import ExtraFolders, MediaCategory
 
+
 @dataclass
 class MediaFolderData:
     """
     A dataclass to hold the information and folder(s) to make for the Media Folder.
     """
+
     directory: str = field(default=None)
     media_title: str = field(default=None)
     media_type: MediaCategory = field(default=MediaCategory.UNCATEGORIZED)
@@ -26,6 +28,7 @@ class MediaFolderData:
                 return True
         return False
 
+
 @dataclass
 class ModifyMediaFolder(MediaFolderData):
     """
@@ -33,6 +36,7 @@ class ModifyMediaFolder(MediaFolderData):
 
     Inheritance MediaFolderData.
     """
+
     number_of_new_seasons: int = field(default=0)
 
     def generate_new_season_folders(self) -> None:
@@ -43,8 +47,11 @@ class ModifyMediaFolder(MediaFolderData):
         """
         # added plus one to start range so it doesn't use an existing number;
         # added plus one to end range to generate the correct number of new season folder(s)
-        for season_num in range(self.number_of_seasons+1, self.number_of_seasons+self.number_of_new_seasons+1):
-            os.mkdir('{}/Season {}'.format(self.directory, season_num))
+        for season_num in range(
+            self.number_of_seasons + 1,
+            self.number_of_seasons + self.number_of_new_seasons + 1,
+        ):
+            os.mkdir("{}/Season {}".format(self.directory, season_num))
 
     def generate_specials_season_folder(self) -> None:
         """
@@ -52,7 +59,7 @@ class ModifyMediaFolder(MediaFolderData):
 
         :return:
         """
-        os.mkdir('{}/Specials'.format(self.directory))
+        os.mkdir("{}/Specials".format(self.directory))
 
     def generate_new_extra_folders(self) -> None:
         """
@@ -62,7 +69,8 @@ class ModifyMediaFolder(MediaFolderData):
         """
         for key in self.extra_folders:
             if self.extra_folders[key]:
-                os.mkdir('{}/{}'.format(self.directory, key.title()))
+                os.mkdir("{}/{}".format(self.directory, key.title()))
+
 
 class GenerateMediaFolder(MediaFolderData):
     """
@@ -77,7 +85,9 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return: True -- directory exists, False -- directory not exists
         """
-        does_directory_exist = os.path.isdir('{}/{}'.format(self.directory, self.media_title))
+        does_directory_exist = os.path.isdir(
+            "{}/{}".format(self.directory, self.media_title)
+        )
         if does_directory_exist:
             return True
         else:
@@ -89,7 +99,7 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return:
         """
-        os.mkdir('{}/{}'.format(self.directory, self.media_title))
+        os.mkdir("{}/{}".format(self.directory, self.media_title))
 
     def generate_seasons(self) -> None:
         """
@@ -97,8 +107,12 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return:
         """
-        for season_num in range(1, self.number_of_seasons+1): # plus one is added to generate the correct number of season folder(s).
-            os.mkdir('{}/{}/Season {}'.format(self.directory, self.media_title, season_num))
+        for season_num in range(
+            1, self.number_of_seasons + 1
+        ):  # plus one is added to generate the correct number of season folder(s).
+            os.mkdir(
+                "{}/{}/Season {}".format(self.directory, self.media_title, season_num)
+            )
 
     def generate_specials_season_folder(self) -> None:
         """
@@ -106,8 +120,7 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return:
         """
-        os.mkdir('{}/{}/Specials'.format(self.directory, self.media_title))
-
+        os.mkdir("{}/{}/Specials".format(self.directory, self.media_title))
 
     def generate_extra_folders(self) -> None:
         """
@@ -117,4 +130,6 @@ class GenerateMediaFolder(MediaFolderData):
         """
         for key in self.extra_folders:
             if self.extra_folders[key]:
-                os.mkdir('{}/{}/{}'.format(self.directory, self.media_title, key.title()))
+                os.mkdir(
+                    "{}/{}/{}".format(self.directory, self.media_title, key.title())
+                )

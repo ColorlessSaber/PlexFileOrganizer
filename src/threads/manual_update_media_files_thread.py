@@ -1,10 +1,12 @@
 """
 Thread for Manual Update Media Files
 """
+
 import time
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 from ..functions import update_files_in_directory, prep_files_for_modified_renaming
+
 
 class ManualUpdateMediaFilesThread(qtc.QRunnable):
     class ThreadSignals(DefaultThreadSignals):
@@ -31,14 +33,18 @@ class ManualUpdateMediaFilesThread(qtc.QRunnable):
         files_identified_for_renaming = None
 
         try:
-            self.signals.progress.emit(17, 'Starting manual update of media file(s)...')
+            self.signals.progress.emit(17, "Starting manual update of media file(s)...")
 
-            self.signals.progress.emit(24, '-- Prepping file(s) for update.')
+            self.signals.progress.emit(24, "-- Prepping file(s) for update.")
             time.sleep(1)  # delay for a second so the user sees the program is working.
-            files_identified_for_renaming, prepped_media_files = prep_files_for_modified_renaming(self.media_files_to_update)
+            files_identified_for_renaming, prepped_media_files = (
+                prep_files_for_modified_renaming(self.media_files_to_update)
+            )
 
-            self.signals.progress.emit(41, '-- Identify the file(s) in directory to be renamed.')
-            time.sleep(1) # delay for a second so the user sees the program is working.
+            self.signals.progress.emit(
+                41, "-- Identify the file(s) in directory to be renamed."
+            )
+            time.sleep(1)  # delay for a second so the user sees the program is working.
             update_files_in_directory(files_identified_for_renaming)
 
             self.signals.progress.emit(58, "-- Updating media file(s).")
@@ -47,7 +53,7 @@ class ManualUpdateMediaFilesThread(qtc.QRunnable):
             self.signals.progress.emit(75, "-- Media file(s) updated.")
 
             time.sleep(1)  # delay for a second so the user sees the program is working.
-            self.signals.progress.emit(100, 'Finished manual update of media file(s).')
+            self.signals.progress.emit(100, "Finished manual update of media file(s).")
             self.signals.finished.emit()
 
         except OSError as e:

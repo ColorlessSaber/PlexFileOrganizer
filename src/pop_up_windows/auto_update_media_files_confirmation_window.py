@@ -3,9 +3,11 @@ Pop-up window to warn user how the Auto-Update Media Files process work,
 and get final confirmation that they wish to process, along with input if to update the files in
 the extra folders as well
 """
+
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtGui as qtg
 from PySide6 import QtCore as qtc
+
 
 class AutoUpdateMediaFilesWindow(qtw.QDialog):
     signal_initiate_auto_update = qtc.Signal(dict)
@@ -19,7 +21,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         """
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
-        self.setWindowTitle('Auto-Update Media Files Confirmation')
+        self.setWindowTitle("Auto-Update Media Files Confirmation")
 
         # Labels
         label_information_of_process = qtw.QLabel(
@@ -43,20 +45,22 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
             or more episodes, or the files in a season folder aren’t in chronological order by episode; exit out of
             this window and click the “Manual-Update Media Files’ option on the main window.
             """,
-            self
+            self,
         )
         label_information_of_process.setAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
-        label_information_of_process.setFont(qtg.QFont('Arial', 16))
-        self.label_selected_directory = qtw.QLabel('', self)
+        label_information_of_process.setFont(qtg.QFont("Arial", 16))
+        self.label_selected_directory = qtw.QLabel("", self)
 
         # buttons and checkbox creation
-        self.cb_extra_folders_to_be_scanned = qtw.QCheckBox('Update media files in Extra Folder(s)', self)
-        self.btn_select_directory = qtw.QPushButton('Select Directory', self)
+        self.cb_extra_folders_to_be_scanned = qtw.QCheckBox(
+            "Update media files in Extra Folder(s)", self
+        )
+        self.btn_select_directory = qtw.QPushButton("Select Directory", self)
         self.btn_select_directory.clicked.connect(self.select_directory_window)
-        self.btn_proceed = qtw.QPushButton('Proceed', self)
+        self.btn_proceed = qtw.QPushButton("Proceed", self)
         self.btn_proceed.setEnabled(False)
         self.btn_proceed.clicked.connect(self.start_update_process)
-        self.btn_cancel = qtw.QPushButton('Cancel', self)
+        self.btn_cancel = qtw.QPushButton("Cancel", self)
         self.btn_cancel.clicked.connect(self.reject)
 
         # Set up the layout of window
@@ -83,14 +87,14 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         :return:
         """
         directory_selected_by_user = qtw.QFileDialog.getExistingDirectory(
-            self,
-            'Select folder...',
-            qtc.QDir.homePath()
+            self, "Select folder...", qtc.QDir.homePath()
         )
 
         # confirm user selected a directory
         if directory_selected_by_user:
-            self.btn_proceed.setEnabled(True) # enable the button given user has selected a directory
+            self.btn_proceed.setEnabled(
+                True
+            )  # enable the button given user has selected a directory
             self.label_selected_directory.setText(directory_selected_by_user)
 
     def start_update_process(self) -> None:
@@ -100,8 +104,10 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
 
         :return:
         """
-        user_selected_dir_and_options = {'directory': self.label_selected_directory.text(),
-                                         'scan_extra_folder': self.cb_extra_folders_to_be_scanned.isChecked()}
+        user_selected_dir_and_options = {
+            "directory": self.label_selected_directory.text(),
+            "scan_extra_folder": self.cb_extra_folders_to_be_scanned.isChecked(),
+        }
 
         self.signal_initiate_auto_update.emit(user_selected_dir_and_options)
 

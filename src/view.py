@@ -1,13 +1,11 @@
-from PySide6 import (
-    QtWidgets as qtw,
-    QtCore as qtc
-)
+from PySide6 import QtWidgets as qtw, QtCore as qtc
 from .pop_up_windows import (
     ManualMediaFileUpdate,
     CreateMediaFolder,
     AutoUpdateMediaFilesWindow,
-    ModifiedMediaFolderWindow
+    ModifiedMediaFolderWindow,
 )
+
 
 class View(qtw.QWidget):
     """The front-end of the program"""
@@ -41,26 +39,40 @@ class View(qtw.QWidget):
         super().__init__()
 
         # widgets
-        self.btn_create_media_folder = qtw.QPushButton('Create Media Folder', self)
-        self.btn_create_media_folder.clicked.connect(self.launch_create_media_folder_window)
+        self.btn_create_media_folder = qtw.QPushButton("Create Media Folder", self)
+        self.btn_create_media_folder.clicked.connect(
+            self.launch_create_media_folder_window
+        )
 
-        self.btn_modified_existing_media_folder = qtw.QPushButton('Modified Existing Media Folder', self)
-        self.btn_modified_existing_media_folder.clicked.connect(self.launch_modified_media_folder_window)
+        self.btn_modified_existing_media_folder = qtw.QPushButton(
+            "Modified Existing Media Folder", self
+        )
+        self.btn_modified_existing_media_folder.clicked.connect(
+            self.launch_modified_media_folder_window
+        )
 
-        self.btn_auto_update_media_files = qtw.QPushButton('Auto-Update Media Files', self)
-        self.btn_auto_update_media_files.clicked.connect(self.launch_auto_update_media_files_conformation_window)
+        self.btn_auto_update_media_files = qtw.QPushButton(
+            "Auto-Update Media Files", self
+        )
+        self.btn_auto_update_media_files.clicked.connect(
+            self.launch_auto_update_media_files_conformation_window
+        )
 
-        self.btn_manual_update_media_files = qtw.QPushButton('Manual-Update Media Files', self)
-        self.btn_manual_update_media_files.clicked.connect(self.launch_manual_update_media_files_window)
+        self.btn_manual_update_media_files = qtw.QPushButton(
+            "Manual-Update Media Files", self
+        )
+        self.btn_manual_update_media_files.clicked.connect(
+            self.launch_manual_update_media_files_window
+        )
 
-        self.btn_clear_log = qtw.QPushButton('Clear Log', self)
+        self.btn_clear_log = qtw.QPushButton("Clear Log", self)
         self.btn_clear_log.clicked.connect(self.clear_log_window)
 
-        self.btn_quit_app = qtw.QPushButton('Quit Application', self)
+        self.btn_quit_app = qtw.QPushButton("Quit Application", self)
         self.btn_quit_app.clicked.connect(self.signal_close_application)
 
         self.log_window = qtw.QTextBrowser()
-        self.log_window.insertPlainText('Media Log Window')
+        self.log_window.insertPlainText("Media Log Window")
 
         # Set up the layout of window
         # QGridLayout placement order: row, column, row-span, column-span
@@ -74,7 +86,7 @@ class View(qtw.QWidget):
         grid_layout.addWidget(self.btn_quit_app, 8, 3)
         self.setLayout(grid_layout)
 
-# *** Method(s) that launch popup windows ***
+    # *** Method(s) that launch popup windows ***
     @qtc.Slot()
     def launch_create_media_folder_window(self) -> None:
         """
@@ -83,12 +95,22 @@ class View(qtw.QWidget):
         :return:
         """
         create_media_folder_window = CreateMediaFolder(self)
-        create_media_folder_window.signal_initiate_create_media_folder.connect(self.signal_initiate_creating_media_folder)
-        create_media_folder_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
-        self.status_pass_through_media_folder_already_exists.connect(create_media_folder_window.messagebox_media_folder_already_exists)
-        self.status_pass_through_media_folder_creation_complete.connect(create_media_folder_window.messagebox_media_folder_creation_complete)
-        self.status_pass_through_reset_do_to_error.connect(create_media_folder_window.enable_buttons_due_to_error)
-        self.log_window.insertPlainText('\nOpening Create Media Folder window')
+        create_media_folder_window.signal_initiate_create_media_folder.connect(
+            self.signal_initiate_creating_media_folder
+        )
+        create_media_folder_window.signal_reset_progress_bar.connect(
+            self.signal_reset_progress_bar
+        )
+        self.status_pass_through_media_folder_already_exists.connect(
+            create_media_folder_window.messagebox_media_folder_already_exists
+        )
+        self.status_pass_through_media_folder_creation_complete.connect(
+            create_media_folder_window.messagebox_media_folder_creation_complete
+        )
+        self.status_pass_through_reset_do_to_error.connect(
+            create_media_folder_window.enable_buttons_due_to_error
+        )
+        self.log_window.insertPlainText("\nOpening Create Media Folder window")
         create_media_folder_window.exec()
 
     @qtc.Slot()
@@ -99,14 +121,30 @@ class View(qtw.QWidget):
         :return:
         """
         modified_media_folder_window = ModifiedMediaFolderWindow(self)
-        modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(self.signal_initiate_scan_of_media_folder)
-        modified_media_folder_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
-        modified_media_folder_window.signal_media_folder_update_information.connect(self.signal_initiate_update_of_media_folder)
-        self.data_pass_through_media_folder_scan_result.connect(modified_media_folder_window.load_existing_media_folder_info)
-        self.status_pass_through_folder_not_media_folder.connect(modified_media_folder_window.messagebox_folder_not_media_folder)
-        self.status_pass_through_media_folder_modification_complete.connect(modified_media_folder_window.messagebox_media_folder_modification_complete)
-        self.status_pass_through_reset_do_to_error.connect(modified_media_folder_window.enable_buttons_due_to_error)
-        self.log_window.insertPlainText('\nOpening "Modified Existing Media Folder" window')
+        modified_media_folder_window.signal_initiate_scan_of_media_folder.connect(
+            self.signal_initiate_scan_of_media_folder
+        )
+        modified_media_folder_window.signal_reset_progress_bar.connect(
+            self.signal_reset_progress_bar
+        )
+        modified_media_folder_window.signal_media_folder_update_information.connect(
+            self.signal_initiate_update_of_media_folder
+        )
+        self.data_pass_through_media_folder_scan_result.connect(
+            modified_media_folder_window.load_existing_media_folder_info
+        )
+        self.status_pass_through_folder_not_media_folder.connect(
+            modified_media_folder_window.messagebox_folder_not_media_folder
+        )
+        self.status_pass_through_media_folder_modification_complete.connect(
+            modified_media_folder_window.messagebox_media_folder_modification_complete
+        )
+        self.status_pass_through_reset_do_to_error.connect(
+            modified_media_folder_window.enable_buttons_due_to_error
+        )
+        self.log_window.insertPlainText(
+            '\nOpening "Modified Existing Media Folder" window'
+        )
         modified_media_folder_window.exec()
 
     @qtc.Slot()
@@ -117,8 +155,12 @@ class View(qtw.QWidget):
         :return:
         """
         auto_update_media_files_conformation_window = AutoUpdateMediaFilesWindow(self)
-        auto_update_media_files_conformation_window.signal_initiate_auto_update.connect(self.signal_initiate_auto_update_media_files)
-        self.log_window.insertPlainText('\nOpening "Auto-Update Media Files Conformation" window')
+        auto_update_media_files_conformation_window.signal_initiate_auto_update.connect(
+            self.signal_initiate_auto_update_media_files
+        )
+        self.log_window.insertPlainText(
+            '\nOpening "Auto-Update Media Files Conformation" window'
+        )
         auto_update_media_files_conformation_window.exec()
 
     @qtc.Slot()
@@ -129,16 +171,28 @@ class View(qtw.QWidget):
         :return:
         """
         manual_update_media_files_window = ManualMediaFileUpdate(self)
-        manual_update_media_files_window.signal_initiate_manual_update.connect(self.signal_initiate_manual_update)
-        manual_update_media_files_window.signal_check_list_of_files_for_duplicates.connect(self.signal_check_list_of_files_for_duplicates)
-        manual_update_media_files_window.signal_reset_progress_bar.connect(self.signal_reset_progress_bar)
-        self.data_pass_through_duplicate_check_result.connect(manual_update_media_files_window.second_stage_update_process)
-        self.status_pass_through_manual_update_media_files_complete.connect(manual_update_media_files_window.messagebox_manual_update_media_files_complete)
-        self.status_pass_through_reset_do_to_error.connect(manual_update_media_files_window.enable_buttons_due_to_error)
-        self.log_window.insertPlainText('\nOpening Manual Update Media Files window')
+        manual_update_media_files_window.signal_initiate_manual_update.connect(
+            self.signal_initiate_manual_update
+        )
+        manual_update_media_files_window.signal_check_list_of_files_for_duplicates.connect(
+            self.signal_check_list_of_files_for_duplicates
+        )
+        manual_update_media_files_window.signal_reset_progress_bar.connect(
+            self.signal_reset_progress_bar
+        )
+        self.data_pass_through_duplicate_check_result.connect(
+            manual_update_media_files_window.second_stage_update_process
+        )
+        self.status_pass_through_manual_update_media_files_complete.connect(
+            manual_update_media_files_window.messagebox_manual_update_media_files_complete
+        )
+        self.status_pass_through_reset_do_to_error.connect(
+            manual_update_media_files_window.enable_buttons_due_to_error
+        )
+        self.log_window.insertPlainText("\nOpening Manual Update Media Files window")
         manual_update_media_files_window.exec()
 
-# *** Method(s) that launch a messagebox ***
+    # *** Method(s) that launch a messagebox ***
     @qtc.Slot()
     def messagebox_auto_update_media_files_complete(self) -> None:
         """
@@ -149,8 +203,8 @@ class View(qtw.QWidget):
         """
         response = qtw.QMessageBox.information(
             self,
-            'Auto Update Media Files Complete!',
-            'Finished scanning the selected directory. Please see console window for information on if any files were updated during the scan.'
+            "Auto Update Media Files Complete!",
+            "Finished scanning the selected directory. Please see console window for information on if any files were updated during the scan.",
         )
 
         if response == qtw.QMessageBox.Ok:
@@ -165,14 +219,14 @@ class View(qtw.QWidget):
         """
         response = qtw.QMessageBox.information(
             self,
-            'System Error Detected!',
-            'The program ran into an error when executing the task; the task has been canceled. Please see console window for information on the error.'
+            "System Error Detected!",
+            "The program ran into an error when executing the task; the task has been canceled. Please see console window for information on the error.",
         )
 
         if response == qtw.QMessageBox.Ok:
             self.status_pass_through_reset_do_to_error.emit()
 
-# *** Methods for Log Window ***
+    # *** Methods for Log Window ***
     @qtc.Slot()
     def clear_log_window(self) -> None:
         """
@@ -181,7 +235,7 @@ class View(qtw.QWidget):
         :return:
         """
         self.log_window.clear()
-        self.log_window.insertPlainText('Media Log Window')
+        self.log_window.insertPlainText("Media Log Window")
 
     @qtc.Slot(str)
     def write_to_log_window(self, message: str) -> None:
@@ -191,4 +245,4 @@ class View(qtw.QWidget):
         :param message: message to display to user
         :return:
         """
-        self.log_window.insertPlainText('\n' + message)
+        self.log_window.insertPlainText("\n" + message)
