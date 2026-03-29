@@ -16,6 +16,13 @@
 N/A
 
 ## _Current Version_
+### _Version 1.1.2_
+**Bug Fixes**
+- Manual media file update would identify the wrong file to update.
+
+**Performance**
+- Under-the-hood optimization.
+
 ### _Version 1.1.1_
 **Bug Fixes**
 - Fixed issue for modified media folder not working when its a movie media folder
