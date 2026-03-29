@@ -27,7 +27,7 @@ class View(qtw.QWidget):
 
     # Data pass-through to pop-up window(s)
     data_pass_through_media_folder_scan_result = qtc.Signal(object)
-    data_pass_through_duplicate_check_result = qtc.Signal(list)
+    data_pass_through_duplicate_check_result = qtc.Signal(bool)
 
     # status pass-through to pop-up window(s)
     status_pass_through_manual_update_media_files_complete = qtc.Signal()

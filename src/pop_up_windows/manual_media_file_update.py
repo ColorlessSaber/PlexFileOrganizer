@@ -213,17 +213,17 @@ class ManualMediaFileUpdate(qtw.QDialog):
             data = self.model.extract_data()
             self.signal_check_list_of_files_for_duplicates.emit(data)
 
-    @qtc.Slot(list)
-    def second_stage_update_process(self, duplicate_result: list) -> None:
+    @qtc.Slot(bool)
+    def second_stage_update_process(self, there_are_no_duplicates_in_rename_file_list: bool) -> None:
         """
         Second stage of update the media files.
         -- If there are no duplicate rename file names, send the data off to be processed.
         -- if there are duplicate rename file names, cancel operation and inform the user.
 
-        :param duplicate_result: The results of the duplication check.
+        :param there_are_no_duplicates_in_rename_file_list: True if there are no duplicate rename file names in list.
         :return:
         """
-        if not duplicate_result:
+        if there_are_no_duplicates_in_rename_file_list:
             data = self.model.extract_data()
             self.signal_initiate_manual_update.emit(data)
         else:
