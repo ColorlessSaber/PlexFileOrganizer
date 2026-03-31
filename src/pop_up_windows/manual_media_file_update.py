@@ -1,92 +1,8 @@
 from typing import Any, Optional
-
+from ..custom_objects import MediaFileListTableObject
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 import pathlib
-
-
-class MediaFileTable(qtc.QAbstractTableModel):
-    """A table to allow user to view and modify what the file's new name should be"""
-
-    def __init__(
-        self,
-        read_only_indexes: list,
-        current_media_file_list: Optional[list] = None,
-        column_names: Optional[list] = None,
-    ):
-        super().__init__()
-        if current_media_file_list is None:
-            current_media_file_list = []
-        self.read_only_indexes = read_only_indexes
-        self._data = current_media_file_list
-        self._headers = column_names
-
-    def rowCount(self, parent=qtc.QModelIndex()) -> int:
-        """Return the number of rows in the table"""
-        return len(self._data)
-
-    def columnCount(self, parent=qtc.QModelIndex()) -> int:
-        """Return the number of columns in the table"""
-        return len(self._headers) if self._headers else 0
-
-    def data(self, index, role=qtc.Qt.DisplayRole) -> object | None:
-        """Return the data at the given index for display and editing"""
-        if not index.isValid():
-            return None
-
-        if role in (qtc.Qt.DisplayRole, qtc.Qt.EditRole):
-            return self._data[index.row()][index.column()]
-
-        return None
-
-    def setData(self, index, value, role=qtc.Qt.EditRole) -> object | None:
-        """Set the data at the given index for editing"""
-        if index.isValid() and role == qtc.Qt.EditRole:
-            self._data[index.row()][index.column()] = value
-            self.dataChanged.emit(index, index, [role])
-            return True
-        else:
-            return False
-
-    def flags(self, index) -> object:
-        """Return the flags attached to the given index"""
-        if not index.isValid():
-            return qtc.Qt.ItemIsEnabled
-
-        if index.column() not in self.read_only_indexes:
-            return super().flags(index) | qtc.Qt.ItemIsEditable
-        else:
-            return super().flags(index)
-
-    def headerData(
-        self, section, orientation, role=qtc.Qt.DisplayRole
-    ) -> object | str | None:
-        """Return the header labels"""
-        if role == qtc.Qt.DisplayRole and orientation == qtc.Qt.Horizontal:
-            return self._headers[section]
-        else:
-            return super().headerData(section, orientation, role)
-
-    def insert_file(self, position, rows, row_data, parent=qtc.QModelIndex()) -> None:
-        """Insert a new row into the table"""
-        self.beginInsertRows(parent, position, position + rows - 1)
-        for _ in range(rows):
-            self._data.insert(position, row_data)
-        self.endInsertRows()
-
-    def remove_file(self, position, rows, parent=qtc.QModelIndex()) -> None:
-        """Remove a single row into the table"""
-        self.beginRemoveRows(parent, position, position + rows - 1)
-        for _ in range(rows):
-            del self._data[position]
-        self.endRemoveRows()
-
-    def extract_data(self) -> list[Any]:
-        """
-        Returns the data that is stored in the table
-        """
-        return self._data
-
 
 class ManualMediaFileUpdate(qtw.QDialog):
     """
@@ -121,7 +37,7 @@ class ManualMediaFileUpdate(qtw.QDialog):
 
         self.table_view = qtw.QTableView(self)
         self.table_view.setSortingEnabled(False)
-        self.model = MediaFileTable(
+        self.model = MediaFileListTableObject(
             [0, 1, 3],
             None,
             ["Directory", "Current File Name", "New File Name", "Format Type"],
