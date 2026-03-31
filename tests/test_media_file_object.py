@@ -1,4 +1,4 @@
-from src.classes import MediaFile
+from src.custom_objects import MediaFile
 
 
 class TestMediaFileObject:

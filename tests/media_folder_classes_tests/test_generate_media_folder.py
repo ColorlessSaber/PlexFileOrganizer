@@ -1,4 +1,5 @@
-from src.classes import GenerateMediaFolder, MediaCategory
+from src.classes import GenerateMediaFolder
+from src.custom_objects import MediaCategory
 from pyfakefs.fake_filesystem_unittest import TestCase
 import os
 

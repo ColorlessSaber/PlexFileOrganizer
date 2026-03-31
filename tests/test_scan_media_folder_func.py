@@ -1,5 +1,5 @@
 from src.functions import scan_media_folder
-from src.classes import MediaCategory
+from src.custom_objects import MediaCategory
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 
