@@ -2,7 +2,8 @@
 Pop-up window to allow user to create a media folder for a movie or TV show
 """
 
-from ..classes import GenerateMediaFolder, MediaCategory
+from ..classes import GenerateMediaFolder
+from ..custom_objects import MediaCategory
 from PySide6 import QtWidgets as qtw, QtCore as qtc
 
 

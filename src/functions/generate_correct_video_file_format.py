@@ -1,4 +1,5 @@
-from ..classes import MediaFile, FolderAndFilePatterns
+from ..classes import FolderAndFilePatterns
+from ..custom_objects import MediaFile
 
 
 def generate_correct_video_file_format(

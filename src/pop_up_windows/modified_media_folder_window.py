@@ -3,7 +3,8 @@ Pop-up window to allow user to add more folders to an existing media folder
 """
 
 from PySide6 import QtWidgets as qtw, QtCore as qtc
-from ..classes import ModifyMediaFolder, MediaCategory
+from ..classes import ModifyMediaFolder
+from ..custom_objects import MediaCategory
 
 
 class ModifiedMediaFolderWindow(qtw.QDialog):

@@ -1,6 +1,7 @@
 import os
 from ..functions import video_file_condition
-from ..classes import MediaFolderData, correct_media_file_format, MediaCategory
+from ..classes import MediaFolderData, correct_media_file_format
+from ..custom_objects import MediaCategory
 
 
 def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:

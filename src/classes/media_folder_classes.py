@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass, field
-from . import ExtraFolders, MediaCategory
+from ..custom_objects import ExtraFolders, MediaCategory
 
 
 @dataclass
