@@ -7,21 +7,19 @@
 **Features**
 - [ ] Use an SQLite database to quickly add/remove folders and content to existing media folders.
 
+## _Next Version in the Works_
 ### _Version 1.2_
 **Features**
 - [ ] Built in media player to allow user to watch to see which episode the media file is.
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
 
-## _Next Version in the Works_
-N/A
-
-## _Current Version_
-### _Version 1.1.2_
 **Bug Fixes**
 - Manual media file update would identify the wrong file to update.
 
 **Performance**
 - Under-the-hood optimization.
+
+## _Current Version_
 
 ### _Version 1.1.1_
 **Bug Fixes**
