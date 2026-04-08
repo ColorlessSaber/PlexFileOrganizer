@@ -289,5 +289,6 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_select_directory.setEnabled(enable_or_disable)
         self.le_selected_directory.setEnabled(enable_or_disable)
         self.groupbox_media_information.setEnabled(enable_or_disable)
-        self.groupbox_tv_show_options.setEnabled(enable_or_disable)
+        if self.rb_media_type_tv_select.isChecked(): # only enable tv show options if user previously selected tv show for media type
+            self.groupbox_tv_show_options.setEnabled(enable_or_disable)
         self.groupbox_extra_folder_options.setEnabled(enable_or_disable)

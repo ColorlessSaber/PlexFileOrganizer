@@ -10,11 +10,11 @@
 ## _Next Version in the Works_
 ### _Version 1.2_
 **Features**
-- [ ] Built in media player to allow user to watch to see which episode the media file is.
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
 
 **Bug Fixes**
-- Manual media file update would identify the wrong file to update.
+- Manual media file update would identify the wrong file to update when new file name matches old one.
+- Fix issue of Media Folder creation TV show options would be enabled after creating a folder for a movie.
 
 **Performance**
 - Under-the-hood optimization.
