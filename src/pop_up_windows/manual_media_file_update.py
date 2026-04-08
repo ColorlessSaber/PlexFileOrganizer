@@ -1,8 +1,11 @@
-from typing import Any, Optional
-from ..custom_objects import MediaFileListTableObject
+from ..custom_objects import (
+    MediaFileListTable,
+    MediaFileListTableView,
+)
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
 import pathlib
+from typing import NamedTuple
 
 class ManualMediaFileUpdate(qtw.QDialog):
     """
@@ -18,54 +21,61 @@ class ManualMediaFileUpdate(qtw.QDialog):
         super().__init__(parent, modal=True)
         self.setWindowTitle("Media File Select")
         self.setMinimumWidth(800)
-        self.setMinimumHeight(400)
+        self.setMinimumHeight(600)
 
-        # widgets
+        # Files table with buttons
         self.btn_add_files = qtw.QPushButton("Add File(s)", self)
         self.btn_add_files.clicked.connect(self.select_files)
-        self.btn_remove_file = qtw.QPushButton("Remove File(s)", self)
-        self.btn_remove_file.clicked.connect(self.remove_files)
-        self.btn_remove_file.setEnabled(False)
         self.btn_clear_table = qtw.QPushButton("Clear Table", self)
         self.btn_clear_table.clicked.connect(self.clear_table)
         self.btn_clear_table.setEnabled(False)
-        self.btn_update_files = qtw.QPushButton("Update File(s)", self)
-        self.btn_update_files.clicked.connect(self.first_stage_update_process)
-        self.btn_update_files.setEnabled(False)
-        self.btn_close = qtw.QPushButton("Cancel", self)
-        self.btn_close.clicked.connect(self.reject)
 
-        self.table_view = qtw.QTableView(self)
+        self.table_view = MediaFileListTableView(self)
         self.table_view.setSortingEnabled(False)
-        self.model = MediaFileListTableObject(
+        self.model = MediaFileListTable(
             [0, 1, 3],
             None,
             ["Directory", "Current File Name", "New File Name", "Format Type"],
         )
         self.table_view.setModel(self.model)
+        self.table_view.signal_media_file.connect(self.remove_files)
 
         # Hiding 'Directory' and 'Format Type' from user view for they are storing the respective
         # information to be used during the processes of updating the files.
         self.table_view.setColumnHidden(0, True)
         self.table_view.setColumnHidden(3, True)
 
-        # layout
         table_buttons_layout = qtw.QHBoxLayout()
         table_buttons_layout.addWidget(self.btn_add_files)
-        table_buttons_layout.addWidget(self.btn_remove_file)
         table_buttons_layout.addWidget(self.btn_clear_table)
 
         table_with_buttons_layout = qtw.QVBoxLayout()
         table_with_buttons_layout.addLayout(table_buttons_layout)
         table_with_buttons_layout.addWidget(self.table_view)
 
-        main_buttons_layout = qtw.QVBoxLayout()
-        main_buttons_layout.addWidget(self.btn_update_files)
-        main_buttons_layout.addWidget(self.btn_close)
+        groupbox_file_table = qtw.QGroupBox("") # Left name out for don't see a reason to identify the group
+        groupbox_file_table.setLayout(table_with_buttons_layout)
+        groupbox_file_table.setStyleSheet("""
+            QGroupBox {
+                border: 2px solid grey;
+                border-radius: 5px;
+            }
+        """)
 
-        main_layout = qtw.QHBoxLayout()
-        main_layout.addLayout(main_buttons_layout)
-        main_layout.addLayout(table_with_buttons_layout)
+        # buttons at bottom
+        self.btn_update_files = qtw.QPushButton("Update File(s)", self)
+        self.btn_update_files.clicked.connect(self.first_stage_update_process)
+        self.btn_update_files.setEnabled(False)
+        self.btn_close = qtw.QPushButton("Cancel", self)
+        self.btn_close.clicked.connect(self.reject)
+        update_or_close_buttons_layout = qtw.QHBoxLayout()
+        update_or_close_buttons_layout.addWidget(self.btn_update_files)
+        update_or_close_buttons_layout.addWidget(self.btn_close)
+
+        # layout
+        main_layout = qtw.QVBoxLayout()
+        main_layout.addWidget(groupbox_file_table)
+        main_layout.addLayout(update_or_close_buttons_layout)
         self.setLayout(main_layout)
 
     @qtc.Slot()
@@ -103,8 +113,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
             self.btn_clear_table.setEnabled(True)
             self.btn_update_files.setEnabled(True)
 
-    @qtc.Slot()
-    def remove_files(self) -> None:
+    @qtc.Slot(object)
+    def remove_files(self, selection_info: NamedTuple) -> None:
         """
         Removes selected file(s) from the table the user selected.
 
@@ -113,7 +123,8 @@ class ManualMediaFileUpdate(qtw.QDialog):
         selected_files = self.table_view.selectedIndexes()
         if selected_files:
             self.model.remove_file(
-                position=selected_files[0].row(), rows=len(selected_files)
+                position=selection_info.start_row,
+                rows=selection_info.num_of_indexes
             )
 
     def clear_table(self) -> None:
