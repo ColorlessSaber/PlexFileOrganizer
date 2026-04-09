@@ -7,10 +7,13 @@
 **Features**
 - [ ] Use an SQLite database to quickly add/remove folders and content to existing media folders.
 
+### _Version 1.3_
+**Features**
+- [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
+
 ## _Next Version in the Works_
 ### _Version 1.2_
 **Features**
-- [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
 - [x] Added logging capabilities to the application.
 
 **Bug Fixes**
