@@ -12,6 +12,8 @@ __all__ = [
     "find_media_files_in_dir",
     "scan_media_folder",
     "prep_files_for_modified_renaming",
+    "build_app_directory",
+    "setup_logger",
 ]
 from .update_files_in_directory import update_files_in_directory
 from .directory_scanner import directory_scanner
@@ -21,3 +23,4 @@ from .folder_condition_functions import default_folder_condition, skip_extra_fol
 from .find_media_files_in_dir import find_media_files_in_dir
 from .scan_media_folder import scan_media_folder
 from .prep_files_for_modified_renaming import prep_files_for_modified_renaming
+from .application_directory_funcs import build_app_directory, setup_logger

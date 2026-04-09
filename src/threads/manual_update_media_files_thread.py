@@ -3,6 +3,7 @@ Thread for Manual Update Media Files
 """
 
 import time
+import logging
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 from ..functions import update_files_in_directory, prep_files_for_modified_renaming
@@ -57,8 +58,9 @@ class ManualUpdateMediaFilesThread(qtc.QRunnable):
             self.signals.finished.emit()
 
         except OSError as e:
+            logging.exception(e)
             self.signals.error.emit(e)
 
-        except BaseException as e:
-            # bad use of an exception, but required to catch an error for something that isn't covered for.
+        except Exception as e:
+            logging.exception(e)
             self.signals.error.emit(e)

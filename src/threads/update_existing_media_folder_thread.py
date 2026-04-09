@@ -3,6 +3,7 @@ Thread for updating existing media folder
 """
 
 import time
+import logging
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 
@@ -83,6 +84,8 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
             self.signals.progress.emit(100, "Update of Media Folder completed!")
             self.signals.finished.emit()
         except OSError as e:
-            self.signals.error.emit(e)
-        except BaseException as e:
-            self.signals.error.emit(e)
+            logging.exception(e)
+            self.signals.error.emit()
+        except Exception as e:
+            logging.exception(e)
+            self.signals.error.emit()

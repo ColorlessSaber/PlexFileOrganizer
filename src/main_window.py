@@ -3,7 +3,7 @@ from PySide6 import QtCore as qtc
 
 from .model import Model
 from .view import View
-
+from .functions import build_app_directory, setup_logger
 
 class MainWindow(qtw.QMainWindow):
     """The main window for the application"""
@@ -11,6 +11,11 @@ class MainWindow(qtw.QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # create the application directory, if necessary, and setup logger
+        build_app_directory()
+        setup_logger()
+
+        # set up the view and model
         self.view = View()
         self.model = Model()
         self.setCentralWidget(self.view)
@@ -123,18 +128,17 @@ class MainWindow(qtw.QMainWindow):
         self.progress_bar.setValue(progress_bar_percentage)
         self.view.write_to_log_window(status_message)
 
-    @qtc.Slot(object)
-    def slot_display_error_message(self, error_message: object) -> None:
+    @qtc.Slot()
+    def slot_display_error_message(self) -> None:
         """
         Write the error message to the Log Window, reset the progress bar, and have view launch messagebox
-        to inform user what happened.
+        to inform user an error occurred
 
-        :param error_message: The error that was generated
         :return:
         """
         self.progress_bar.reset()
         self.view.write_to_log_window(
-            "\n!!Error has been detected!! -> {}".format(error_message)
+            "\nERROR: An error occurred when executing the task. Please check the log file in the application directory for more details\n\n"
         )
         self.view.messagebox_system_error_detected()
 

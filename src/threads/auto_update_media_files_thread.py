@@ -3,8 +3,12 @@ Thread for Auto Update Media Files
 """
 
 import time
+import logging
 from PySide6 import QtCore as qtc
-from ..classes import FolderAndFilePatterns, DefaultThreadSignals
+from ..classes import (
+    FolderAndFilePatterns,
+    DefaultThreadSignals,
+)
 from ..functions import (
     update_files_in_directory,
     generate_correct_video_file_format,
@@ -67,7 +71,6 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
             for file_list in generator_find_media_files:
                 all_files_are_formatted_correctly = folder_and_file_pattern.check_files_in_list(file_list)
                 if not all_files_are_formatted_correctly:
-                    # print("generate correct file formats") # debug
                     files_to_be_updated, message_number_of_files_affected = generate_correct_video_file_format(file_list)
                     update_files_in_directory(files_to_be_updated)
                     self.signals.progress.emit(50, message_number_of_files_affected)
@@ -80,8 +83,9 @@ class AutoUpdateMediaFilesThread(qtc.QRunnable):
             self.signals.finished.emit()
 
         except OSError as e:
-            self.signals.error.emit(e)
+            logging.exception(e)
+            self.signals.error.emit()
 
-        except BaseException as e:
-            # bad use of an exception, but required to catch an error for something that isn't covered for.
-            self.signals.error.emit(e)
+        except Exception as e:
+            logging.exception(e)
+            self.signals.error.emit()

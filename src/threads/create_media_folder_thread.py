@@ -3,6 +3,7 @@ Thread for creating the media folders in the selected directory
 """
 
 import time
+import logging
 from PySide6 import QtCore as qtc
 from ..classes import DefaultThreadSignals
 
@@ -92,7 +93,9 @@ class CreateMediaFolderThread(qtc.QRunnable):
                 self.signals.finished.emit()
 
         except OSError as e:
+            logging.exception(e)
             self.signals.error.emit(e)
 
-        except BaseException as e:
+        except Exception as e:
+            logging.exception(e)
             self.signals.error.emit(e)

@@ -220,7 +220,7 @@ class View(qtw.QWidget):
         response = qtw.QMessageBox.information(
             self,
             "System Error Detected!",
-            "The program ran into an error when executing the task; the task has been canceled. Please see console window for information on the error.",
+            "Application ran into an error! Task has been cancelled.",
         )
 
         if response == qtw.QMessageBox.Ok:

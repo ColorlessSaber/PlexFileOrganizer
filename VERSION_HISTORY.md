@@ -11,6 +11,7 @@
 ### _Version 1.2_
 **Features**
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
+- [x] Added logging capabilities to the application.
 
 **Bug Fixes**
 - Manual media file update would identify the wrong file to update when new file name matches old one.

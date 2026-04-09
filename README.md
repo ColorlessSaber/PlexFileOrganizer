@@ -33,7 +33,8 @@
 A program to help the user create folder for new movies/tv shows, properly name media file(s) to match the media they are in while following
 Plex approve file naming convention, and organize the media folder(s)--AKA your music folder--if it gets out of hand. Also, it will contain other handy futures:
 rename existing media file(s); and have a built-in media player so the user can see what the media file is, thus allowing them to name it properly.
-
+<br><br>
+This application also includes the ability to generate error logs when an error occurs.
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>
 
 <!--BUILT WITH-->
