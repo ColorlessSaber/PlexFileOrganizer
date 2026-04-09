@@ -1,51 +1,68 @@
 import re
 import pathlib
 
+
 class FolderAndFilePatterns:
     """
     Contains regex expressions to check to see if media file is in an extra folder or a tv show season folder, and if the
     media file is properly name for the folder they are in.
     """
+
     # *** File Format Regex Patterns ***
-    movie_file_format_regex_pattern = re.compile(r"""
+    movie_file_format_regex_pattern = re.compile(
+        r"""
                                     ^(?P<title>.+)   # group 1: the name of the file
                                     (?P<ext>\.\w+) # group 2: file extension
-                                    """, re.VERBOSE | re.IGNORECASE)
+                                    """,
+        re.VERBOSE | re.IGNORECASE,
+    )
 
-    extra_file_format_regex_pattern = re.compile(r"""
+    extra_file_format_regex_pattern = re.compile(
+        r"""
                                             ^(?P<title>.+) # group 1: the name of the file
                                             \s
                                             (?P<number>\d+) # group 2: the number of the file
                                             \.\w+           # file extension
-                                            """, re.VERBOSE | re.IGNORECASE)
+                                            """,
+        re.VERBOSE | re.IGNORECASE,
+    )
 
     # tv episode format is as follows: name_of_show - sxxeyy
     # xx - the season number. For Specials folder, the season number is 00
     # yy - episode number
     #
     # The format has two groups to make is easy to grab the episode number(s) from an existing episode media file.
-    tv_episode_file_format_regex_pattern = re.compile(r"""
+    tv_episode_file_format_regex_pattern = re.compile(
+        r"""
                                     ^.+   # wildcard to handle name of show
                                     \s-\s # dash between name of show and season and episode number
                                     s\d+  # season number
                                     e(?P<first_ep>\d+)  # episode number
                                     (-e(?P<second_ep>\d+))?  # possible multiple episode number
                                     \.\w+ # file extension
-                                    """, re.VERBOSE | re.IGNORECASE)
+                                    """,
+        re.VERBOSE | re.IGNORECASE,
+    )
 
     # *** Folder Format Regex Patterns ***
-    tv_show_folder_format_regex_pattern = re.compile(r"""
+    tv_show_folder_format_regex_pattern = re.compile(
+        r"""
     ^(Season\s\d+)|(Specials)$ # A season folder can be either Season ## or Specials
-    """, re.VERBOSE | re.IGNORECASE)
+    """,
+        re.VERBOSE | re.IGNORECASE,
+    )
 
-    extra_folder_format_regex_pattern = re.compile(r"""
+    extra_folder_format_regex_pattern = re.compile(
+        r"""
     ^(trailers)|(behind\sthe\sscenes)|(deleted\sscenes)|(featurettes)|(interviews)|(scenes)|(shorts)|(other)$
-    """, re.VERBOSE | re.IGNORECASE)
+    """,
+        re.VERBOSE | re.IGNORECASE,
+    )
 
     def tv_show_episode_pattern_check(self, file_name: str) -> bool:
         """
         Checks to see if the given video file matches the correct tv show episode file format.
-        
+
         :param file_name: the file name to check against
         :return: True - formatted correctly, False - not formatted correctly
         """
@@ -57,12 +74,15 @@ class FolderAndFilePatterns:
     def movie_media_file_check(self, file_name: str, folder_name: str) -> bool:
         """
         Checks to see if the given video file matches the correct movie file format.
-        
+
         :param file_name: the file name to check against
         :param folder_name: The name of the folder the media file is in.
         :return: True - formatted correctly, False - not formatted correctly
         """
-        if self.movie_file_format_regex_pattern.match(file_name).group('title') == folder_name:
+        if (
+            self.movie_file_format_regex_pattern.match(file_name).group("title")
+            == folder_name
+        ):
             return True
         else:
             return False
@@ -76,13 +96,13 @@ class FolderAndFilePatterns:
         :return: True - formatted correctly, False - not formatted correctly
         """
         # The folder_name[:-1] removes the "s" on the end of the folder name
-        if folder_name.endswith('s'):
+        if folder_name.endswith("s"):
             modified_folder_name = folder_name[:-1]
         else:
             modified_folder_name = folder_name
         file_pattern_match = self.extra_file_format_regex_pattern.match(file_name)
         if file_pattern_match is not None:
-            if file_pattern_match.group('title') == modified_folder_name:
+            if file_pattern_match.group("title") == modified_folder_name:
                 return True
             else:
                 return False
@@ -121,14 +141,18 @@ class FolderAndFilePatterns:
         :return: True -- all media files in folder are formated correctly. False -- at lest one media file in the folder isn't formated correctly
         """
         for file_path in list_of_files:
-            file_name = file_path.split('/')[-1]
+            file_name = file_path.split("/")[-1]
             file_directory_path = pathlib.Path(file_path).parent.resolve().name
 
-            if self.tv_show_season_folder_check(file_directory_path) and self.tv_show_episode_pattern_check(file_name):
+            if self.tv_show_season_folder_check(
+                file_directory_path
+            ) and self.tv_show_episode_pattern_check(file_name):
                 continue
             elif self.movie_media_file_check(file_name, file_directory_path):
                 continue
-            elif self.extra_folder_check(file_directory_path) and self.extra_media_file_check(file_name, file_directory_path):
+            elif self.extra_folder_check(
+                file_directory_path
+            ) and self.extra_media_file_check(file_name, file_directory_path):
                 continue
             else:
                 return False

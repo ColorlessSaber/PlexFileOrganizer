@@ -1,6 +1,7 @@
 import os
 from ..functions import video_file_condition
-from ..classes import MediaFolderData, correct_media_file_format, MediaCategory
+from ..classes import MediaFolderData, correct_media_file_format
+from ..custom_objects import MediaCategory
 
 
 def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
@@ -14,12 +15,14 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
     folder_and_file_patterns = correct_media_file_format.FolderAndFilePatterns()
     media_folder_information = MediaFolderData()
 
-    media_folder_information.media_title = media_folder_path.split('/')[-1]
+    media_folder_information.media_title = media_folder_path.split("/")[-1]
     media_folder_information.directory = media_folder_path
 
     with os.scandir(media_folder_information.directory) as directory_to_scan:
         for entry in directory_to_scan:
-            if entry.name.startswith('.'): # Assuming all files starting with dot should not be checked.
+            if entry.name.startswith(
+                "."
+            ):  # Assuming all files starting with dot should not be checked.
                 continue
 
             if entry.is_file() and video_file_condition(entry.path):
@@ -30,7 +33,7 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
                 elif folder_and_file_patterns.tv_show_season_folder_check(entry.name):
                     # don't want to count the 'Special' season folder when counting how many seasons there are in
                     # the folder.
-                    if not entry.name.lower() == 'specials':
+                    if not entry.name.lower() == "specials":
                         media_folder_information.number_of_seasons += 1
                     else:
                         media_folder_information.specials_season = True
@@ -40,10 +43,16 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
                 pass
 
     # Situation when media folder is not a media folder
-    if media_folder_information.media_type is MediaCategory.UNCATEGORIZED and media_folder_information.number_of_seasons == 0:
+    if (
+        media_folder_information.media_type is MediaCategory.UNCATEGORIZED
+        and media_folder_information.number_of_seasons == 0
+    ):
         return media_folder_information, False
 
-    if media_folder_information.media_type is MediaCategory.UNCATEGORIZED and media_folder_information.number_of_seasons > 0:
+    if (
+        media_folder_information.media_type is MediaCategory.UNCATEGORIZED
+        and media_folder_information.number_of_seasons > 0
+    ):
         media_folder_information.media_type = MediaCategory.TV
 
     return media_folder_information, True

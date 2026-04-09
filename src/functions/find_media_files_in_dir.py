@@ -2,10 +2,12 @@ import pathlib
 from typing import Callable, Generator
 from . import directory_scanner
 
+
 def find_media_files_in_dir(
-        file_condition: Callable[..., bool],
-        folder_condition: Callable[..., bool],
-        directory: str) -> Generator[tuple[str], None, None]:
+    file_condition: Callable[..., bool],
+    folder_condition: Callable[..., bool],
+    directory: str,
+) -> Generator[tuple[str], None, None]:
     """
     A generator that returns all files in a given directory that meet the condition given by the
     file_condition function.
@@ -27,7 +29,10 @@ def find_media_files_in_dir(
             # When the generator is called again, clear the list and append the file that wasn't append to the previous list.
             if len(files_in_directory) > 0:
                 last_appended_file = files_in_directory[-1]
-                if pathlib.Path(last_appended_file).parent.resolve() == pathlib.Path(entry.path).parent.resolve():
+                if (
+                    pathlib.Path(last_appended_file).parent.resolve()
+                    == pathlib.Path(entry.path).parent.resolve()
+                ):
                     files_in_directory.append(entry.path)
                 else:
                     yield tuple(files_in_directory)

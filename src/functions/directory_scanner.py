@@ -14,5 +14,5 @@ def directory_scanner(directory_path: str) -> Generator[os.DirEntry, None, None]
         for entry in directory_to_scan:
             if entry.is_dir():
                 yield from directory_scanner(entry.path)
-            elif not entry.name.startswith('.') and entry.is_file():
+            elif not entry.name.startswith(".") and entry.is_file():
                 yield entry

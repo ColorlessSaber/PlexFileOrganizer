@@ -1,7 +1,9 @@
 """
 Contains functions to test if a folder or a set of folders meets the conditions.
 """
+
 from ..classes import FolderAndFilePatterns
+
 
 def default_folder_condition(_) -> bool:
     """
@@ -11,6 +13,7 @@ def default_folder_condition(_) -> bool:
     :return: Always returns True. IE, scan all folders!
     """
     return True
+
 
 def skip_extra_folders(folder_name: str) -> bool:
     """
@@ -23,6 +26,6 @@ def skip_extra_folders(folder_name: str) -> bool:
     folder_and_file_patterns = FolderAndFilePatterns()
 
     if folder_and_file_patterns.extra_folder_check(folder_name):
-        return False # False for we want to skip the extra folder
+        return False  # False for we want to skip the extra folder
     else:
-        return True # True for we want to scan the folder
+        return True  # True for we want to scan the folder

@@ -2,6 +2,7 @@
 Contains functions to test if a file meets the conditions
 """
 
+
 def video_file_condition(file: str) -> bool:
     """
     The condition that validates that the file found is a video file.
@@ -9,7 +10,9 @@ def video_file_condition(file: str) -> bool:
     :param file: The file to check
     :return: True -- file has the correct video file extension, False -- file does not have the correct video file extension
     """
-    if any(file.endswith(file_extension) for file_extension in ['.mkv', '.mp4', '.avi']):
+    if any(
+        file.endswith(file_extension) for file_extension in [".mkv", ".mp4", ".avi"]
+    ):
         return True
     else:
         return False

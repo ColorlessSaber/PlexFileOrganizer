@@ -1,6 +1,7 @@
 from src.functions import scan_media_folder
-from src.classes import MediaCategory
+from src.custom_objects import MediaCategory
 from pyfakefs.fake_filesystem_unittest import TestCase
+
 
 class TestScanMediaFolder(TestCase):
     def setUp(self):
@@ -40,17 +41,39 @@ class TestScanMediaFolder(TestCase):
         media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/tv show")
 
         assert folder_is_a_media_folder, "Failed to detect tv media folder"
-        assert media_folder_info.media_type == MediaCategory.TV, "Failed to detect media folder is tv show"
-        assert media_folder_info.number_of_seasons == 1, "Failed to not count Special season folder"
-        assert media_folder_info.specials_season is True, "Failed to detect Special season folder"
-        assert media_folder_info.extra_folders['trailers'] is True, "Failed to detect extra folder - trailers"
-        assert media_folder_info.extra_folders['behind the scenes'] is True, "Failed to detect extra folder - behind the scenes"
-        assert media_folder_info.extra_folders['deleted scenes'] is True, "Failed to detect extra folder - deleted scenes"
-        assert media_folder_info.extra_folders['featurettes'] is True, "Failed to detect extra folder - featurettes"
-        assert media_folder_info.extra_folders['interviews'] is True, "Failed to detect extra folder - interviews"
-        assert media_folder_info.extra_folders['scenes'] is True, "Failed to detect extra folder - scenes"
-        assert media_folder_info.extra_folders['shorts'] is True, "Failed to detect extra folder - shorts"
-        assert media_folder_info.extra_folders['other'] is True, "Failed to detect extra folder - other"
+        assert media_folder_info.media_type == MediaCategory.TV, (
+            "Failed to detect media folder is tv show"
+        )
+        assert media_folder_info.number_of_seasons == 1, (
+            "Failed to not count Special season folder"
+        )
+        assert media_folder_info.specials_season is True, (
+            "Failed to detect Special season folder"
+        )
+        assert media_folder_info.extra_folders["trailers"] is True, (
+            "Failed to detect extra folder - trailers"
+        )
+        assert media_folder_info.extra_folders["behind the scenes"] is True, (
+            "Failed to detect extra folder - behind the scenes"
+        )
+        assert media_folder_info.extra_folders["deleted scenes"] is True, (
+            "Failed to detect extra folder - deleted scenes"
+        )
+        assert media_folder_info.extra_folders["featurettes"] is True, (
+            "Failed to detect extra folder - featurettes"
+        )
+        assert media_folder_info.extra_folders["interviews"] is True, (
+            "Failed to detect extra folder - interviews"
+        )
+        assert media_folder_info.extra_folders["scenes"] is True, (
+            "Failed to detect extra folder - scenes"
+        )
+        assert media_folder_info.extra_folders["shorts"] is True, (
+            "Failed to detect extra folder - shorts"
+        )
+        assert media_folder_info.extra_folders["other"] is True, (
+            "Failed to detect extra folder - other"
+        )
 
     def test_scan_movie_media_folder(self):
         """
@@ -59,19 +82,39 @@ class TestScanMediaFolder(TestCase):
         media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/movie")
 
         assert folder_is_a_media_folder, "Failed to detect movie media folder"
-        assert media_folder_info.media_type == MediaCategory.MOVIE, "Failed to detect media folder is tv show"
-        assert media_folder_info.extra_folders['trailers'] is True, "Failed to detect extra folder - trailers"
-        assert media_folder_info.extra_folders['behind the scenes'] is True, "Failed to detect extra folder - behind the scenes"
-        assert media_folder_info.extra_folders['deleted scenes'] is True, "Failed to detect extra folder - deleted scenes"
-        assert media_folder_info.extra_folders['featurettes'] is True, "Failed to detect extra folder - featurettes"
-        assert media_folder_info.extra_folders['interviews'] is True, "Failed to detect extra folder - interviews"
-        assert media_folder_info.extra_folders['scenes'] is True, "Failed to detect extra folder - scenes"
-        assert media_folder_info.extra_folders['shorts'] is True, "Failed to detect extra folder - shorts"
-        assert media_folder_info.extra_folders['other'] is True, "Failed to detect extra folder - other"
+        assert media_folder_info.media_type == MediaCategory.MOVIE, (
+            "Failed to detect media folder is tv show"
+        )
+        assert media_folder_info.extra_folders["trailers"] is True, (
+            "Failed to detect extra folder - trailers"
+        )
+        assert media_folder_info.extra_folders["behind the scenes"] is True, (
+            "Failed to detect extra folder - behind the scenes"
+        )
+        assert media_folder_info.extra_folders["deleted scenes"] is True, (
+            "Failed to detect extra folder - deleted scenes"
+        )
+        assert media_folder_info.extra_folders["featurettes"] is True, (
+            "Failed to detect extra folder - featurettes"
+        )
+        assert media_folder_info.extra_folders["interviews"] is True, (
+            "Failed to detect extra folder - interviews"
+        )
+        assert media_folder_info.extra_folders["scenes"] is True, (
+            "Failed to detect extra folder - scenes"
+        )
+        assert media_folder_info.extra_folders["shorts"] is True, (
+            "Failed to detect extra folder - shorts"
+        )
+        assert media_folder_info.extra_folders["other"] is True, (
+            "Failed to detect extra folder - other"
+        )
 
     def test_scan_not_media_folder(self):
         """
         Validate scan_media_folder returns an error when folder isn't a media folder.
         """
         media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/misc")
-        assert folder_is_a_media_folder is False, "Failed to detect folder is not a media folder"
+        assert folder_is_a_media_folder is False, (
+            "Failed to detect folder is not a media folder"
+        )

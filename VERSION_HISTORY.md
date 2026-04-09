@@ -7,15 +7,21 @@
 **Features**
 - [ ] Use an SQLite database to quickly add/remove folders and content to existing media folders.
 
+## _Next Version in the Works_
 ### _Version 1.2_
 **Features**
-- [ ] Built in media player to allow user to watch to see which episode the media file is.
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
+- [x] Added logging capabilities to the application.
 
-## _Next Version in the Works_
-N/A
+**Bug Fixes**
+- Manual media file update would identify the wrong file to update when new file name matches old one.
+- Fix issue of Media Folder creation TV show options would be enabled after creating a folder for a movie.
+
+**Performance**
+- Under-the-hood optimization.
 
 ## _Current Version_
+
 ### _Version 1.1.1_
 **Bug Fixes**
 - Fixed issue for modified media folder not working when its a movie media folder

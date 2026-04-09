@@ -11,5 +11,5 @@ def update_files_in_directory(list_of_files_to_update: list[tuple[str, str]]) ->
     """
     for file in list_of_files_to_update:
         old_file, new_file = file
-        #print("Old file: {} \nNew file: {} \n".format(old_file, new_file))  # for debugging
+        # print("Old file: {} \nNew file: {} \n".format(old_file, new_file))  # for debugging
         os.rename(old_file, new_file)
