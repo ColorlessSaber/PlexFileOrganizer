@@ -27,7 +27,7 @@ class MainWindow(qtw.QMainWindow):
         self.progress_bar.setMaximum(100)
         self.statusBar().addPermanentWidget(self.progress_bar)
 
-        self.statusBar().addPermanentWidget(qtw.QLabel("V1.2.0"))
+        self.statusBar().addPermanentWidget(qtw.QLabel("V1.2.1"))
 
         # view signals to be connected to model slots
         self.view.signal_initiate_creating_media_folder.connect(
