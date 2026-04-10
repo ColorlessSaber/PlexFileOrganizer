@@ -62,7 +62,7 @@ class Model(qtc.QObject):
             self.slot_thread_update_progress_status
         )
         create_media_folder_thread.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         create_media_folder_thread.signals.finished.connect(
             self.signal_create_media_folder_finished
@@ -85,7 +85,7 @@ class Model(qtc.QObject):
             self.slot_thread_update_progress_status
         )
         auto_update_media_files_threads.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         auto_update_media_files_threads.signals.finished.connect(
             self.signal_auto_update_finished
@@ -109,7 +109,7 @@ class Model(qtc.QObject):
             self.slot_thread_update_progress_status
         )
         scan_existing_media_folder.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         scan_existing_media_folder.signals.finished.connect(
             self.signal_analysis_of_media_folder_complete
@@ -135,7 +135,7 @@ class Model(qtc.QObject):
             self.slot_thread_update_progress_status
         )
         update_existing_media_folder.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         update_existing_media_folder.signals.finished.connect(
             self.signal_update_of_media_folder_finished
@@ -154,7 +154,7 @@ class Model(qtc.QObject):
             self.slot_thread_update_progress_status
         )
         manual_update_media_files_thread.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         manual_update_media_files_thread.signals.finished.connect(
             self.signal_manual_update_finished
