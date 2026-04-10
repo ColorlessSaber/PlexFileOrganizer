@@ -59,10 +59,10 @@ class Model(qtc.QObject):
             self.signal_inform_user_media_folder_already_exists
         )
         create_media_folder_thread.signals.progress.connect(
-            self.slot_thread_update_progress_status
+            self.signal_update_progress
         )
         create_media_folder_thread.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         create_media_folder_thread.signals.finished.connect(
             self.signal_create_media_folder_finished
@@ -82,10 +82,10 @@ class Model(qtc.QObject):
             user_selected_options
         )
         auto_update_media_files_threads.signals.progress.connect(
-            self.slot_thread_update_progress_status
+            self.signal_update_progress
         )
         auto_update_media_files_threads.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         auto_update_media_files_threads.signals.finished.connect(
             self.signal_auto_update_finished
@@ -106,10 +106,10 @@ class Model(qtc.QObject):
             media_folder_directory
         )
         scan_existing_media_folder.signals.progress.connect(
-            self.slot_thread_update_progress_status
+            self.signal_update_progress
         )
         scan_existing_media_folder.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         scan_existing_media_folder.signals.finished.connect(
             self.signal_analysis_of_media_folder_complete
@@ -132,10 +132,10 @@ class Model(qtc.QObject):
             media_folder_info
         )
         update_existing_media_folder.signals.progress.connect(
-            self.slot_thread_update_progress_status
+            self.signal_update_progress
         )
         update_existing_media_folder.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         update_existing_media_folder.signals.finished.connect(
             self.signal_update_of_media_folder_finished
@@ -151,27 +151,12 @@ class Model(qtc.QObject):
         """
         manual_update_media_files_thread = ManualUpdateMediaFilesThread(files_to_update)
         manual_update_media_files_thread.signals.progress.connect(
-            self.slot_thread_update_progress_status
+            self.signal_update_progress
         )
         manual_update_media_files_thread.signals.error.connect(
-            self.signal_error_message.emit
+            self.signal_error_message
         )
         manual_update_media_files_thread.signals.finished.connect(
             self.signal_manual_update_finished
         )
         self.thread_pool.start(manual_update_media_files_thread)
-
-    # *** Signals to for threads to connect to pass updates/statues out***
-    @qtc.Slot(int, str)
-    def slot_thread_update_progress_status(
-        self, progress_bar_percentage: int, message: str
-    ) -> None:
-        """
-        The slot on the model side for all threads' signals.progress to connect to for sending out a progress
-        update--change to progress bar and message to print to user.
-
-        :param progress_bar_percentage: An int value to set the progress bar position.
-        :param message: A string message to be printed out to the user.
-        :return:
-        """
-        self.signal_update_progress.emit(progress_bar_percentage, message)
