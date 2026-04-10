@@ -7,10 +7,20 @@
 **Features**
 - [ ] Use an SQLite database to quickly add/remove folders and content to existing media folders.
 
-## _Next Version in the Works_
-### _Version 1.2_
+### _Version 1.3_
 **Features**
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
+
+## _Next Version in the Works_
+
+## _Current Version_
+### _Version 1.2.1_
+**Bug Fixes**
+- Fixed an issue where the connection between signals would not pass data between each other.
+
+## _Previous Versions_
+### _Version 1.2_
+**Features**
 - [x] Added logging capabilities to the application.
 
 **Bug Fixes**
@@ -20,8 +30,6 @@
 **Performance**
 - Under-the-hood optimization.
 
-## _Current Version_
-
 ### _Version 1.1.1_
 **Bug Fixes**
 - Fixed issue for modified media folder not working when its a movie media folder
@@ -29,7 +37,6 @@
 **Misc.**
 - Added more process messages when doing auto update media files
 
-## _Previous Versions_
 ### _Version 1.1_
 **Features**
 - [x] Create a Special season folder for TV show.
