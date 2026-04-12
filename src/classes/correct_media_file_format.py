@@ -144,15 +144,11 @@ class FolderAndFilePatterns:
             file_name = file_path.split("/")[-1]
             file_directory_path = pathlib.Path(file_path).parent.resolve().name
 
-            if self.tv_show_season_folder_check(
-                file_directory_path
-            ) and self.tv_show_episode_pattern_check(file_name):
+            if self.tv_show_season_folder_check(file_directory_path) and self.tv_show_episode_pattern_check(file_name):
                 continue
             elif self.movie_media_file_check(file_name, file_directory_path):
                 continue
-            elif self.extra_folder_check(
-                file_directory_path
-            ) and self.extra_media_file_check(file_name, file_directory_path):
+            elif self.extra_folder_check(file_directory_path) and self.extra_media_file_check(file_name, file_directory_path):
                 continue
             else:
                 return False

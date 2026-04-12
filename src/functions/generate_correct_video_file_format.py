@@ -8,13 +8,13 @@ from .media_file_format_funcs import (
 
 
 def generate_correct_video_file_format(
-    list_of_video_files: tuple[str],
+    list_of_video_files: tuple[str, ...],
 ) -> tuple[list[tuple[str, str]], str]:
     """
     Takes the list of video files in a directory and automatically generates the correct file format for each file
     that isn't formatted correctly.
-    This program also handles numbering tv shows in a season folder that already has formated files--IE, it will
-    figure out the next number(s) to give to the unformatted tv show episodes.
+    This program also handles numbering TV shows in a season folder that already has formated files--IE, it will
+    figure out the next number(s) to give to the unformatted TV show episodes.
 
     :param list_of_video_files: A tuple list of video files in a directory
     :return: A list with each element a tuple with the following format: (old file name, new file name); and a status message of
