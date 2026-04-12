@@ -1,5 +1,5 @@
-from src.functions import generate_correct_video_file_format
-
+from src.functions.media_file_format_funcs import tv_show_file_format
+from src.custom_objects import MediaFile
 
 class TestTvShowFileFormats:
     def test_update_all_season_folders(self):
@@ -17,7 +17,9 @@ class TestTvShowFileFormats:
             "/dir/dir1/Zenless Zone Zero/Season 1/Zenless Zone Zero - s01e04.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = tv_show_file_format(prepped_files_to_update)
 
         if len(result) != 4:
             assert False, f"All files should be updated, but only found {len(result)}"
@@ -46,7 +48,9 @@ class TestTvShowFileFormats:
             "/dir/dir1/Zenless Zone Zero/Specials/Zenless Zone Zero - s00e04.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = tv_show_file_format(prepped_files_to_update)
 
         if len(result) != 4:
             assert False, f"All files should be updated, but only found {len(result)}"
@@ -68,7 +72,9 @@ class TestTvShowFileFormats:
             "/dir/dir1/Zenless Zone Zero/Season 1/ZZZ_s01_ep06.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = tv_show_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -93,7 +99,9 @@ class TestTvShowFileFormats:
             "/dir/dir1/Zenless Zone Zero/Specials/ZZZ_s01_ep06.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = tv_show_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
