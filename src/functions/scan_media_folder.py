@@ -15,7 +15,8 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
     folder_and_file_patterns = correct_media_file_format.FolderAndFilePatterns()
     media_folder_information = MediaFolderData()
 
-    media_folder_information.media_title = media_folder_path.split("/")[-1]
+    # The [1:-1] slice is to remove the slash on either end of the directory string
+    media_folder_information.media_title = media_folder_path[1:-1].split("/")[-1]
     media_folder_information.directory = media_folder_path
 
     with os.scandir(media_folder_information.directory) as directory_to_scan:
