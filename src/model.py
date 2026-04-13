@@ -11,7 +11,7 @@ from .threads import (
 class Model(qtc.QObject):
     """The back-end of the Plex File Organizer"""
 
-    thread_pool = qtc.QThreadPool()
+    thread_pool = qtc.QThreadPool().globalInstance()
 
     # Signal(s) to inform the user of something
     signal_inform_user_media_folder_already_exists = qtc.Signal()
