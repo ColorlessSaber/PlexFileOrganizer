@@ -166,9 +166,7 @@ class CreateMediaFolder(qtw.QDialog):
 
     @qtc.Slot()
     def enable_or_disable_create_btn(self) -> None:
-        if (len(self.le_media_title.text()) > 0) and (
-            self.le_selected_directory.text() != ""
-        ):
+        if (len(self.le_media_title.text()) > 0) and (self.le_selected_directory.text() != ""):
             self.btn_create.setEnabled(True)
         else:
             self.btn_create.setEnabled(False)

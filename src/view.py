@@ -207,7 +207,7 @@ class View(qtw.QWidget):
             "Finished scanning the selected directory. Please see console window for information on if any files were updated during the scan.",
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.signal_reset_progress_bar.emit()
 
     @qtc.Slot()
@@ -223,7 +223,7 @@ class View(qtw.QWidget):
             "Application ran into an error! Task has been cancelled.",
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.status_pass_through_reset_do_to_error.emit()
 
     # *** Methods for Log Window ***
