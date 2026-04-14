@@ -302,7 +302,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         Create the object to hold the user's selection and disable all button widgets before sending it off.
         """
 
-        if not self.le_new_name_for_media_folder.text().isspace() and (self.le_selected_directory.text() != ""):
+        if not self.le_new_name_for_media_folder.text().isspace() and (self.le_new_name_for_media_folder.text() != ""):
             response = qtw.QMessageBox.warning(
                 self,
                 "Are you want to change Media Folder name?",
