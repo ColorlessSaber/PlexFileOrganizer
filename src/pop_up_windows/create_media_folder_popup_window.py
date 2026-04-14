@@ -29,6 +29,7 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_select_directory.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
         self.btn_select_directory.clicked.connect(self.select_directory_popup)
         self.le_selected_directory = qtw.QLineEdit(self)
+        self.le_selected_directory.textChanged.connect(self.enable_or_disable_create_btn)
         select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
         select_directory_layout.addWidget(self.le_selected_directory, 0, 1, 0, 2)
 
@@ -38,16 +39,12 @@ class CreateMediaFolder(qtw.QDialog):
         self.rb_media_type_movie_select = qtw.QRadioButton("Movie", self)
         self.rb_media_type_movie_select.setChecked(True)
         self.rb_media_type_movie_select.toggled.connect(
-            self.enable_or_disable_season_number_line_edit
-        )
-        self.rb_media_type_movie_select.toggled.connect(
-            self.enable_or_disable_create_btn
+            self.enable_or_disable_tv_show_options
         )
         self.rb_media_type_tv_select = qtw.QRadioButton("TV Show", self)
         self.rb_media_type_tv_select.toggled.connect(
-            self.enable_or_disable_season_number_line_edit
+            self.enable_or_disable_tv_show_options
         )
-        self.rb_media_type_tv_select.toggled.connect(self.enable_or_disable_create_btn)
         media_type_group.setLayout(qtw.QHBoxLayout())
         media_type_group.layout().addWidget(self.rb_media_type_movie_select)
         media_type_group.layout().addWidget(self.rb_media_type_tv_select)
@@ -166,13 +163,14 @@ class CreateMediaFolder(qtw.QDialog):
 
     @qtc.Slot()
     def enable_or_disable_create_btn(self) -> None:
-        if (len(self.le_media_title.text()) > 0) and (self.le_selected_directory.text() != ""):
-            self.btn_create.setEnabled(True)
-        else:
-            self.btn_create.setEnabled(False)
+        enable_button = False
+        if self.le_selected_directory.text() != "":
+            if not self.le_media_title.text().isspace() and (len(self.le_media_title.text()) > 0):
+                enable_button = True
+        self.btn_create.setEnabled(enable_button)
 
     @qtc.Slot()
-    def enable_or_disable_season_number_line_edit(self) -> None:
+    def enable_or_disable_tv_show_options(self) -> None:
         if self.rb_media_type_movie_select.isChecked():
             self.groupbox_tv_show_options.setEnabled(False)
         elif self.rb_media_type_tv_select.isChecked():
