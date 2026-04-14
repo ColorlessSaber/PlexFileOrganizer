@@ -7,18 +7,26 @@
 **Features**
 - [ ] Use an SQLite database to quickly add/remove folders and content to existing media folders.
 
-### _Version 1.3_
+### _Version 1.4_
 **Features**
 - [ ] Update subtitle file(s) to have the same name as updated file that are associated with.
 
 ## _Next Version in the Works_
 
 ## _Current Version_
+### _Version 1.3.0_
+**Features**
+- [x] Update existing media folder name and the folder contents to match new name
+- [ ] The ability to enable/disable debug and info logs.
+
+**Bug Fixes**
+- Modified existing media folder pop-up wasn't displaying the name of the media folder
+
+## _Previous Versions_
 ### _Version 1.2.1_
 **Bug Fixes**
 - Fixed an issue where the connection between signals would not pass data between each other.
 
-## _Previous Versions_
 ### _Version 1.2_
 **Features**
 - [x] Added logging capabilities to the application.
@@ -46,7 +54,6 @@
 <br><br>
 **Misc.**
 - Added styling to the windows.
-
 
 ### _Version 1.0.1_
 **Bug Fixes**

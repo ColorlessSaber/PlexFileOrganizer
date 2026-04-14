@@ -14,7 +14,8 @@ class TestModifyMediaFolder(TestCase):
         Validates the built-in function generates the correct number of new season folders
         """
         media_folder = ModifyMediaFolder()
-        media_folder.directory = "/media_folder/Tv Show Series"
+        media_folder.directory = "/media_folder"
+        media_folder.media_title = "Tv Show Series"
         media_folder.number_of_seasons = 1
         media_folder.number_of_new_seasons = 3
 
@@ -29,7 +30,8 @@ class TestModifyMediaFolder(TestCase):
         Validates the build-in function generates the extra folders
         """
         extra_folder = ModifyMediaFolder()
-        extra_folder.directory = "/media_folder/Extra Folder"
+        extra_folder.directory = "/media_folder"
+        extra_folder.media_title = "Extra Folder"
         extra_folder.extra_folders["trailers"] = True
         extra_folder.extra_folders["behind the scenes"] = True
         extra_folder.extra_folders["deleted scenes"] = True

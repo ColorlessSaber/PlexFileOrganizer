@@ -37,6 +37,7 @@ class ModifyMediaFolder(MediaFolderData):
     Inheritance MediaFolderData.
     """
 
+    new_media_title: str = field(default="")
     number_of_new_seasons: int = field(default=0)
 
     def generate_new_season_folders(self) -> None:
@@ -51,7 +52,7 @@ class ModifyMediaFolder(MediaFolderData):
             self.number_of_seasons + 1,
             self.number_of_seasons + self.number_of_new_seasons + 1,
         ):
-            os.mkdir("{}/Season {}".format(self.directory, season_num))
+            os.mkdir("{}/{}/Season {}".format(self.directory, self.media_title, season_num))
 
     def generate_specials_season_folder(self) -> None:
         """
@@ -59,7 +60,7 @@ class ModifyMediaFolder(MediaFolderData):
 
         :return:
         """
-        os.mkdir("{}/Specials".format(self.directory))
+        os.mkdir("{}/{}/Specials".format(self.directory, self.media_title))
 
     def generate_new_extra_folders(self) -> None:
         """
@@ -69,7 +70,7 @@ class ModifyMediaFolder(MediaFolderData):
         """
         for key in self.extra_folders:
             if self.extra_folders[key]:
-                os.mkdir("{}/{}".format(self.directory, key.title()))
+                os.mkdir("{}/{}/{}".format(self.directory, self.media_title, key.title()))
 
 
 class GenerateMediaFolder(MediaFolderData):
