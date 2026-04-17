@@ -4,6 +4,8 @@ from PySide6 import QtCore as qtc
 from .model import Model
 from .view import View
 from .functions import build_app_directory, setup_logger
+from .pop_up_windows import ApplicationPreferencesWindow
+
 
 class MainWindow(qtw.QMainWindow):
     """The main window for the application"""
@@ -28,6 +30,15 @@ class MainWindow(qtw.QMainWindow):
         self.statusBar().addPermanentWidget(self.progress_bar)
 
         self.statusBar().addPermanentWidget(qtw.QLabel("V1.3.0"))
+
+        # setup menu bar
+        menubar = qtw.QMenuBar()
+
+        main_menu = menubar.addMenu("Plex File Organizer")
+        settings_action = main_menu.addAction("Preferences...", self.open_preferences_window)
+
+        self.setMenuBar(menubar)
+        #self.menuBar().setNativeMenuBar(False)
 
         # view signals to be connected to model slots
         self.view.signal_initiate_creating_media_folder.connect(
@@ -96,6 +107,15 @@ class MainWindow(qtw.QMainWindow):
         self.show()
 
     # *** Main Window Methods ***
+    def open_preferences_window(self) -> None:
+        """
+        Launches the preferences window.
+
+        :return:
+        """
+        application_preferences_window = ApplicationPreferencesWindow()
+        application_preferences_window.exec()
+
     def closeEvent(self, event) -> None:
         """
         Close the application gracefully.
