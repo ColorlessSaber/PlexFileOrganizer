@@ -26,9 +26,7 @@ class AutoUpdateMediaFilesWindow(qtw.QDialog):
         self.setFixedHeight(600)
 
         # Labels
-        label_information_of_process = qtw.QTextBrowser(
-            self,
-        )
+        label_information_of_process = qtw.QTextBrowser(self)
         label_information_of_process.setHtml(
             """
             <body>
