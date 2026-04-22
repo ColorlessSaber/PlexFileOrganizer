@@ -20,7 +20,7 @@ def build_app_directory():
     data_dir.mkdir(parents=True, exist_ok=True)
     logs_dir.mkdir(exist_ok=True)
 
-def setup_logger() -> None:
+def setup_app_logger() -> None:
     """
     Gets the logger all setup for use within the application
     """
@@ -33,18 +33,31 @@ def setup_logger() -> None:
         format=LOGGER_FORMAT,
     )
 
-def load_settings() -> dict:
+def setup_app_settings_file() -> None:
+    """
+    Creates the settings json file for the application. Will skip process if file already exists.
+    """
+    data_dir = Path(user_data_dir(APP_NAME, APP_AUTHOR))
+    settings_file = data_dir / 'settings.json'
+    if not settings_file.exists():
+        default_settings_dict = {
+            "logging_settings": {
+                "enable_debug_logs": False,
+                "enable_info_logs": False,
+            }
+        }
+        save_app_settings(default_settings_dict)
+
+def load_app_settings() -> dict:
     """
     Loads the settings json file from the application directory.
     """
     data_dir = Path(user_data_dir(APP_NAME, APP_AUTHOR))
     settings_file = data_dir / 'settings.json'
-    if settings_file.exists():
-        with open(settings_file) as json_file:
-            return json.load(json_file)
-    return {}
+    with open(settings_file) as json_file:
+        return json.load(json_file)
 
-def save_settings(settings: dict) -> None:
+def save_app_settings(settings: dict) -> None:
     """
     Saves the new settings the user selected to the json file in the application directory.
     """

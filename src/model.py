@@ -1,5 +1,11 @@
 from PySide6 import QtCore as qtc
-from .functions import build_app_directory, setup_logger
+from .functions import (
+    build_app_directory,
+    setup_app_logger,
+    setup_app_settings_file,
+    load_app_settings,
+    save_app_settings,
+)
 from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
@@ -52,21 +58,22 @@ class Model(qtc.QObject):
         Builds the application directory and sets up the logger for the application.
         """
         build_app_directory()
-        setup_logger()
+        setup_app_logger()
+        setup_app_settings_file()
 
     @qtc.Slot()
     def load_application_settings_from_json_file(self) -> None:
         """
         Loads the application settings from a json file that is located in the application directory.
         """
-        print("Loading Application Settings...")
+        load_app_settings()
 
     @qtc.Slot(dict)
     def save_application_settings_to_json_file(self, app_settings: dict) -> None:
         """
         Saves the new application settings to a json file that is located in the application directory.
         """
-        print("Saving Application Settings...")
+        save_app_settings(app_settings)
 
     # *** Methods that create and start a thread ***
     @qtc.Slot(object)
