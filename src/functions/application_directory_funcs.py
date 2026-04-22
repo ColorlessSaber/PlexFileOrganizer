@@ -4,6 +4,7 @@ Containing functions that created, modified, and manage files in the application
 from platformdirs import user_data_dir
 from pathlib import Path
 import logging
+import json
 
 
 APP_NAME = "PlexFileOrganizer"
@@ -31,3 +32,23 @@ def setup_logger() -> None:
         level=logging.INFO,
         format=LOGGER_FORMAT,
     )
+
+def load_settings() -> dict:
+    """
+    Loads the settings json file from the application directory.
+    """
+    data_dir = Path(user_data_dir(APP_NAME, APP_AUTHOR))
+    settings_file = data_dir / 'settings.json'
+    if settings_file.exists():
+        with open(settings_file) as json_file:
+            return json.load(json_file)
+    return {}
+
+def save_settings(settings: dict) -> None:
+    """
+    Saves the new settings the user selected to the json file in the application directory.
+    """
+    data_dir = Path(user_data_dir(APP_NAME, APP_AUTHOR))
+    settings_file = data_dir / 'settings.json'
+    with open(settings_file, 'w') as json_file:
+        json.dump(settings, json_file, indent=2)

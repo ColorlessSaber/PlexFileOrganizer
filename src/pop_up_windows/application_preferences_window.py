@@ -1,7 +1,6 @@
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc,
-    QtGui as qtg,
 )
 
 
@@ -17,8 +16,8 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         # The modal=True makes sure the user cannot click the main screen until they close the popup
         super().__init__(parent, modal=True)
         self.setWindowTitle("Preferences")
-        self.setFixedWidth(500)
-        self.setFixedHeight(500)
+        self.setMinimumWidth(500)
+        self.setMinimumHeight(300)
 
         # Logging settings tab
         self.cb_debug_logger_enable = qtw.QCheckBox("Enable Debug Logger", self)
@@ -28,6 +27,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         logging_settings_layout.addWidget(self.cb_info_logger_enable)
         groupbox_logger_options = qtw.QGroupBox("Logger Options", self)
         groupbox_logger_options.setLayout(logging_settings_layout)
+        groupbox_logger_options.setFixedHeight(100)
         groupbox_logger_options.setStyleSheet(
             """
             QGroupBox {
@@ -39,8 +39,15 @@ class ApplicationPreferencesWindow(qtw.QDialog):
             """
         )
 
+        self.btn_clear_logs = qtw.QPushButton("Clear Logs", self)
+        self.btn_reset_settings = qtw.QPushButton("Reset Settings", self)
+        logging_buttons_layout = qtw.QHBoxLayout()
+        logging_buttons_layout.addWidget(self.btn_clear_logs)
+        logging_buttons_layout.addWidget(self.btn_reset_settings)
+
         main_logger_layout = qtw.QVBoxLayout()
         main_logger_layout.addWidget(groupbox_logger_options)
+        main_logger_layout.addLayout(logging_buttons_layout)
 
         container_for_logging_tab = qtw.QWidget()
         container_for_logging_tab.setLayout(main_logger_layout)
@@ -54,7 +61,9 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         self.btn_cancel = qtw.QPushButton("Cancel", self)
         self.btn_cancel.clicked.connect(self.reject)
         self.btn_apply = qtw.QPushButton("Apply", self)
+        self.btn_apply.setEnabled(False)
         self.btn_ok = qtw.QPushButton("OK", self)
+        self.btn_ok.clicked.connect(self.save_and_close)
         self.btn_ok.setDefault(True)
         self.btn_ok.setAutoDefault(True)
         window_buttons_layout = qtw.QHBoxLayout()
@@ -67,3 +76,10 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         main_layout.addWidget(tab_widget)
         main_layout.addLayout(window_buttons_layout)
         self.setLayout(main_layout)
+
+    def save_and_close(self):
+        """
+        Saves the settings and then closes the dialog window.
+        """
+
+        self.accept()

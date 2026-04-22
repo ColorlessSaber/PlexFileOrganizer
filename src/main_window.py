@@ -3,7 +3,6 @@ from PySide6 import QtCore as qtc
 
 from .model import Model
 from .view import View
-from .functions import build_app_directory, setup_logger
 from .pop_up_windows import ApplicationPreferencesWindow
 
 
@@ -12,10 +11,6 @@ class MainWindow(qtw.QMainWindow):
 
     def __init__(self):
         super().__init__()
-
-        # create the application directory, if necessary, and setup logger
-        build_app_directory()
-        setup_logger()
 
         # set up the view and model
         self.view = View()
@@ -35,10 +30,9 @@ class MainWindow(qtw.QMainWindow):
         menubar = qtw.QMenuBar()
 
         main_menu = menubar.addMenu("Plex File Organizer")
-        settings_action = main_menu.addAction("Preferences...", self.open_preferences_window)
+        main_menu.addAction("Preferences...", self.open_preferences_window)
 
         self.setMenuBar(menubar)
-        #self.menuBar().setNativeMenuBar(False)
 
         # view signals to be connected to model slots
         self.view.signal_initiate_creating_media_folder.connect(
@@ -103,6 +97,8 @@ class MainWindow(qtw.QMainWindow):
             self.slot_update_progress_bar_and_print_message
         )
         self.model.signal_error_message.connect(self.slot_display_error_message)
+
+        self.model.build_application_directory_and_setup_logger()
 
         self.show()
 

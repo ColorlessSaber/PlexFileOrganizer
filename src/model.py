@@ -1,4 +1,5 @@
 from PySide6 import QtCore as qtc
+from .functions import build_app_directory, setup_logger
 from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
@@ -45,7 +46,29 @@ class Model(qtc.QObject):
         else:
             self.signal_duplicate_files_check_complete.emit(False)
 
-    # *** The creation and start of thread methods ***
+    @qtc.Slot()
+    def build_application_directory_and_setup_logger(self) -> None:
+        """
+        Builds the application directory and sets up the logger for the application.
+        """
+        build_app_directory()
+        setup_logger()
+
+    @qtc.Slot()
+    def load_application_settings_from_json_file(self) -> None:
+        """
+        Loads the application settings from a json file that is located in the application directory.
+        """
+        print("Loading Application Settings...")
+
+    @qtc.Slot(dict)
+    def save_application_settings_to_json_file(self, app_settings: dict) -> None:
+        """
+        Saves the new application settings to a json file that is located in the application directory.
+        """
+        print("Saving Application Settings...")
+
+    # *** Methods that create and start a thread ***
     @qtc.Slot(object)
     def start_create_media_folder_thread(self, media_folder_selection: object) -> None:
         """
