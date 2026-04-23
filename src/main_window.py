@@ -121,11 +121,11 @@ class MainWindow(qtw.QMainWindow):
             self,
             "Close Application?",
             "Are you sure you want to close the application?",
-            buttons=qtw.QMessageBox.Yes | qtw.QMessageBox.No,
-            defaultButton=qtw.QMessageBox.Yes,
+            buttons=qtw.QMessageBox.StandardButton.Yes | qtw.QMessageBox.StandardButton.No,
+            defaultButton=qtw.QMessageBox.StandardButton.Yes,
         )
 
-        if response == qtw.QMessageBox.Yes:
+        if response == qtw.QMessageBox.StandardButton.Yes:
             event.accept()
         else:
             event.ignore()
