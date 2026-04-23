@@ -6,11 +6,12 @@ from PySide6 import (
 
 class ApplicationPreferencesWindow(qtw.QDialog):
 
-    def __init__(self, parent=None):
+    def __init__(self, settings_data, parent=None):
         """
         Displays the settings available to the user that allow modification to the application, logging, etc.
         The settings are divided up into categories via tabs.
 
+        :param settings_data: The settings data of the application
         :param parent: The parent window the dialog window will be linked to.
         """
         # The modal=True makes sure the user cannot click the main screen until they close the popup
@@ -18,6 +19,8 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         self.setWindowTitle("Preferences")
         self.setMinimumWidth(500)
         self.setMinimumHeight(300)
+
+        self.__settings_data = settings_data
 
         # Logging settings tab
         self.cb_debug_logger_enable = qtw.QCheckBox("Enable Debug Logger", self)
@@ -56,6 +59,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         tab_widget = qtw.QTabWidget()
         tab_widget.addTab(container_for_logging_tab, "Logging")
 
+        self._setup_preferences_per_setting_data()
 
         # set up the layout of window
         self.btn_cancel = qtw.QPushButton("Cancel", self)
@@ -76,6 +80,20 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         main_layout.addWidget(tab_widget)
         main_layout.addLayout(window_buttons_layout)
         self.setLayout(main_layout)
+
+    def _setup_preferences_per_setting_data(self) -> None:
+        """
+        Setup the preferences per application settings data/json file.
+
+        :return: None
+        """
+
+        self.cb_info_logger_enable.setChecked(
+            self.__settings_data.get("logging_settings").get("enable_info_logs")
+        )
+        self.cb_debug_logger_enable.setChecked(
+            self.__settings_data.get("logging_settings").get("enable_debug_logs")
+        )
 
     def save_and_close(self):
         """

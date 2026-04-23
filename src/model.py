@@ -37,6 +37,45 @@ class Model(qtc.QObject):
     signal_update_of_media_folder_finished = qtc.Signal()
     signal_manual_update_finished = qtc.Signal()
 
+    def __init__(self):
+        super().__init__()
+        self.__app_settings_data = {}
+
+    # *** Methods that access Model or application files ***
+    @property
+    def preferences_data(self):
+        return self.__app_settings_data.get("preferences")
+
+    @qtc.Slot()
+    def build_application_directory_and_setup_logger(self) -> None:
+        """
+        Builds the application directory and sets up the logger for the application.
+
+        :return:
+        """
+        build_app_directory()
+        setup_app_logger()
+        setup_app_settings_file()
+        self.__app_settings_data = load_app_settings()
+
+    @qtc.Slot()
+    def load_application_settings_from_json_file(self) -> None:
+        """
+        Loads the application settings from a json file that is located in the application directory.
+
+        :return:
+        """
+        self.__app_settings_data = load_app_settings()
+
+    @qtc.Slot(dict)
+    def save_application_settings_to_json_file(self) -> None:
+        """
+        Saves the new application settings to a json file that is located in the application directory.
+
+        :return:
+        """
+        save_app_settings(self.__app_settings_data)
+
     # *** Quick methods that don't require threads ***
     @qtc.Slot(list)
     def check_for_duplicates_in_media_file_list(self, media_file_list: list) -> None:
@@ -51,29 +90,6 @@ class Model(qtc.QObject):
             self.signal_duplicate_files_check_complete.emit(True)
         else:
             self.signal_duplicate_files_check_complete.emit(False)
-
-    @qtc.Slot()
-    def build_application_directory_and_setup_logger(self) -> None:
-        """
-        Builds the application directory and sets up the logger for the application.
-        """
-        build_app_directory()
-        setup_app_logger()
-        setup_app_settings_file()
-
-    @qtc.Slot()
-    def load_application_settings_from_json_file(self) -> None:
-        """
-        Loads the application settings from a json file that is located in the application directory.
-        """
-        load_app_settings()
-
-    @qtc.Slot(dict)
-    def save_application_settings_to_json_file(self, app_settings: dict) -> None:
-        """
-        Saves the new application settings to a json file that is located in the application directory.
-        """
-        save_app_settings(app_settings)
 
     # *** Methods that create and start a thread ***
     @qtc.Slot(object)

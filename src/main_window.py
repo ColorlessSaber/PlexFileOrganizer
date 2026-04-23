@@ -109,7 +109,8 @@ class MainWindow(qtw.QMainWindow):
 
         :return:
         """
-        application_preferences_window = ApplicationPreferencesWindow()
+        preferences_settings_data = self.model.preferences_data
+        application_preferences_window = ApplicationPreferencesWindow(preferences_settings_data)
         application_preferences_window.exec()
 
     def closeEvent(self, event) -> None:
