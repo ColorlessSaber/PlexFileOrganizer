@@ -5,6 +5,8 @@ from PySide6 import (
 import logging
 
 class ApplicationPreferencesWindow(qtw.QDialog):
+    signal_save_new_preferences_settings = qtc.Signal(dict)
+    signal_clear_log_file = qtc.Signal()
 
     def __init__(self, settings_data, parent=None):
         """
@@ -104,7 +106,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         # Run though all the tabs and check to see if any settings are different compared to the __settings_data
         # if so, enable the apply button
         there_are_changes = False
-        ## Check logging tab
+        ## Logging tab
         for key in self.rb_logging_options.keys():
             if self.rb_logging_options[key].isChecked():
                 if key != str(self.__settings_data.get("logging_settings").get("level")):
@@ -124,9 +126,24 @@ class ApplicationPreferencesWindow(qtw.QDialog):
 
         # Run through all the tabs and check to see what settings are different compared to the __settings_data
         # Apply any differences between the two
-        
+        ## Logging tab
+        for key in self.rb_logging_options.keys():
+            if self.rb_logging_options[key].isChecked():
+                self.__settings_data["logging_settings"].update({"level": int(key)})
+                match key:
+                    case "10":
+                        logging.getLogger().setLevel(logging.DEBUG)
+                    case "20":
+                        logging.getLogger().setLevel(logging.INFO)
+                    case "30":
+                        logging.getLogger().setLevel(logging.WARNING)
+                    case "40":
+                        logging.getLogger().setLevel(logging.ERROR)
 
         # save the new settings configuration
+        self.signal_save_new_preferences_settings.emit(self.__settings_data)
 
         if button_pressed.property("btnName") == "ok": # only close the window if the btn_ok was pressed
             self.accept()
+        else:
+            self.btn_apply.setEnabled(False)

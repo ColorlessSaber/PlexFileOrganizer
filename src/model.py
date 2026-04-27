@@ -58,24 +58,6 @@ class Model(qtc.QObject):
         setup_app_settings_file()
         self.__app_settings_data = load_app_settings()
 
-    @qtc.Slot()
-    def load_application_settings_from_json_file(self) -> None:
-        """
-        Loads the application settings from a json file that is located in the application directory.
-
-        :return:
-        """
-        self.__app_settings_data = load_app_settings()
-
-    @qtc.Slot(dict)
-    def save_application_settings_to_json_file(self) -> None:
-        """
-        Saves the new application settings to a json file that is located in the application directory.
-
-        :return:
-        """
-        save_app_settings(self.__app_settings_data)
-
     # *** Quick methods that don't require threads ***
     @qtc.Slot(list)
     def check_for_duplicates_in_media_file_list(self, media_file_list: list) -> None:
@@ -90,6 +72,15 @@ class Model(qtc.QObject):
             self.signal_duplicate_files_check_complete.emit(True)
         else:
             self.signal_duplicate_files_check_complete.emit(False)
+    @qtc.Slot(dict)
+    def save_new_app_preferences_to_json_file(self, new_pref_settings: dict) -> None:
+        """
+        Saves the new preferences to a json file that is located in the application directory.
+        :param new_pref_settings: The new preferences settings to save.
+        :return:
+        """
+        self.__app_settings_data["preferences"] = new_pref_settings
+        save_app_settings(self.__app_settings_data)
 
     # *** Methods that create and start a thread ***
     @qtc.Slot(object)

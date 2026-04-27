@@ -111,6 +111,7 @@ class MainWindow(qtw.QMainWindow):
         """
         preferences_settings_data = self.model.preferences_data
         application_preferences_window = ApplicationPreferencesWindow(preferences_settings_data)
+        application_preferences_window.signal_save_new_preferences_settings.connect(self.model.save_new_app_preferences_to_json_file)
         application_preferences_window.exec()
 
     def closeEvent(self, event) -> None:
