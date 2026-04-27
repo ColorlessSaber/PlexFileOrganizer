@@ -2,7 +2,7 @@ from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc,
 )
-
+import logging
 
 class ApplicationPreferencesWindow(qtw.QDialog):
 
@@ -23,19 +23,19 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         self.__settings_data = settings_data
 
         # Logging settings tab
-        self.cb_debug_logger_enable = qtw.QCheckBox("Enable Debug Logger", self)
-        self.cb_debug_logger_enable.clicked.connect(self._toggle_apply_btn)
-        self.cb_info_logger_enable = qtw.QCheckBox("Enable Info Logger", self)
-        self.cb_info_logger_enable.clicked.connect(self._toggle_apply_btn)
-        self.cb_warning_logger_enable = qtw.QCheckBox("Enable Warning Logger", self)
-        self.cb_warning_logger_enable.clicked.connect(self._toggle_apply_btn)
+        self.rb_logging_options = { # Using the logging library enum values for keys
+            '10': qtw.QRadioButton("Enable Debug Logger", self), # debug
+            '20': qtw.QRadioButton("Enable Info Logger", self), # info
+            '30': qtw.QRadioButton("Enable Warning Logger", self), # warning
+            '40': qtw.QRadioButton("Enable Error Logger", self), # error
+        }
         logging_settings_layout = qtw.QVBoxLayout()
-        logging_settings_layout.addWidget(self.cb_debug_logger_enable)
-        logging_settings_layout.addWidget(self.cb_info_logger_enable)
-        logging_settings_layout.addWidget(self.cb_warning_logger_enable)
-        groupbox_logger_options = qtw.QGroupBox("Logger Options", self)
+        for radio_button in self.rb_logging_options.values():
+            radio_button.clicked.connect(self._toggle_apply_btn)
+            logging_settings_layout.addWidget(radio_button)
+        groupbox_logger_options = qtw.QGroupBox("Level", self)
         groupbox_logger_options.setLayout(logging_settings_layout)
-        groupbox_logger_options.setFixedHeight(100)
+        groupbox_logger_options.setFixedHeight(200)
         groupbox_logger_options.setStyleSheet(
             """
             QGroupBox {
@@ -93,16 +93,9 @@ class ApplicationPreferencesWindow(qtw.QDialog):
 
         :return: None
         """
-
-        self.cb_info_logger_enable.setChecked(
-            self.__settings_data.get("logging_settings").get("enable_info_logs")
-        )
-        self.cb_debug_logger_enable.setChecked(
-            self.__settings_data.get("logging_settings").get("enable_debug_logs")
-        )
-        self.cb_warning_logger_enable.setChecked(
-            self.__settings_data.get("logging_settings").get("enable_warning_logs")
-        )
+        self.rb_logging_options.get(
+            str(self.__settings_data.get("logging_settings").get("level"))
+        ).setChecked(True)
 
     def _toggle_apply_btn(self) -> None:
         """
@@ -110,17 +103,13 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         """
         # Run though all the tabs and check to see if any settings are different compared to the __settings_data
         # if so, enable the apply button
-
         there_are_changes = False
         ## Check logging tab
-        if self.cb_debug_logger_enable.isChecked() != self.__settings_data.get("logging_settings").get('enable_debug_logs'):
-            there_are_changes = True
-
-        if self.cb_info_logger_enable.isChecked() != self.__settings_data.get("logging_settings").get('enable_info_logs'):
-            there_are_changes = True
-
-        if self.cb_warning_logger_enable.isChecked() != self.__settings_data.get("logging_settings").get('enable_warning_logs'):
-            there_are_changes = True
+        for key in self.rb_logging_options.keys():
+            if self.rb_logging_options[key].isChecked():
+                if key != str(self.__settings_data.get("logging_settings").get("level")):
+                    there_are_changes = True
+                    break  # no reason to check the other given we are searching for at lest one value is different
 
         if there_are_changes:
             self.btn_apply.setEnabled(True)
@@ -135,6 +124,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
 
         # Run through all the tabs and check to see what settings are different compared to the __settings_data
         # Apply any differences between the two
+        
 
         # save the new settings configuration
 

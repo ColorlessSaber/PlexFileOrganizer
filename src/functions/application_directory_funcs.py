@@ -50,9 +50,7 @@ def setup_app_settings_file() -> None:
             "version": "1.3.0",
             "preferences": {
                 "logging_settings": {
-                    "enable_debug_logs": False,
-                    "enable_info_logs": False,
-                    "enable_warning_logs": False,
+                    "level": logging.ERROR,
                 }
             }
         }
