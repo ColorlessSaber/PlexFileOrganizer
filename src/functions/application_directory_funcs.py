@@ -78,3 +78,12 @@ def save_app_settings(settings: dict) -> None:
     settings_file = data_dir / 'settings.json'
     with open(settings_file, 'w') as json_file:
         json.dump(settings, json_file, indent=2)
+
+def delete_then_recreate_log_file() -> None:
+    """
+    Deletes the log files located in the application directory, and then creates a new one.
+    """
+    data_dir = Path(user_data_dir(APP_NAME, APP_AUTHOR))
+    log_file = data_dir / 'logs/app.log'
+    log_file.unlink()
+    log_file.touch()

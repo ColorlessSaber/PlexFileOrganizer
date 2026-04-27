@@ -18,6 +18,7 @@ __all__ = [
     "load_app_settings",
     "save_app_settings",
     "setup_app_settings_file",
+    "delete_then_recreate_log_file"
 ]
 from .update_files_in_directory import update_files_in_directory
 from .directory_scanner import directory_scanner
@@ -34,4 +35,5 @@ from .application_directory_funcs import (
     load_app_settings,
     save_app_settings,
     setup_app_settings_file,
+    delete_then_recreate_log_file,
 )

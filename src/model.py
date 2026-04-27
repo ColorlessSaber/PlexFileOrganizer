@@ -5,6 +5,7 @@ from .functions import (
     setup_app_settings_file,
     load_app_settings,
     save_app_settings,
+    delete_then_recreate_log_file,
 )
 from .threads import (
     CreateMediaFolderThread,
@@ -72,6 +73,7 @@ class Model(qtc.QObject):
             self.signal_duplicate_files_check_complete.emit(True)
         else:
             self.signal_duplicate_files_check_complete.emit(False)
+
     @qtc.Slot(dict)
     def save_new_app_preferences_to_json_file(self, new_pref_settings: dict) -> None:
         """
@@ -81,6 +83,13 @@ class Model(qtc.QObject):
         """
         self.__app_settings_data["preferences"] = new_pref_settings
         save_app_settings(self.__app_settings_data)
+
+    @qtc.Slot()
+    def remove_then_make_new_log_file(self) -> None:
+        """
+        Removes the existing log files, and then recreates them.
+        """
+        delete_then_recreate_log_file()
 
     # *** Methods that create and start a thread ***
     @qtc.Slot(object)

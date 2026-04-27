@@ -33,7 +33,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         }
         logging_settings_layout = qtw.QVBoxLayout()
         for radio_button in self.rb_logging_options.values():
-            radio_button.clicked.connect(self._toggle_apply_btn)
+            radio_button.clicked.connect(self.toggle_apply_btn)
             logging_settings_layout.addWidget(radio_button)
         groupbox_logger_options = qtw.QGroupBox("Level", self)
         groupbox_logger_options.setLayout(logging_settings_layout)
@@ -50,6 +50,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         )
 
         self.btn_clear_logs = qtw.QPushButton("Clear Logs", self)
+        self.btn_clear_logs.clicked.connect(self.clear_existing_log_file)
         logging_buttons_layout = qtw.QHBoxLayout()
         logging_buttons_layout.addWidget(self.btn_clear_logs)
 
@@ -64,7 +65,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         tab_widget = qtw.QTabWidget()
         tab_widget.addTab(container_for_logging_tab, "Logging")
 
-        self._setup_preferences_per_setting_data()
+        self.setup_preferences_per_setting_data()
 
         # set up the layout of window
         self.btn_cancel = qtw.QPushButton("Cancel", self)
@@ -89,7 +90,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         main_layout.addLayout(window_buttons_layout)
         self.setLayout(main_layout)
 
-    def _setup_preferences_per_setting_data(self) -> None:
+    def setup_preferences_per_setting_data(self) -> None:
         """
         Setup the preferences per application settings data/json file.
 
@@ -99,7 +100,7 @@ class ApplicationPreferencesWindow(qtw.QDialog):
             str(self.__settings_data.get("logging_settings").get("level"))
         ).setChecked(True)
 
-    def _toggle_apply_btn(self) -> None:
+    def toggle_apply_btn(self) -> None:
         """
         Toggle the apply button state.
         """
@@ -117,6 +118,18 @@ class ApplicationPreferencesWindow(qtw.QDialog):
             self.btn_apply.setEnabled(True)
         else:
             self.btn_apply.setEnabled(False)
+
+    def clear_existing_log_file(self) -> None:
+        response = qtw.QMessageBox.question(
+            self,
+            "Clear Existing Logs?",
+            "Are you sure you want to clear the existing logs?",
+            buttons=qtw.QMessageBox.StandardButton.Yes | qtw.QMessageBox.StandardButton.No,
+            defaultButton=qtw.QMessageBox.StandardButton.Yes,
+        )
+
+        if response == qtw.QMessageBox.StandardButton.Yes:
+            self.signal_clear_log_file.emit()
 
     def apply_changes_save_and_close(self):
         """
