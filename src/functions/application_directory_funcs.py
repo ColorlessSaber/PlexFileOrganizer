@@ -33,7 +33,7 @@ def setup_app_logger() -> None:
 
     logging.basicConfig(
         filename=logs_dir / 'app.log',
-        level=logging.INFO,
+        level=logging.ERROR,
         format=LOGGER_FORMAT,
     )
 
