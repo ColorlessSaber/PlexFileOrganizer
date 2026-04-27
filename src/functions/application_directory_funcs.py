@@ -52,6 +52,7 @@ def setup_app_settings_file() -> None:
                 "logging_settings": {
                     "enable_debug_logs": False,
                     "enable_info_logs": False,
+                    "enable_warning_logs": False,
                 }
             }
         }

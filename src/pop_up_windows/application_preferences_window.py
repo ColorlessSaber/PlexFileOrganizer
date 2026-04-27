@@ -24,10 +24,15 @@ class ApplicationPreferencesWindow(qtw.QDialog):
 
         # Logging settings tab
         self.cb_debug_logger_enable = qtw.QCheckBox("Enable Debug Logger", self)
+        self.cb_debug_logger_enable.clicked.connect(self._toggle_apply_btn)
         self.cb_info_logger_enable = qtw.QCheckBox("Enable Info Logger", self)
+        self.cb_info_logger_enable.clicked.connect(self._toggle_apply_btn)
+        self.cb_warning_logger_enable = qtw.QCheckBox("Enable Warning Logger", self)
+        self.cb_warning_logger_enable.clicked.connect(self._toggle_apply_btn)
         logging_settings_layout = qtw.QVBoxLayout()
         logging_settings_layout.addWidget(self.cb_debug_logger_enable)
         logging_settings_layout.addWidget(self.cb_info_logger_enable)
+        logging_settings_layout.addWidget(self.cb_warning_logger_enable)
         groupbox_logger_options = qtw.QGroupBox("Logger Options", self)
         groupbox_logger_options.setLayout(logging_settings_layout)
         groupbox_logger_options.setFixedHeight(100)
@@ -43,10 +48,8 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         )
 
         self.btn_clear_logs = qtw.QPushButton("Clear Logs", self)
-        self.btn_reset_settings = qtw.QPushButton("Reset Settings", self)
         logging_buttons_layout = qtw.QHBoxLayout()
         logging_buttons_layout.addWidget(self.btn_clear_logs)
-        logging_buttons_layout.addWidget(self.btn_reset_settings)
 
         main_logger_layout = qtw.QVBoxLayout()
         main_logger_layout.addWidget(groupbox_logger_options)
@@ -65,9 +68,12 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         self.btn_cancel = qtw.QPushButton("Cancel", self)
         self.btn_cancel.clicked.connect(self.reject)
         self.btn_apply = qtw.QPushButton("Apply", self)
+        self.btn_apply.clicked.connect(self.apply_changes_save_and_close)
+        self.btn_apply.setProperty("btnName", "apply")
         self.btn_apply.setEnabled(False)
         self.btn_ok = qtw.QPushButton("OK", self)
-        self.btn_ok.clicked.connect(self.save_and_close)
+        self.btn_ok.clicked.connect(self.apply_changes_save_and_close)
+        self.btn_ok.setProperty("btnName", "ok")
         self.btn_ok.setDefault(True)
         self.btn_ok.setAutoDefault(True)
         window_buttons_layout = qtw.QHBoxLayout()
@@ -94,10 +100,43 @@ class ApplicationPreferencesWindow(qtw.QDialog):
         self.cb_debug_logger_enable.setChecked(
             self.__settings_data.get("logging_settings").get("enable_debug_logs")
         )
+        self.cb_warning_logger_enable.setChecked(
+            self.__settings_data.get("logging_settings").get("enable_warning_logs")
+        )
 
-    def save_and_close(self):
+    def _toggle_apply_btn(self) -> None:
         """
-        Saves the settings and then closes the dialog window.
+        Toggle the apply button state.
         """
+        # Run though all the tabs and check to see if any settings are different compared to the __settings_data
+        # if so, enable the apply button
 
-        self.accept()
+        there_are_changes = False
+        ## Check logging tab
+        if self.cb_debug_logger_enable.isChecked() != self.__settings_data.get("logging_settings").get('enable_debug_logs'):
+            there_are_changes = True
+
+        if self.cb_info_logger_enable.isChecked() != self.__settings_data.get("logging_settings").get('enable_info_logs'):
+            there_are_changes = True
+
+        if self.cb_warning_logger_enable.isChecked() != self.__settings_data.get("logging_settings").get('enable_warning_logs'):
+            there_are_changes = True
+
+        if there_are_changes:
+            self.btn_apply.setEnabled(True)
+        else:
+            self.btn_apply.setEnabled(False)
+
+    def apply_changes_save_and_close(self):
+        """
+        Apply the changes in settings, save the changes, and then close the window.
+        """
+        button_pressed = self.sender()
+
+        # Run through all the tabs and check to see what settings are different compared to the __settings_data
+        # Apply any differences between the two
+
+        # save the new settings configuration
+
+        if button_pressed.property("btnName") == "ok": # only close the window if the btn_ok was pressed
+            self.accept()
