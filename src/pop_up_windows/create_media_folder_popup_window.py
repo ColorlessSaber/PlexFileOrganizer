@@ -29,11 +29,26 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_select_directory.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
         self.btn_select_directory.clicked.connect(self.select_directory_popup)
         self.le_selected_directory = qtw.QLineEdit(self)
+        self.le_selected_directory.setStyleSheet("""
+            QLineEdit {
+                border: 1px solid grey;
+                border-radius: 5px;
+            }
+        """)
         self.le_selected_directory.textChanged.connect(self.enable_or_disable_create_btn)
         select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
         select_directory_layout.addWidget(self.le_selected_directory, 0, 1, 0, 2)
 
         ## media information
+        self.le_media_title = qtw.QLineEdit(self)
+        self.le_media_title.textChanged.connect(self.enable_or_disable_create_btn)
+        self.le_edition_tag = qtw.QLineEdit(self)
+        media_title_layout = qtw.QGridLayout()
+        media_title_layout.addWidget(qtw.QLabel("Title:", self), 0, 0)
+        media_title_layout.addWidget(self.le_media_title, 0, 1)
+        media_title_layout.addWidget(qtw.QLabel("Edition:", self), 1, 0)
+        media_title_layout.addWidget(self.le_edition_tag, 1, 1)
+
         media_type_group = qtw.QGroupBox("Media Type")
         media_type_group.setObjectName("media_type_group")
         self.rb_media_type_movie_select = qtw.QRadioButton("Movie", self)
@@ -48,12 +63,6 @@ class CreateMediaFolder(qtw.QDialog):
         media_type_group.setLayout(qtw.QHBoxLayout())
         media_type_group.layout().addWidget(self.rb_media_type_movie_select)
         media_type_group.layout().addWidget(self.rb_media_type_tv_select)
-
-        self.le_media_title = qtw.QLineEdit(self)
-        self.le_media_title.textChanged.connect(self.enable_or_disable_create_btn)
-        media_title_layout = qtw.QHBoxLayout()
-        media_title_layout.addWidget(qtw.QLabel("Title:", self))
-        media_title_layout.addWidget(self.le_media_title)
 
         layout_media_information = qtw.QVBoxLayout()
         layout_media_information.setSpacing(20)
@@ -76,6 +85,10 @@ class CreateMediaFolder(qtw.QDialog):
             }
             QLabel {
                 text-decoration: underline;
+            }
+            QLineEdit {
+                border: 1px solid grey;
+                border-radius: 5px;
             }
         """)
 
