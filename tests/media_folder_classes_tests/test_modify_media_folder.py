@@ -11,6 +11,27 @@ class TestModifyMediaFolder(TestCase):
         self.fs.create_dir("/media_folder/Extra Folder")
         self.fs.create_dir("/media_folder/Extra Folder {edition-full screen}")
 
+    def test_check_if_extra_folders_to_be_generated_method(self):
+        """
+        Validates that the GenerateMediaFolder object's check_if_new_extra_folders_are_needed method returns True
+        when there are extra folder(s) to be generated and false otherwise.
+        """
+
+        media_folder = ModifyMediaFolder()
+        media_folder.extra_folders["other"] = True
+
+        assert media_folder.check_if_new_extra_folders_are_needed() is True, (
+            "Failed to detect extra folder(s) to be generated."
+        )
+
+        media_folder = ModifyMediaFolder()
+        media_folder.extra_folders["other"] = False
+
+        assert media_folder.check_if_new_extra_folders_are_needed() is False, (
+            "Failed to detect no extra folder(s) needed to be generated."
+        )
+
+
     def test_modify_tv_show_folder(self):
         """
         Validates the built-in function generates the correct number of new season folders
@@ -100,23 +121,3 @@ class TestModifyMediaFolder(TestCase):
         assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Scenes")
         assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Shorts")
         assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Other")
-
-    def test_check_if_extra_folders_to_be_generated_method(self):
-        """
-        Validates that the GenerateMediaFolder object's check_if_new_extra_folders_are_needed method returns True
-        when there are extra folder(s) to be generated and false otherwise.
-        """
-
-        media_folder = ModifyMediaFolder()
-        media_folder.extra_folders["other"] = True
-
-        assert media_folder.check_if_new_extra_folders_are_needed() is True, (
-            "Failed to detect extra folder(s) to be generated."
-        )
-
-        media_folder = ModifyMediaFolder()
-        media_folder.extra_folders["other"] = False
-
-        assert media_folder.check_if_new_extra_folders_are_needed() is False, (
-            "Failed to detect no extra folder(s) needed to be generated."
-        )

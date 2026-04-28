@@ -11,6 +11,51 @@ class TestGenerateMediaFolder(TestCase):
         self.fs.create_dir("/media_folder/Zenless Zone Zero")
         self.fs.create_dir("/media_folder/Zenless Zone Zero {edition-widescreen}")
 
+    def test_generate_media_folder_detects_existing_folder(self):
+        """
+        Validates that the GenerateMediaFolder object detects existing folder.
+        """
+        media_folder = GenerateMediaFolder()
+        media_folder.directory = "/media_folder"
+        media_folder.media_title = "Zenless Zone Zero"
+
+        assert media_folder.check_if_media_folder_exists() is True, (
+            "Failed to detect existing folder."
+        )
+
+    def test_generate_media_folder_detects_existing_folder_with_edition_tag(self):
+        """
+        Validates that the GenerateMediaFolder object detects existing folder that has edition tag.
+        """
+        media_folder = GenerateMediaFolder()
+        media_folder.directory = "/media_folder"
+        media_folder.media_title = "Zenless Zone Zero"
+        media_folder.edition_tag = "widescreen"
+
+        assert media_folder.check_if_media_folder_exists() is True, (
+            "Failed to detect existing folder."
+        )
+
+    def test_check_if_extra_folders_to_be_generated_method(self):
+        """
+        Validates that the GenerateMediaFolder object's check_if_new_extra_folders_are_needed method returns True
+        when there are extra folder(s) to be generated and false otherwise.
+        """
+
+        media_folder = GenerateMediaFolder()
+        media_folder.extra_folders["other"] = True
+
+        assert media_folder.check_if_new_extra_folders_are_needed() is True, (
+            "Failed to detect extra folder(s) to be generated."
+        )
+
+        media_folder = GenerateMediaFolder()
+        media_folder.extra_folders["other"] = False
+
+        assert media_folder.check_if_new_extra_folders_are_needed() is False, (
+            "Failed to detect no extra folder(s) needed to be generated."
+        )
+
     def test_generate_all_extra_folders(self):
         """
         Checks to see that all extra folders will be generated.
@@ -69,26 +114,6 @@ class TestGenerateMediaFolder(TestCase):
         assert os.path.isdir("/media_folder/Extra Test {edition-widescreen}/Scenes")
         assert os.path.isdir("/media_folder/Extra Test {edition-widescreen}/Shorts")
         assert os.path.isdir("/media_folder/Extra Test {edition-widescreen}/Other")
-
-    def test_check_if_extra_folders_to_be_generated_method(self):
-        """
-        Validates that the GenerateMediaFolder object's check_if_new_extra_folders_are_needed method returns True
-        when there are extra folder(s) to be generated and false otherwise.
-        """
-
-        media_folder = GenerateMediaFolder()
-        media_folder.extra_folders["other"] = True
-
-        assert media_folder.check_if_new_extra_folders_are_needed() is True, (
-            "Failed to detect extra folder(s) to be generated."
-        )
-
-        media_folder = GenerateMediaFolder()
-        media_folder.extra_folders["other"] = False
-
-        assert media_folder.check_if_new_extra_folders_are_needed() is False, (
-            "Failed to detect no extra folder(s) needed to be generated."
-        )
 
     def test_generate_new_tv_show_folder(self):
         """
@@ -175,28 +200,3 @@ class TestGenerateMediaFolder(TestCase):
         assert os.path.isdir("/media_folder/Re:Creators {edition-english audio}")
         assert os.path.isdir("/media_folder/Re:Creators {edition-english audio}/Trailers")
         assert os.path.isdir("/media_folder/Re:Creators {edition-english audio}/Shorts")
-
-    def test_generate_media_folder_detects_existing_folder(self):
-        """
-        Validates that the GenerateMediaFolder object detects existing folder.
-        """
-        media_folder = GenerateMediaFolder()
-        media_folder.directory = "/media_folder"
-        media_folder.media_title = "Zenless Zone Zero"
-
-        assert media_folder.check_if_media_folder_exists() is True, (
-            "Failed to detect existing folder."
-        )
-
-    def test_generate_media_folder_detects_existing_folder_with_edition_tag(self):
-        """
-        Validates that the GenerateMediaFolder object detects existing folder that has edition tag.
-        """
-        media_folder = GenerateMediaFolder()
-        media_folder.directory = "/media_folder"
-        media_folder.media_title = "Zenless Zone Zero"
-        media_folder.edition_tag = "widescreen"
-
-        assert media_folder.check_if_media_folder_exists() is True, (
-            "Failed to detect existing folder."
-        )
