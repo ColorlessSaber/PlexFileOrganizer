@@ -17,7 +17,7 @@
 ### _Version 1.3.0_
 **Features**
 - [x] Update existing media folder name and the folder contents to match new name.
-- [ ] The ability to enable/disable debug and info logs.
+- [x] The ability to change the logging level.
 - [ ] Ability to add edition tag to new or existing media folders for movies. 
 
 **Bug Fixes**

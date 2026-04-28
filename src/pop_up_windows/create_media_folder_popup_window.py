@@ -38,11 +38,11 @@ class CreateMediaFolder(qtw.QDialog):
         media_type_group.setObjectName("media_type_group")
         self.rb_media_type_movie_select = qtw.QRadioButton("Movie", self)
         self.rb_media_type_movie_select.setChecked(True)
-        self.rb_media_type_movie_select.toggled.connect(
+        self.rb_media_type_movie_select.clicked.connect(
             self.enable_or_disable_tv_show_options
         )
         self.rb_media_type_tv_select = qtw.QRadioButton("TV Show", self)
-        self.rb_media_type_tv_select.toggled.connect(
+        self.rb_media_type_tv_select.clicked.connect(
             self.enable_or_disable_tv_show_options
         )
         media_type_group.setLayout(qtw.QHBoxLayout())
