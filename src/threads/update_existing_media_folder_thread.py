@@ -99,7 +99,7 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
             self.signals.progress.emit(100, "Update of Media Folder completed!")
             self.signals.finished.emit()
 
-        except OSError as e:
+        except (OSError, FileExistsError) as e:
             logging.exception(e)
             self.signals.error.emit()
 

@@ -7,7 +7,9 @@ class TestModifyMediaFolder(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
         self.fs.create_dir("/media_folder/Tv Show Series")
+        self.fs.create_dir("/media_folder/Tv Show Series {edition-full screen}")
         self.fs.create_dir("/media_folder/Extra Folder")
+        self.fs.create_dir("/media_folder/Extra Folder {edition-full screen}")
 
     def test_modify_tv_show_folder(self):
         """
@@ -24,6 +26,24 @@ class TestModifyMediaFolder(TestCase):
         assert os.path.isdir("media_folder/Tv Show Series/Season 2")
         assert os.path.isdir("media_folder/Tv Show Series/Season 3")
         assert os.path.isdir("media_folder/Tv Show Series/Season 4")
+
+    def test_modify_tv_show_folder_with_edition_tag(self):
+        """
+        Validates the built-in function generates the correct number of new season folders for a media folder
+        that has an edition tag.
+        """
+        media_folder = ModifyMediaFolder()
+        media_folder.directory = "/media_folder"
+        media_folder.media_title = "Tv Show Series"
+        media_folder.edition_tag = "full screen"
+        media_folder.number_of_seasons = 1
+        media_folder.number_of_new_seasons = 3
+
+        media_folder.generate_new_season_folders()
+
+        assert os.path.isdir("media_folder/Tv Show Series {edition-full screen}/Season 2")
+        assert os.path.isdir("media_folder/Tv Show Series {edition-full screen}/Season 3")
+        assert os.path.isdir("media_folder/Tv Show Series {edition-full screen}/Season 4")
 
     def test_adding_new_extra_folders(self):
         """
@@ -51,6 +71,35 @@ class TestModifyMediaFolder(TestCase):
         assert os.path.isdir("/media_folder/Extra Folder/Scenes")
         assert os.path.isdir("/media_folder/Extra Folder/Shorts")
         assert os.path.isdir("/media_folder/Extra Folder/Other")
+
+    def test_adding_new_extra_folders_with_edition_tag(self):
+        """
+        Validates the build-in function generates the extra folders for a media folder that has
+        an edition tag.
+        """
+        extra_folder = ModifyMediaFolder()
+        extra_folder.directory = "/media_folder"
+        extra_folder.media_title = "Extra Folder"
+        extra_folder.edition_tag = "full screen"
+        extra_folder.extra_folders["trailers"] = True
+        extra_folder.extra_folders["behind the scenes"] = True
+        extra_folder.extra_folders["deleted scenes"] = True
+        extra_folder.extra_folders["featurettes"] = True
+        extra_folder.extra_folders["interviews"] = True
+        extra_folder.extra_folders["scenes"] = True
+        extra_folder.extra_folders["shorts"] = True
+        extra_folder.extra_folders["other"] = True
+
+        extra_folder.generate_new_extra_folders()
+
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Trailers")
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Behind The Scenes")
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Deleted Scenes")
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Featurettes")
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Interviews")
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Scenes")
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Shorts")
+        assert os.path.isdir("/media_folder/Extra Folder {edition-full screen}/Other")
 
     def test_check_if_extra_folders_to_be_generated_method(self):
         """
