@@ -12,7 +12,7 @@ class MediaFolderData:
 
     directory: str = field(default=None)
     media_title: str = field(default=None)
-    edition_tag: str = field(default=None)
+    edition_tag: str = field(default="")
     media_type: MediaCategory = field(default=MediaCategory.UNCATEGORIZED)
     number_of_seasons: int = field(default=0)
     specials_season: bool = field(default=False)
@@ -22,7 +22,7 @@ class MediaFolderData:
         """
         Creates the name of the media folder.
         """
-        if self.edition_tag is not None:
+        if self.edition_tag != "" and not self.edition_tag.isspace():
             return f"{self.media_title} {{edition-{self.edition_tag}}}"
         else:
             return self.media_title

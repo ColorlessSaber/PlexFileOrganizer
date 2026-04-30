@@ -211,6 +211,7 @@ class CreateMediaFolder(qtw.QDialog):
         new_media_folder_info = GenerateMediaFolder()
         new_media_folder_info.directory = self.le_selected_directory.text()
         new_media_folder_info.media_title = self.le_media_title.text()
+        new_media_folder_info.edition_tag = self.le_edition_tag.text()
         new_media_folder_info.media_type = (
             MediaCategory.MOVIE
             if self.rb_media_type_movie_select.isChecked()
