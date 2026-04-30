@@ -1,6 +1,6 @@
 from ..custom_objects import (
-    MediaFileListTable,
-    MediaFileListTableView,
+    MediaListTable,
+    MediaListTableView,
 )
 from PySide6 import QtWidgets as qtw
 from PySide6 import QtCore as qtc
@@ -30,9 +30,9 @@ class ManualMediaFileUpdate(qtw.QDialog):
         self.btn_clear_table.clicked.connect(self.clear_table)
         self.btn_clear_table.setEnabled(False)
 
-        self.table_view = MediaFileListTableView(self)
+        self.table_view = MediaListTableView(self)
         self.table_view.setSortingEnabled(False)
-        self.model = MediaFileListTable(
+        self.model = MediaListTable(
             [0, 1, 3],
             None,
             ["Directory", "Current File Name", "New File Name", "Format Type"],

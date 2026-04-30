@@ -2,7 +2,8 @@ from PySide6 import QtCore as qtc
 from typing import Any
 from .generic_pyside_objects import GenericTable
 
-class MediaFileListTable(GenericTable):
+
+class MediaListTable(GenericTable):
 
     def insert_file(self, position, rows, row_data, parent=qtc.QModelIndex()) -> None:
         """Insert a new row into the table"""
