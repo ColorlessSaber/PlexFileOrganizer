@@ -14,5 +14,5 @@ from .media_folder_classes import (
     GenerateMediaFolder,
     ModifyMediaFolder,
 )
-from .correct_media_file_format import FolderAndFilePatterns
+from .folder_and_file_patterns import FolderAndFilePatterns
 from .default_thread_signals import DefaultThreadSignals

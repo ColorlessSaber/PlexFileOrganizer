@@ -45,6 +45,15 @@ class FolderAndFilePatterns:
     )
 
     # *** Folder Format Regex Patterns ***
+    media_folder_regex_pattern = re.compile(
+        r"""
+            ^(?P<title>.+?) # group 1: the name of the media folder
+            \s*
+            {edition-(?P<edition>.+)} # group 2: the edition of the media folder
+        """,
+        re.VERBOSE | re.IGNORECASE
+    )
+
     tv_show_folder_format_regex_pattern = re.compile(
         r"""
     ^(Season\s\d+)|(Specials)$ # A season folder can be either Season ## or Specials

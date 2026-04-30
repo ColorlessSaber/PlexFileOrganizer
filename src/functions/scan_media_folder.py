@@ -1,6 +1,7 @@
 import os
+import re
 from ..functions import video_file_condition
-from ..classes import MediaFolderData, correct_media_file_format
+from ..classes import MediaFolderData, folder_and_file_patterns
 from ..custom_objects import MediaCategory
 
 
@@ -16,14 +17,21 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
     media_folder_information = MediaFolderData()
 
     # The [1:-1] slice is to remove the slash on either end of the directory string
-    media_folder_information.media_title = media_folder_path[1:-1].split("/")[-1]
+    media_folder_name = media_folder_path[1:-1].split("/")[-1]
+    media_folder_information.media_title = (folder_and_file_patterns
+                                            .media_folder_regex_pattern
+                                            .match(media_folder_name)
+                                            .group("title"))
+    media_folder_information.edition_tag = (folder_and_file_patterns
+                                            .media_folder_regex_pattern
+                                            .match(media_folder_name)
+                                            .group("edition"))
     media_folder_information.directory = media_folder_path
 
     with os.scandir(media_folder_information.directory) as directory_to_scan:
         for entry in directory_to_scan:
-            if entry.name.startswith(
-                "."
-            ):  # Assuming all files starting with dot should not be checked.
+            # Skip all files that start with a dot
+            if entry.name.startswith("."):
                 continue
 
             if entry.is_file() and video_file_condition(entry.path):

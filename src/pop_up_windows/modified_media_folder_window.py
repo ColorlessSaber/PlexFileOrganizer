@@ -33,6 +33,12 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.btn_select_directory = qtw.QPushButton("Select Media Folder", self)
         self.btn_select_directory.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
         self.le_selected_directory = qtw.QLineEdit(self)
+        self.le_selected_directory.setStyleSheet("""
+                    QLineEdit {
+                        border: 1px solid grey;
+                        border-radius: 5px;
+                    }
+                """)
         self.le_selected_directory.returnPressed.connect(self.user_pasted_in_directory)
         self.btn_select_directory.clicked.connect(self.select_media_folder)
         select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
@@ -40,11 +46,14 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
 
         ## display information about Media Folder
         self.media_title = qtw.QLabel("", self)
+        self.edition_tag = qtw.QLabel("", self)
         self.media_type = qtw.QLabel("", self)
         self.highest_season_number = qtw.QLabel("", self)
         self.specials_season_folder_status = qtw.QLabel("", self)
         label_media_title = qtw.QLabel("Title:", self)
         label_media_title.setObjectName("media_title")
+        label_media_edition_tag = qtw.QLabel("Edition Tag:", self)
+        label_media_edition_tag.setObjectName("media_edition_tag")
         label_media_category = qtw.QLabel("Category:", self)
         label_media_category.setObjectName("media_category")
         label_media_highest_season_number = qtw.QLabel(
@@ -57,6 +66,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         label_media_specials_season_folder.setObjectName("media_specials_season_folder")
         media_inform_form = qtw.QFormLayout()
         media_inform_form.addRow(label_media_title, self.media_title)
+        media_inform_form.addRow(label_media_edition_tag, self.edition_tag)
         media_inform_form.addRow(label_media_category, self.media_type)
         media_inform_form.addRow(
             label_media_highest_season_number, self.highest_season_number
@@ -76,20 +86,20 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
                 font-weight: bold;
             }
             
-            #media_title, #media_category, #media_highest_season_number, #media_specials_season_folder {
+            #media_title, #media_edition_tag, #media_category, #media_highest_season_number, #media_specials_season_folder {
                 text-decoration: underline;
             }
         """)
 
-        ## Media folder options
-        label_new_media_folder_name = qtw.QLabel("New Media Folder Name:", self)
+        ## Modified Media folder name options
         self.le_new_name_for_media_folder = qtw.QLineEdit(self)
-        media_folder_options_form = qtw.QFormLayout()
-        media_folder_options_form.addRow(
-            label_new_media_folder_name, self.le_new_name_for_media_folder
-        )
-        media_folder_options_form.setFormAlignment(qtc.Qt.AlignmentFlag.AlignLeft)
-        self.groupbox_media_folder_options = qtw.QGroupBox("Media Folder Name", self)
+        self.le_edition_tag = qtw.QLineEdit(self)
+        media_folder_options_form = qtw.QGridLayout()
+        media_folder_options_form.addWidget(qtw.QLabel("New Media Folder Name:", self), 0, 0)
+        media_folder_options_form.addWidget(self.le_new_name_for_media_folder, 0, 1)
+        media_folder_options_form.addWidget(qtw.QLabel("Edition Tag:", self), 1, 0)
+        media_folder_options_form.addWidget(self.le_edition_tag, 1, 1)
+        self.groupbox_media_folder_options = qtw.QGroupBox("Modified Media Folder Name", self)
         self.groupbox_media_folder_options.setLayout(media_folder_options_form)
         self.groupbox_media_folder_options.setStyleSheet("""
             QGroupBox {
@@ -98,7 +108,10 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
                 padding-top: 16px;
                 font-weight: bold;
             }
-            
+            QLineEdit {
+                border: 1px solid grey;
+                border-radius: 5px;
+            }
             QLabel {
                 text-decoration: underline;
             }
@@ -201,6 +214,7 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.signal_reset_progress_bar.emit()
         self.le_selected_directory.setText(media_file_information.directory)
         self.media_title.setText(media_file_information.media_title)
+        self.edition_tag.setText(media_file_information.edition_tag)
         self.media_type.setText(media_file_information.media_type)
 
         if media_file_information.media_type.is_tv():
