@@ -1,7 +1,6 @@
 import os
-import re
 from ..functions import video_file_condition
-from ..classes import MediaFolderData, folder_and_file_patterns
+from ..classes import MediaFolderData, FolderAndFilePatterns
 from ..custom_objects import MediaCategory
 
 
@@ -13,19 +12,14 @@ def scan_media_folder(media_folder_path: str) -> tuple[MediaFolderData, bool]:
     :param media_folder_path: the folder location of the media folder to scan.
     :return: A media folder object and bool value if folder is a media folder (True if it is a media folder)
     """
-    folder_and_file_patterns = correct_media_file_format.FolderAndFilePatterns()
+    folder_and_file_patterns = FolderAndFilePatterns()
     media_folder_information = MediaFolderData()
 
     # The [1:-1] slice is to remove the slash on either end of the directory string
-    media_folder_name = media_folder_path[1:-1].split("/")[-1]
-    media_folder_information.media_title = (folder_and_file_patterns
-                                            .media_folder_regex_pattern
-                                            .match(media_folder_name)
-                                            .group("title"))
-    media_folder_information.edition_tag = (folder_and_file_patterns
-                                            .media_folder_regex_pattern
-                                            .match(media_folder_name)
-                                            .group("edition"))
+    media_folder_name_parsed = folder_and_file_patterns.parse_media_folder_name(media_folder_path[1:-1].split("/")[-1])
+
+    media_folder_information.media_title = media_folder_name_parsed["title"]
+    media_folder_information.edition_tag = media_folder_name_parsed["edition"]
     media_folder_information.directory = media_folder_path
 
     with os.scandir(media_folder_information.directory) as directory_to_scan:

@@ -49,7 +49,9 @@ class FolderAndFilePatterns:
         r"""
             ^(?P<title>.+?) # group 1: the name of the media folder
             \s*
-            {edition-(?P<edition>.+)} # group 2: the edition of the media folder
+            (?P<year>\(\d{4}\))?
+            \s*
+            ({edition-(?P<edition>.+)})?$ # group 2: the edition of the media folder
         """,
         re.VERBOSE | re.IGNORECASE
     )
@@ -67,6 +69,39 @@ class FolderAndFilePatterns:
     """,
         re.VERBOSE | re.IGNORECASE,
     )
+
+    def parse_media_folder_name(self, folder_name: str) -> dict:
+        """
+        Parses the title and edition tag, if any, from the media folder name; and returns
+        the results as a dictionary.
+
+        :param folder_name: the folder name to parse
+        :return: a dictionary with the parsed title and edition tag
+        """
+        media_folder_name = self.media_folder_regex_pattern.match(folder_name)
+
+        if media_folder_name is not None:
+            if media_folder_name.group("year") is not None:
+                media_title = media_folder_name.group("title") + " " + media_folder_name.group("year")
+            else:
+                media_title = media_folder_name.group("title")
+
+            if media_folder_name.group("edition") is not None:
+                return {
+                    "title": media_title,
+                    "edition": media_folder_name.group("edition"),
+                }
+            else:
+                return {
+                    "title": media_title,
+                    "edition": "",
+                }
+        else:
+            return {
+                "title": "",
+                "edition": "",
+            }
+
 
     def tv_show_episode_pattern_check(self, file_name: str) -> bool:
         """
