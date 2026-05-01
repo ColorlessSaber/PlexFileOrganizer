@@ -5,7 +5,8 @@ Pop-up window to allow user to add more folders to an existing media folder
 from pathlib import Path
 from PySide6 import (
     QtWidgets as qtw,
-    QtCore as qtc
+    QtCore as qtc,
+    QtGui as qtg,
 )
 from ..classes import ModifyMediaFolder
 from ..custom_objects import MediaCategory
@@ -93,14 +94,57 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
 
         ## Modified Media folder name options
         self.le_new_name_for_media_folder = qtw.QLineEdit(self)
-        self.le_edition_tag = qtw.QLineEdit(self)
-        media_folder_options_form = qtw.QGridLayout()
-        media_folder_options_form.addWidget(qtw.QLabel("New Media Folder Name:", self), 0, 0)
-        media_folder_options_form.addWidget(self.le_new_name_for_media_folder, 0, 1)
-        media_folder_options_form.addWidget(qtw.QLabel("Edition Tag:", self), 1, 0)
-        media_folder_options_form.addWidget(self.le_edition_tag, 1, 1)
-        self.groupbox_media_folder_options = qtw.QGroupBox("Modified Media Folder Name", self)
-        self.groupbox_media_folder_options.setLayout(media_folder_options_form)
+        self.le_new_name_for_media_folder.setEnabled(False)
+        self.le_new_edition_tag = qtw.QLineEdit(self)
+        self.le_new_edition_tag.setEnabled(False)
+
+        media_folder_name_options_group = qtw.QButtonGroup(self)
+        self.rb_modified_media_folder_name = qtw.QRadioButton("Modified", self)
+        self.rb_modified_media_folder_name.clicked.connect(self.enable_or_disable_new_media_folder_name_line_edit)
+        self.rb_keep_media_folder_name = qtw.QRadioButton("Keep", self)
+        self.rb_keep_media_folder_name.clicked.connect(self.enable_or_disable_new_media_folder_name_line_edit)
+        self.rb_keep_media_folder_name.setChecked(True)
+        media_folder_name_options_group.addButton(self.rb_modified_media_folder_name)
+        media_folder_name_options_group.addButton(self.rb_keep_media_folder_name)
+
+        edition_tag_options_group = qtw.QButtonGroup(self)
+        self.rb_modified_edition_tag = qtw.QRadioButton("Modified/Add", self)
+        self.rb_modified_edition_tag.clicked.connect(self.enable_or_disable_new_edition_tag_line_edit)
+        self.rb_remove_edition_tag = qtw.QRadioButton("Remove", self)
+        self.rb_remove_edition_tag.clicked.connect(self.enable_or_disable_new_edition_tag_line_edit)
+        self.rb_keep_edition_tag = qtw.QRadioButton("Keep", self)
+        self.rb_keep_edition_tag.clicked.connect(self.enable_or_disable_new_edition_tag_line_edit)
+        self.rb_keep_edition_tag.setChecked(True)
+        edition_tag_options_group.addButton(self.rb_modified_edition_tag)
+        edition_tag_options_group.addButton(self.rb_remove_edition_tag)
+        edition_tag_options_group.addButton(self.rb_keep_edition_tag)
+
+        media_folder_options_layout = qtw.QGridLayout()
+        separator = qtw.QFrame(self)
+        separator.setFrameStyle(qtw.QFrame.Shape.HLine)
+        separator.setLineWidth(2)
+        separator.setFixedHeight(1)
+
+        label_media_folder_name_options = qtw.QLabel("Media Folder Name", self)
+        label_media_folder_name_options.setObjectName("subgroup_label")
+        media_folder_options_layout.addWidget(label_media_folder_name_options, 0, 0)
+        media_folder_options_layout.addWidget(self.rb_modified_media_folder_name, 1, 0)
+        media_folder_options_layout.addWidget(self.rb_keep_media_folder_name, 1, 1)
+        media_folder_options_layout.addWidget(qtw.QLabel("New Media Folder Name:", self), 2, 0)
+        media_folder_options_layout.addWidget(self.le_new_name_for_media_folder, 2, 1)
+        media_folder_options_layout.addWidget(separator, 3, 0, 1, 3)
+
+        label_edition_tag_options = qtw.QLabel("Edition Tag", self)
+        label_edition_tag_options.setObjectName("subgroup_label")
+        media_folder_options_layout.addWidget(label_edition_tag_options, 4, 0)
+        media_folder_options_layout.addWidget(self.rb_modified_edition_tag, 5, 0)
+        media_folder_options_layout.addWidget(self.rb_remove_edition_tag, 5, 1)
+        media_folder_options_layout.addWidget(self.rb_keep_edition_tag, 5, 2)
+        media_folder_options_layout.addWidget(qtw.QLabel("Edition Tag:", self), 6, 0)
+        media_folder_options_layout.addWidget(self.le_new_edition_tag, 6, 1)
+
+        self.groupbox_media_folder_options = qtw.QGroupBox("Media Folder Options", self)
+        self.groupbox_media_folder_options.setLayout(media_folder_options_layout)
         self.groupbox_media_folder_options.setStyleSheet("""
             QGroupBox {
                 border: 2px solid grey;
@@ -111,6 +155,10 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             QLineEdit {
                 border: 1px solid grey;
                 border-radius: 5px;
+            }
+            #subgroup_label {
+                font-style: italic;
+                text-decoration: none;
             }
             QLabel {
                 text-decoration: underline;
@@ -214,7 +262,9 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.signal_reset_progress_bar.emit()
         self.le_selected_directory.setText(media_file_information.directory)
         self.media_title.setText(media_file_information.media_title)
+        self.le_new_name_for_media_folder.setText(media_file_information.media_title)
         self.edition_tag.setText(media_file_information.edition_tag)
+        self.le_new_edition_tag.setText(media_file_information.edition_tag)
         self.media_type.setText(media_file_information.media_type)
 
         if media_file_information.media_type.is_tv():
@@ -310,12 +360,36 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             self.le_selected_directory.text()
         )
 
+    def enable_or_disable_new_media_folder_name_line_edit(self) -> None:
+        """
+        Enables or disables new media folder name line edit based on which radio button is checked.
+        """
+        if self.rb_modified_media_folder_name.isChecked():
+            self.le_new_name_for_media_folder.setEnabled(True)
+        elif self.rb_keep_media_folder_name.isChecked():
+            self.le_new_name_for_media_folder.setEnabled(False)
+            self.le_new_name_for_media_folder.setText(self.media_title.text())
+
+    def enable_or_disable_new_edition_tag_line_edit(self) -> None:
+        """
+        Enables or disables new edition tag line edit based on which radio button is checked.
+        """
+        if self.rb_modified_edition_tag.isChecked():
+            self.le_new_edition_tag.setEnabled(True)
+            self.le_new_edition_tag.setText(self.edition_tag.text())
+        elif self.rb_remove_edition_tag.isChecked():
+            self.le_new_edition_tag.setEnabled(False)
+            self.le_new_edition_tag.setText("")
+        elif self.rb_keep_edition_tag.isChecked():
+            self.le_new_edition_tag.setEnabled(False)
+            self.le_new_edition_tag.setText(self.edition_tag.text())
+
     @qtc.Slot()
     def start_folder_modification(self) -> None:
         """
         Create the object to hold the user's selection and disable all button widgets before sending it off.
         """
-
+        # TODO add in logic to check to see if user has entered edition-tag or not.
         if not self.le_new_name_for_media_folder.text().isspace() and (self.le_new_name_for_media_folder.text() != ""):
             response = qtw.QMessageBox.warning(
                 self,
