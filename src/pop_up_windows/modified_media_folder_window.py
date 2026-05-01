@@ -198,23 +198,28 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         """)
 
         ## extra folder options
-        self.cb_trailers = qtw.QCheckBox("Trailers", self)
-        self.cb_behind_the_scenes = qtw.QCheckBox("Behind The Scenes", self)
-        self.cb_deleted_scenes = qtw.QCheckBox("Deleted Scenes", self)
-        self.cb_featurettes = qtw.QCheckBox("Featurettes", self)
-        self.cb_interviews = qtw.QCheckBox("Interviews", self)
-        self.cb_scenes = qtw.QCheckBox("Scenes", self)
-        self.cb_shorts = qtw.QCheckBox("shorts", self)
-        self.cb_other = qtw.QCheckBox("Other", self)
+        self.rb_extra_folder_options = {
+            'trailers': qtw.QCheckBox("Trailers", self),
+            'behind the scenes': qtw.QCheckBox("Behind the Scenes", self),
+            'deleted scenes': qtw.QCheckBox("Deleted Scenes", self),
+            'featurettes': qtw.QCheckBox("Featurettes", self),
+            'interviews': qtw.QCheckBox("Interviews", self),
+            'scenes': qtw.QCheckBox("Scenes", self),
+            'shorts': qtw.QCheckBox("Shorts", self),
+            'other': qtw.QCheckBox("Other", self),
+        }
+
         extra_folder_options_layout = qtw.QGridLayout()
-        extra_folder_options_layout.addWidget(self.cb_trailers, 0, 0)
-        extra_folder_options_layout.addWidget(self.cb_behind_the_scenes, 0, 1)
-        extra_folder_options_layout.addWidget(self.cb_deleted_scenes, 0, 2)
-        extra_folder_options_layout.addWidget(self.cb_featurettes, 0, 3)
-        extra_folder_options_layout.addWidget(self.cb_interviews, 1, 0)
-        extra_folder_options_layout.addWidget(self.cb_scenes, 1, 1)
-        extra_folder_options_layout.addWidget(self.cb_shorts, 1, 2)
-        extra_folder_options_layout.addWidget(self.cb_other, 1, 3)
+        row_number, column_number = 0, 0
+        for extra_folder_checkbox in self.rb_extra_folder_options.values():
+            extra_folder_options_layout.addWidget(extra_folder_checkbox, row_number, column_number)
+
+            # there should be four checkboxes per row. The count starts from zero.
+            column_number += 1
+            if column_number == 4:
+                row_number += 1
+                column_number = 0
+
         self.groupbox_extra_folder_options = qtw.QGroupBox("Extra Folder Options", self)
         self.groupbox_extra_folder_options.setLayout(extra_folder_options_layout)
         self.groupbox_extra_folder_options.setStyleSheet("""
@@ -289,61 +294,21 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             self.sb_number_of_new_seasons.setValue(0)
             self.sb_number_of_new_seasons.setEnabled(False)
 
-        if media_file_information.extra_folders["trailers"]:
-            self.cb_trailers.setChecked(True)
-            self.cb_trailers.setEnabled(False)
+        if media_file_information.edition_tag != "":
+            self.rb_remove_edition_tag.setEnabled(True)
         else:
-            self.cb_trailers.setChecked(False)
-            self.cb_trailers.setEnabled(True)
+            self.rb_remove_edition_tag.setEnabled(False)
 
-        if media_file_information.extra_folders["behind the scenes"]:
-            self.cb_behind_the_scenes.setChecked(True)
-            self.cb_behind_the_scenes.setEnabled(False)
-        else:
-            self.cb_behind_the_scenes.setChecked(False)
-            self.cb_behind_the_scenes.setEnabled(True)
-
-        if media_file_information.extra_folders["deleted scenes"]:
-            self.cb_deleted_scenes.setChecked(True)
-            self.cb_deleted_scenes.setEnabled(False)
-        else:
-            self.cb_deleted_scenes.setChecked(False)
-            self.cb_deleted_scenes.setEnabled(True)
-
-        if media_file_information.extra_folders["featurettes"]:
-            self.cb_featurettes.setChecked(True)
-            self.cb_featurettes.setEnabled(False)
-        else:
-            self.cb_featurettes.setChecked(False)
-            self.cb_featurettes.setEnabled(True)
-
-        if media_file_information.extra_folders["interviews"]:
-            self.cb_interviews.setChecked(True)
-            self.cb_interviews.setEnabled(False)
-        else:
-            self.cb_interviews.setChecked(False)
-            self.cb_interviews.setEnabled(True)
-
-        if media_file_information.extra_folders["scenes"]:
-            self.cb_scenes.setChecked(True)
-            self.cb_scenes.setEnabled(False)
-        else:
-            self.cb_scenes.setChecked(False)
-            self.cb_scenes.setEnabled(True)
-
-        if media_file_information.extra_folders["shorts"]:
-            self.cb_shorts.setChecked(True)
-            self.cb_shorts.setEnabled(False)
-        else:
-            self.cb_shorts.setChecked(False)
-            self.cb_shorts.setEnabled(True)
-
-        if media_file_information.extra_folders["other"]:
-            self.cb_other.setChecked(True)
-            self.cb_other.setEnabled(False)
-        else:
-            self.cb_other.setChecked(False)
-            self.cb_other.setEnabled(True)
+        for extra_folder_checkbox, existing_extra_folder_key in zip(
+                self.rb_extra_folder_options.values(),
+                media_file_information.extra_folders.keys()
+        ):
+            if media_file_information.extra_folders[existing_extra_folder_key]:
+                extra_folder_checkbox.setChecked(True)
+                extra_folder_checkbox.setEnabled(False)
+            else:
+                extra_folder_checkbox.setChecked(False)
+                extra_folder_checkbox.setEnabled(True)
 
         self.btn_update.setEnabled(True)
 
@@ -428,36 +393,12 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
                 if self.cb_generate_specials_season_folder.isEnabled()
                 else False
             )
-            modified_media_folder_info.extra_folders["trailers"] = (
-                self.cb_trailers.isChecked() if self.cb_trailers.isEnabled() else False
-            )
-            modified_media_folder_info.extra_folders["behind the scenes"] = (
-                self.cb_behind_the_scenes.isChecked()
-                if self.cb_behind_the_scenes.isEnabled()
-                else False
-            )
-            modified_media_folder_info.extra_folders["deleted scenes"] = (
-                self.cb_deleted_scenes.isChecked()
-                if self.cb_deleted_scenes.isEnabled()
-                else False
-            )
-            modified_media_folder_info.extra_folders["featurettes"] = (
-                self.cb_featurettes.isChecked()
-                if self.cb_featurettes.isEnabled()
-                else False
-            )
-            modified_media_folder_info.extra_folders["interviews"] = (
-                self.cb_interviews.isChecked() if self.cb_interviews.isEnabled() else False
-            )
-            modified_media_folder_info.extra_folders["scenes"] = (
-                self.cb_scenes.isChecked() if self.cb_scenes.isEnabled() else False
-            )
-            modified_media_folder_info.extra_folders["shorts"] = (
-                self.cb_shorts.isChecked() if self.cb_shorts.isEnabled() else False
-            )
-            modified_media_folder_info.extra_folders["other"] = (
-                self.cb_other.isChecked() if self.cb_other.isEnabled() else False
-            )
+
+            for extra_folder_checkbox, extra_folder_key in zip(
+                    self.rb_extra_folder_options.values(),
+                    modified_media_folder_info.extra_folders.keys()
+            ):
+                modified_media_folder_info.extra_folders[extra_folder_key] = extra_folder_checkbox.isChecked() if extra_folder_checkbox.isEnabled() else False
 
             self._enable_or_disable_buttons(False)
 
