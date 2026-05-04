@@ -29,7 +29,7 @@ class MediaFolderData:
     specials_season: bool = field(default=False)
     extra_folders: dict = field(default_factory=ExtraFolders)
 
-    def _media_folder_name(self) -> str:
+    def media_folder_name(self) -> str:
         """
         Creates the name of the media folder.
         """
@@ -65,13 +65,22 @@ class ModifyMediaFolder(MediaFolderData):
     edition_tag_modification: FolderNameModification = field(default=FolderNameModification.KEEP_EDITION_TAG)
     number_of_new_seasons: int = field(default=0)
 
+    def new_media_folder_name(self) -> str:
+        """
+        Creates the name of the media folder.
+        """
+        if self.new_edition_tag != "" and not self.new_edition_tag.isspace():
+            return f"{self.new_media_title} {{edition-{self.new_edition_tag}}}"
+        else:
+            return self.new_media_title
+
     def generate_new_season_folders(self) -> None:
         """
         Generates one or more new season folders.
 
         :return:
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
 
         # added plus one to start range so it doesn't use an existing number;
         # added plus one to end range to generate the correct number of new season folder(s)
@@ -87,7 +96,7 @@ class ModifyMediaFolder(MediaFolderData):
 
         :return:
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
 
         Path("{}/{}/Specials".format(self.directory, media_folder_name)).mkdir()
 
@@ -97,7 +106,7 @@ class ModifyMediaFolder(MediaFolderData):
 
         :return:
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
 
         for key in self.extra_folders:
             if self.extra_folders[key]:
@@ -117,7 +126,7 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return: True -- directory exists, False -- directory not exists
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
 
         media_folder_path = Path("{}/{}".format(self.directory, media_folder_name))
         if media_folder_path.is_dir():
@@ -131,7 +140,7 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return:
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
 
         Path("{}/{}".format(self.directory, media_folder_name)).mkdir()
 
@@ -141,7 +150,7 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return:
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
 
         # plus one is added to generate the correct number of season folder(s).
         for season_num in range(1, self.number_of_seasons + 1):
@@ -155,7 +164,7 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return:
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
         Path("{}/{}/Specials".format(self.directory, media_folder_name)).mkdir()
 
     def generate_extra_folders(self) -> None:
@@ -164,7 +173,7 @@ class GenerateMediaFolder(MediaFolderData):
 
         :return:
         """
-        media_folder_name = self._media_folder_name()
+        media_folder_name = self.media_folder_name()
         for key in self.extra_folders:
             if self.extra_folders[key]:
                 Path(

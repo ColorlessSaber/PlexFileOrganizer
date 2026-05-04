@@ -5,7 +5,7 @@ Thread for updating existing media folder
 
 import logging
 from PySide6 import QtCore as qtc
-from ..classes import DefaultThreadSignals
+from ..classes import DefaultThreadSignals, FolderNameModification
 from ..functions import rename_media_folder_and_contents
 
 
@@ -72,17 +72,20 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
                 )
 
             # renaming of the folder and its contents is done last so it doesn't mess up adding new folders
-            if not self.info_of_media_folder.new_media_title.isspace() and (self.info_of_media_folder.new_media_title != ""):
+            if (
+                    self.info_of_media_folder.folder_name_modification != FolderNameModification.KEEP_FOLDER_NAME
+                    or self.info_of_media_folder.edition_tag_modification != FolderNameModification.KEEP_EDITION_TAG
+            ):
                 self.signals.progress.emit(
                     80,
                     "-- Renaming media folder from {} to {}, along with files inside folder".format(
-                        self.info_of_media_folder.media_title, self.info_of_media_folder.new_media_title
+                        self.info_of_media_folder.media_folder_name(), self.info_of_media_folder.new_media_folder_name()
                     )
                 )
 
                 rename_media_folder_and_contents(
-                    self.info_of_media_folder.media_title,
-                    self.info_of_media_folder.new_media_title,
+                    self.info_of_media_folder.media_folder_name(),
+                    self.info_of_media_folder.new_media_folder_name(),
                     self.info_of_media_folder.directory,
                 )
 
