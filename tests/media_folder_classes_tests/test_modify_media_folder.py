@@ -11,6 +11,30 @@ class TestModifyMediaFolder(TestCase):
         self.fs.create_dir("/media_folder/Extra Folder")
         self.fs.create_dir("/media_folder/Extra Folder {edition-full screen}")
 
+    def test_generate_new_media_folder_name_no_edition_tag(self):
+        """
+        Validates the built-in method generates the correct new media folder name without edition tag.
+        """
+        media_folder = ModifyMediaFolder()
+        media_folder.new_media_title = "Legend of Zelda"
+        media_folder.new_edition_tag = ""
+
+        new_folder_name = media_folder.new_media_folder_name()
+
+        assert new_folder_name == "Legend of Zelda"
+
+    def test_generate_new_media_folder_name_with_edition_tag(self):
+        """
+        Validates the built-in method generates the correct new media folder name with edition tag.
+        """
+        media_folder = ModifyMediaFolder()
+        media_folder.new_media_title = "Legend of Zelda"
+        media_folder.new_edition_tag = "full screen"
+
+        new_folder_name = media_folder.new_media_folder_name()
+
+        assert new_folder_name == "Legend of Zelda {edition-full screen}"
+
     def test_check_if_extra_folders_to_be_generated_method(self):
         """
         Validates that the GenerateMediaFolder object's check_if_new_extra_folders_are_needed method returns True
@@ -30,7 +54,6 @@ class TestModifyMediaFolder(TestCase):
         assert media_folder.check_if_new_extra_folders_are_needed() is False, (
             "Failed to detect no extra folder(s) needed to be generated."
         )
-
 
     def test_modify_tv_show_folder(self):
         """

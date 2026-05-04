@@ -11,6 +11,30 @@ class TestGenerateMediaFolder(TestCase):
         self.fs.create_dir("/media_folder/Zenless Zone Zero")
         self.fs.create_dir("/media_folder/Zenless Zone Zero {edition-widescreen}")
 
+    def test_generate_media_folder_name_no_edition_tag(self):
+        """
+        Validates the built-in method generates the correct media folder name without edition tag.
+        """
+        media_folder = GenerateMediaFolder()
+        media_folder.media_title = "Legend of Zelda"
+        media_folder.edition_tag = ""
+
+        new_folder_name = media_folder.media_folder_name()
+
+        assert new_folder_name == "Legend of Zelda"
+
+    def test_generate_media_folder_name_with_edition_tag(self):
+        """
+        Validates the built-in method generates the correct media folder name with edition tag.
+        """
+        media_folder = GenerateMediaFolder()
+        media_folder.media_title = "Legend of Zelda"
+        media_folder.edition_tag = "full screen"
+
+        new_folder_name = media_folder.media_folder_name()
+
+        assert new_folder_name == "Legend of Zelda {edition-full screen}"
+
     def test_generate_media_folder_detects_existing_folder(self):
         """
         Validates that the GenerateMediaFolder object detects existing folder.
