@@ -1,8 +1,19 @@
-import os
+from enum import Enum, unique, auto
 from pathlib import Path
 from dataclasses import dataclass, field
 from ..custom_objects import ExtraFolders, MediaCategory
 
+@unique
+class FolderNameModification(Enum):
+    """
+    Help keep track of what modifications, if any, need to be made to an existing
+    Media Folder.
+    """
+    KEEP_FOLDER_NAME = auto()
+    CHANGE_FOLDER_NAME = auto()
+    KEEP_EDITION_TAG = auto()
+    CHANGE_EDITION_TAG = auto()
+    REMOVE_EDITION_TAG = auto()
 
 @dataclass
 class MediaFolderData:
@@ -49,6 +60,9 @@ class ModifyMediaFolder(MediaFolderData):
     """
 
     new_media_title: str = field(default="")
+    folder_name_modification: FolderNameModification = field(default=FolderNameModification.KEEP_FOLDER_NAME)
+    new_edition_tag: str = field(default="")
+    edition_tag_modification: FolderNameModification = field(default=FolderNameModification.KEEP_EDITION_TAG)
     number_of_new_seasons: int = field(default=0)
 
     def generate_new_season_folders(self) -> None:

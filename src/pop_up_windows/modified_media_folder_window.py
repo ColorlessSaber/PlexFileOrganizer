@@ -6,9 +6,8 @@ from pathlib import Path
 from PySide6 import (
     QtWidgets as qtw,
     QtCore as qtc,
-    QtGui as qtg,
 )
-from ..classes import ModifyMediaFolder
+from ..classes import ModifyMediaFolder, FolderNameModification
 from ..custom_objects import MediaCategory
 
 
@@ -354,13 +353,80 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         """
         Create the object to hold the user's selection and disable all button widgets before sending it off.
         """
-        # TODO add in logic to check to see if user has entered edition-tag or not.
-        if not self.le_new_name_for_media_folder.text().isspace() and (self.le_new_name_for_media_folder.text() != ""):
+        media_folder_name_will_change = False
+
+        modified_media_folder_info = ModifyMediaFolder()
+        modified_media_folder_info.directory = str(Path(self.le_selected_directory.text()).parent) # remove the media folder from the directory path
+        modified_media_folder_info.media_title = self.media_title.text()
+
+        if self.rb_keep_media_folder_name.isChecked():
+            modified_media_folder_info.new_media_title = ""
+            # the .folder_name_modification default is KEEP_FOLDER_NAME
+        elif self.rb_modified_media_folder_name.isChecked():
+            if self.le_new_name_for_media_folder.text() != self.media_title.text():
+                modified_media_folder_info.new_media_title = self.le_new_name_for_media_folder.text()
+                modified_media_folder_info.folder_name_modification = FolderNameModification.CHANGE_FOLDER_NAME
+                media_folder_name_will_change = True
+        else:
+            pass
+
+        if self.rb_keep_edition_tag.isChecked():
+            modified_media_folder_info.edition_tag = ""
+            # the .edition_tag_modification default is KEEP_EDITION_TAG
+        elif self.rb_modified_edition_tag.isChecked():
+            if self.le_new_edition_tag.text() != self.edition_tag.text():
+                modified_media_folder_info.new_edition_tag = self.le_new_edition_tag.text()
+                modified_media_folder_info.edition_tag_modification = FolderNameModification.CHANGE_EDITION_TAG
+                media_folder_name_will_change = True
+        elif self.rb_remove_edition_tag.isChecked():
+            modified_media_folder_info.new_edition_tag = self.le_new_edition_tag.text()
+            modified_media_folder_info.edition_tag_modification = FolderNameModification.REMOVE_EDITION_TAG
+            media_folder_name_will_change = True
+        else:
+            pass
+
+        modified_media_folder_info.new_media_title = (
+            self.le_new_name_for_media_folder.text()
+            if self.rb_modified_media_folder_name.isChecked()
+            else ""
+        )
+        modified_media_folder_info.edition_tag = self.edition_tag.text()
+
+        modified_media_folder_info.media_type = (
+            MediaCategory.MOVIE
+            if self.media_type.text().lower() == "movie"
+            else MediaCategory.TV
+        )
+        modified_media_folder_info.number_of_seasons = (
+            int(self.highest_season_number.text())
+            if self.highest_season_number.text() != "N/A"
+            else 0
+        )
+        modified_media_folder_info.number_of_new_seasons = int(
+            self.sb_number_of_new_seasons.text()
+        )
+        modified_media_folder_info.specials_season = (
+            self.cb_generate_specials_season_folder.isChecked()
+            if self.cb_generate_specials_season_folder.isEnabled()
+            else False
+        )
+
+        for extra_folder_checkbox, extra_folder_key in zip(
+                self.rb_extra_folder_options.values(),
+                modified_media_folder_info.extra_folders.keys()
+        ):
+            modified_media_folder_info.extra_folders[extra_folder_key] = (
+                extra_folder_checkbox.isChecked()
+                if extra_folder_checkbox.isEnabled()
+                else False
+            )
+
+        if media_folder_name_will_change:
             response = qtw.QMessageBox.warning(
                 self,
                 "Are you want to change Media Folder name?",
                 """
-                Please double check the new name is correct before proceeding.\n
+                Please double check the new name and or edition tag is correct, or you are sure you want to remove the edition tag.\n
                 By changing the Media Folder name the contents of the folder will also be updated to reflect the name change.
                 """,
                 buttons=qtw.QMessageBox.StandardButton.Ok | qtw.QMessageBox.StandardButton.Cancel,
@@ -371,35 +437,6 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
             response = qtw.QMessageBox.StandardButton.Ok
 
         if response == qtw.QMessageBox.StandardButton.Ok:
-            modified_media_folder_info = ModifyMediaFolder()
-            modified_media_folder_info.directory = str(Path(self.le_selected_directory.text()).parent) # remove the media folder from the directory path
-            modified_media_folder_info.media_title = self.media_title.text()
-            modified_media_folder_info.new_media_title = self.le_new_name_for_media_folder.text()
-            modified_media_folder_info.media_type = (
-                MediaCategory.MOVIE
-                if self.media_type.text().lower() == "movie"
-                else MediaCategory.TV
-            )
-            modified_media_folder_info.number_of_seasons = (
-                int(self.highest_season_number.text())
-                if self.highest_season_number.text() != "N/A"
-                else 0
-            )
-            modified_media_folder_info.number_of_new_seasons = int(
-                self.sb_number_of_new_seasons.text()
-            )
-            modified_media_folder_info.specials_season = (
-                self.cb_generate_specials_season_folder.isChecked()
-                if self.cb_generate_specials_season_folder.isEnabled()
-                else False
-            )
-
-            for extra_folder_checkbox, extra_folder_key in zip(
-                    self.rb_extra_folder_options.values(),
-                    modified_media_folder_info.extra_folders.keys()
-            ):
-                modified_media_folder_info.extra_folders[extra_folder_key] = extra_folder_checkbox.isChecked() if extra_folder_checkbox.isEnabled() else False
-
             self._enable_or_disable_buttons(False)
 
             self.signal_media_folder_update_information.emit(modified_media_folder_info)
@@ -464,22 +501,9 @@ class ModifiedMediaFolderWindow(qtw.QDialog):
         self.specials_season_folder_status.setText("")
         self.sb_number_of_new_seasons.setValue(0)
         self.cb_generate_specials_season_folder.setChecked(False)
-        self.cb_trailers.setChecked(False)
-        self.cb_trailers.setEnabled(True)
-        self.cb_behind_the_scenes.setChecked(False)
-        self.cb_behind_the_scenes.setEnabled(True)
-        self.cb_deleted_scenes.setChecked(False)
-        self.cb_deleted_scenes.setEnabled(True)
-        self.cb_featurettes.setChecked(False)
-        self.cb_featurettes.setEnabled(True)
-        self.cb_shorts.setChecked(False)
-        self.cb_shorts.setEnabled(True)
-        self.cb_interviews.setChecked(False)
-        self.cb_interviews.setEnabled(True)
-        self.cb_scenes.setChecked(False)
-        self.cb_scenes.setEnabled(True)
-        self.cb_other.setChecked(False)
-        self.cb_other.setEnabled(True)
+        for extra_folder_checkbox in self.rb_extra_folder_options.values():
+            extra_folder_checkbox.setChecked(False)
+            extra_folder_checkbox.setEnabled(True)
 
     def _enable_or_disable_buttons(self, enable_or_disable: bool) -> None:
         """
