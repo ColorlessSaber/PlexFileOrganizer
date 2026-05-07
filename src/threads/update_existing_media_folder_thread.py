@@ -2,10 +2,11 @@
 Thread for updating existing media folder
 """
 
-import time
+
 import logging
 from PySide6 import QtCore as qtc
-from ..classes import DefaultThreadSignals
+from ..classes import DefaultThreadSignals, FolderNameModification
+from ..functions import rename_media_folder_and_contents
 
 
 class UpdateExistingMediaFolderThread(qtc.QRunnable):
@@ -26,66 +27,85 @@ class UpdateExistingMediaFolderThread(qtc.QRunnable):
         """
         try:
             self.signals.progress.emit(
-                13,
+                10,
                 "Starting to update existing media folder: "
                 + self.info_of_media_folder.media_title,
             )
+
             if self.info_of_media_folder.media_type.is_tv():
                 if self.info_of_media_folder.number_of_new_seasons > 0:
                     self.signals.progress.emit(
-                        26, "-- Generating more season folder(s)."
+                        20, "-- Generating more season folder(s)."
                     )
-                    time.sleep(
-                        1
-                    )  # delay for a second so the user sees the program is working.
                     self.info_of_media_folder.generate_new_season_folders()
-                    self.signals.progress.emit(39, "-- New season folder(s) generated.")
+                    self.signals.progress.emit(30, "-- New season folder(s) generated.")
                 else:
                     self.signals.progress.emit(
-                        39, "-- No new season folder(s) needed to be created."
+                        30, "-- No new season folder(s) needed to be created."
                     )
 
                 if self.info_of_media_folder.specials_season:
                     self.signals.progress.emit(
-                        52, "-- Generating Specials season folder."
+                        40, "-- Generating Specials season folder."
                     )
-                    time.sleep(
-                        1
-                    )  # delay for a second so the user sees the program is working.
                     self.info_of_media_folder.generate_specials_season_folder()
                     self.signals.progress.emit(
-                        65, "-- Specials season folder generated."
+                        50, "-- Specials season folder generated."
                     )
                 else:
                     self.signals.progress.emit(
-                        65, "-- Skipping Specials season folder generation."
+                        50, "-- Skipping Specials season folder generation."
                     )
             else:
                 self.signals.progress.emit(
-                    65,
+                    50,
                     "-- Media folder is for movie; no seasons and/or Specials season folder will be generated.",
                 )
 
             if self.info_of_media_folder.check_if_new_extra_folders_are_needed():
-                self.signals.progress.emit(78, "-- Generating extra folder(s).")
-                time.sleep(
-                    1
-                )  # delay for a second so the user sees the program is working.
+                self.signals.progress.emit(60, "-- Generating extra folder(s).")
                 self.info_of_media_folder.generate_new_extra_folders()
-                self.signals.progress.emit(91, "-- Extra folder(s) generated.")
+                self.signals.progress.emit(70, "-- Extra folder(s) generated.")
             else:
                 self.signals.progress.emit(
-                    91, "-- No new extra folder(s) needed to be created."
+                    70, "-- No new extra folder(s) needed to be created."
                 )
-                time.sleep(
-                    1
-                )  # delay for a second so the user sees the program is working.
+
+            # renaming of the folder and its contents is done last so it doesn't mess up adding new folders
+            if (
+                    self.info_of_media_folder.folder_name_modification != FolderNameModification.KEEP_FOLDER_NAME
+                    or self.info_of_media_folder.edition_tag_modification != FolderNameModification.KEEP_EDITION_TAG
+            ):
+                self.signals.progress.emit(
+                    80,
+                    "-- Renaming media folder from {} to {}, along with files inside folder".format(
+                        self.info_of_media_folder.media_folder_name(), self.info_of_media_folder.new_media_folder_name()
+                    )
+                )
+
+                rename_media_folder_and_contents(
+                    self.info_of_media_folder.media_folder_name(),
+                    self.info_of_media_folder.new_media_folder_name(),
+                    self.info_of_media_folder.directory,
+                )
+
+                self.signals.progress.emit(
+                    90,
+                    "-- Renaming of media folder and media files complete"
+                    )
+            else:
+                self.signals.progress.emit(
+                    90,
+                    "-- Media folder name will be kept."
+                )
 
             self.signals.progress.emit(100, "Update of Media Folder completed!")
             self.signals.finished.emit()
-        except OSError as e:
+
+        except (OSError, FileExistsError) as e:
             logging.exception(e)
             self.signals.error.emit()
+
         except Exception as e:
             logging.exception(e)
             self.signals.error.emit()

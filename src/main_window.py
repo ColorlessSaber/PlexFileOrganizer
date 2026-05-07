@@ -3,17 +3,14 @@ from PySide6 import QtCore as qtc
 
 from .model import Model
 from .view import View
-from .functions import build_app_directory, setup_logger
+from .pop_up_windows import ApplicationPreferencesWindow
+
 
 class MainWindow(qtw.QMainWindow):
     """The main window for the application"""
 
     def __init__(self):
         super().__init__()
-
-        # create the application directory, if necessary, and setup logger
-        build_app_directory()
-        setup_logger()
 
         # set up the view and model
         self.view = View()
@@ -27,7 +24,15 @@ class MainWindow(qtw.QMainWindow):
         self.progress_bar.setMaximum(100)
         self.statusBar().addPermanentWidget(self.progress_bar)
 
-        self.statusBar().addPermanentWidget(qtw.QLabel("V1.2.1"))
+        self.statusBar().addPermanentWidget(qtw.QLabel("V1.3.0"))
+
+        # setup menu bar
+        menubar = qtw.QMenuBar()
+
+        main_menu = menubar.addMenu("Plex File Organizer")
+        main_menu.addAction("Preferences...", self.open_preferences_window)
+
+        self.setMenuBar(menubar)
 
         # view signals to be connected to model slots
         self.view.signal_initiate_creating_media_folder.connect(
@@ -93,9 +98,25 @@ class MainWindow(qtw.QMainWindow):
         )
         self.model.signal_error_message.connect(self.slot_display_error_message)
 
+        self.model.build_application_directory_and_setup_logger()
+
         self.show()
 
     # *** Main Window Methods ***
+    def open_preferences_window(self) -> None:
+        """
+        Launches the preferences window.
+
+        :return:
+        """
+        preferences_settings_data = self.model.preferences_data
+        application_preferences_window = ApplicationPreferencesWindow(preferences_settings_data)
+        application_preferences_window.signal_save_new_preferences_settings.connect(
+            self.model.save_new_app_preferences_to_json_file
+        )
+        application_preferences_window.signal_clear_log_file.connect(self.model.remove_then_make_new_log_file)
+        application_preferences_window.exec()
+
     def closeEvent(self, event) -> None:
         """
         Close the application gracefully.
@@ -104,11 +125,11 @@ class MainWindow(qtw.QMainWindow):
             self,
             "Close Application?",
             "Are you sure you want to close the application?",
-            buttons=qtw.QMessageBox.Yes | qtw.QMessageBox.No,
-            defaultButton=qtw.QMessageBox.Yes,
+            buttons=qtw.QMessageBox.StandardButton.Yes | qtw.QMessageBox.StandardButton.No,
+            defaultButton=qtw.QMessageBox.StandardButton.Yes,
         )
 
-        if response == qtw.QMessageBox.Yes:
+        if response == qtw.QMessageBox.StandardButton.Yes:
             event.accept()
         else:
             event.ignore()

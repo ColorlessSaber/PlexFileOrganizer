@@ -1,3 +1,4 @@
+import logging
 from PySide6 import QtWidgets as qtw, QtCore as qtc
 from .pop_up_windows import (
     ManualMediaFileUpdate,
@@ -111,6 +112,7 @@ class View(qtw.QWidget):
             create_media_folder_window.enable_buttons_due_to_error
         )
         self.log_window.insertPlainText("\nOpening Create Media Folder window")
+        logging.info("Opening Create Media Folder window")
         create_media_folder_window.exec()
 
     @qtc.Slot()
@@ -145,6 +147,7 @@ class View(qtw.QWidget):
         self.log_window.insertPlainText(
             '\nOpening "Modified Existing Media Folder" window'
         )
+        logging.info("Opening Modified Existing Media Folder window")
         modified_media_folder_window.exec()
 
     @qtc.Slot()
@@ -161,6 +164,7 @@ class View(qtw.QWidget):
         self.log_window.insertPlainText(
             '\nOpening "Auto-Update Media Files Conformation" window'
         )
+        logging.info("Opening Auto-Update Media Files Conformation window")
         auto_update_media_files_conformation_window.exec()
 
     @qtc.Slot()
@@ -190,6 +194,7 @@ class View(qtw.QWidget):
             manual_update_media_files_window.enable_buttons_due_to_error
         )
         self.log_window.insertPlainText("\nOpening Manual Update Media Files window")
+        logging.info("Opening Manual Update Media Files window")
         manual_update_media_files_window.exec()
 
     # *** Method(s) that launch a messagebox ***
@@ -207,7 +212,7 @@ class View(qtw.QWidget):
             "Finished scanning the selected directory. Please see console window for information on if any files were updated during the scan.",
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.signal_reset_progress_bar.emit()
 
     @qtc.Slot()
@@ -223,7 +228,7 @@ class View(qtw.QWidget):
             "Application ran into an error! Task has been cancelled.",
         )
 
-        if response == qtw.QMessageBox.Ok:
+        if response == qtw.QMessageBox.StandardButton.Ok:
             self.status_pass_through_reset_do_to_error.emit()
 
     # *** Methods for Log Window ***
@@ -245,4 +250,5 @@ class View(qtw.QWidget):
         :param message: message to display to user
         :return:
         """
+        logging.debug(message)
         self.log_window.insertPlainText("\n" + message)

@@ -1,5 +1,5 @@
-from src.functions import generate_correct_video_file_format
-
+from src.functions.media_file_format_funcs import extra_file_format
+from src.custom_objects import MediaFile
 
 class TestExtraFileFormats:
     def test_extra_file_trailer_format(self):
@@ -8,8 +8,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Trailers/Trailer 2.txt",
             "/dir/dir1/Zenless Zone Zero/Trailers/new trailer.txt",
         )
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -28,7 +29,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Behind the Scenes/new scene.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -50,7 +53,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Deleted Scenes/new scene.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -72,7 +77,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Featurettes/new Featurettes.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -91,7 +98,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Interviews/new Interviews.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -110,7 +119,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Scenes/new Scenes.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -129,7 +140,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Shorts/new Shorts.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (
@@ -148,7 +161,9 @@ class TestExtraFileFormats:
             "/dir/dir1/Zenless Zone Zero/Other/new Other.txt",
         )
 
-        result, _ = generate_correct_video_file_format(files_to_update)
+        prepped_files_to_update = [MediaFile(file) for file in files_to_update]
+
+        result, _ = extra_file_format(prepped_files_to_update)
 
         if len(result) != 1:
             assert False, (

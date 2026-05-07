@@ -20,9 +20,7 @@ def tv_show_file_format(video_file_list: list[MediaFile]) -> tuple[list[tuple[st
     # media files into a list
     highest_episode_number = 0
     for file in video_file_list:
-        if folder_and_files_patterns.tv_show_episode_pattern_check(
-                file.file_name()
-        ):
+        if folder_and_files_patterns.tv_show_episode_pattern_check(file.file_name()):
             # a TV show episode may be multiple episode, which is why we need to check/grab both numbers
             first_episode_number = folder_and_files_patterns.tv_episode_file_format_regex_pattern.match(
                 file.file_name()

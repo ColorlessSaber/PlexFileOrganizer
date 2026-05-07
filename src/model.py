@@ -1,4 +1,13 @@
+import logging
 from PySide6 import QtCore as qtc
+from .functions import (
+    build_app_directory,
+    setup_app_logger,
+    setup_app_settings_file,
+    load_app_settings,
+    save_app_settings,
+    delete_then_recreate_log_file,
+)
 from .threads import (
     CreateMediaFolderThread,
     AutoUpdateMediaFilesThread,
@@ -11,7 +20,7 @@ from .threads import (
 class Model(qtc.QObject):
     """The back-end of the Plex File Organizer"""
 
-    thread_pool = qtc.QThreadPool()
+    thread_pool = qtc.QThreadPool().globalInstance()
 
     # Signal(s) to inform the user of something
     signal_inform_user_media_folder_already_exists = qtc.Signal()
@@ -30,12 +39,40 @@ class Model(qtc.QObject):
     signal_update_of_media_folder_finished = qtc.Signal()
     signal_manual_update_finished = qtc.Signal()
 
+    def __init__(self):
+        super().__init__()
+        self.__app_settings_data = {}
+
+    # *** Methods that access Model or application files ***
+    @property
+    def preferences_data(self):
+        return self.__app_settings_data.get("preferences")
+
+    @qtc.Slot()
+    def build_application_directory_and_setup_logger(self) -> None:
+        """
+        Builds the application directory and sets up the logger for the application.
+
+        :return:
+        """
+        build_app_directory()
+        setup_app_settings_file()
+        self.__app_settings_data = load_app_settings()
+
+        logging_level_from_settings_file = (
+            self.__app_settings_data.get("preferences")
+            .get("logging_settings")
+            .get("level")
+        )
+        setup_app_logger(logging_level_from_settings_file)
+
     # *** Quick methods that don't require threads ***
     @qtc.Slot(list)
     def check_for_duplicates_in_media_file_list(self, media_file_list: list) -> None:
         """
         Checks the list of media files and see if there are duplicates rename file names.
         """
+        logging.info("checking for duplicates in media file list")
         # pull out all the rename file names from the list
         rename_file_list = [i[2] for i in media_file_list]
 
@@ -45,7 +82,25 @@ class Model(qtc.QObject):
         else:
             self.signal_duplicate_files_check_complete.emit(False)
 
-    # *** The creation and start of thread methods ***
+    @qtc.Slot(dict)
+    def save_new_app_preferences_to_json_file(self, new_pref_settings: dict) -> None:
+        """
+        Saves the new preferences to a json file that is located in the application directory.
+        :param new_pref_settings: The new preferences settings to save.
+        :return:
+        """
+        logging.info("saving new preferences to json file")
+        self.__app_settings_data["preferences"] = new_pref_settings
+        save_app_settings(self.__app_settings_data)
+
+    @qtc.Slot()
+    def remove_then_make_new_log_file(self) -> None:
+        """
+        Removes the existing log file, and then recreates them.
+        """
+        delete_then_recreate_log_file()
+
+    # *** Methods that create and start a thread ***
     @qtc.Slot(object)
     def start_create_media_folder_thread(self, media_folder_selection: object) -> None:
         """
@@ -68,6 +123,7 @@ class Model(qtc.QObject):
             self.signal_create_media_folder_finished
         )
         self.thread_pool.start(create_media_folder_thread)
+        logging.info("started thread to create new media folder")
 
     @qtc.Slot(object)
     def start_auto_update_media_files_thread(self, user_selected_options: dict) -> None:
@@ -91,6 +147,7 @@ class Model(qtc.QObject):
             self.signal_auto_update_finished
         )
         self.thread_pool.start(auto_update_media_files_threads)
+        logging.info("started thread to auto update media files")
 
     @qtc.Slot(str)
     def start_scan_of_existing_media_folder_thread(
@@ -118,6 +175,7 @@ class Model(qtc.QObject):
             self.signal_inform_user_folder_not_media_folder
         )
         self.thread_pool.start(scan_existing_media_folder)
+        logging.info("started thread to scan existing media folder")
 
     @qtc.Slot(object)
     def start_update_of_existing_media_folder_thread(
@@ -141,6 +199,7 @@ class Model(qtc.QObject):
             self.signal_update_of_media_folder_finished
         )
         self.thread_pool.start(update_existing_media_folder)
+        logging.info("started thread to update existing media folder")
 
     @qtc.Slot(list)
     def start_manual_update_media_files_thread(self, files_to_update: list) -> None:
@@ -160,3 +219,4 @@ class Model(qtc.QObject):
             self.signal_manual_update_finished
         )
         self.thread_pool.start(manual_update_media_files_thread)
+        logging.info("started thread to update selected media files")

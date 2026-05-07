@@ -6,12 +6,12 @@ __all__ = [
     "MediaCategory",
     "MediaFile",
     "ExtraFolders",
-    "MediaFileListTable",
-    "MediaFileListTableView",
+    "MediaListTable",
+    "MediaListTableView",
 ]
 
 from .media_category import MediaCategory
 from .media_file import MediaFile
 from .extra_folders import ExtraFolders
-from .media_file_list_table_object import MediaFileListTable
-from .media_file_list_table_view_object import MediaFileListTableView
+from .media_list_table_object import MediaListTable
+from .media_list_table_view_object import MediaListTableView

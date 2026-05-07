@@ -8,27 +8,27 @@ class TestScanMediaFolder(TestCase):
         self.setUpPyfakefs()
 
         # test directory for TV media folder
-        self.fs.create_dir("/foo/tv show/Season 01")
-        self.fs.create_dir("/foo/tv show/Specials")
-        self.fs.create_dir("/foo/tv show/Trailers")
-        self.fs.create_dir("/foo/tv show/Behind the Scenes")
-        self.fs.create_dir("/foo/tv show/Deleted Scenes")
-        self.fs.create_dir("/foo/tv show/Featurettes")
-        self.fs.create_dir("/foo/tv show/Interviews")
-        self.fs.create_dir("/foo/tv show/Scenes")
-        self.fs.create_dir("/foo/tv show/Shorts")
-        self.fs.create_dir("/foo/tv show/Other")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Season 01")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Specials")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Trailers")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Behind the Scenes")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Deleted Scenes")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Featurettes")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Interviews")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Scenes")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Shorts")
+        self.fs.create_dir("/foo/Zenless Zone Zero/Other")
 
         # test for movie media folder
-        self.fs.create_file("/foo/movie/movie.mp4")
-        self.fs.create_dir("/foo/movie/Trailers")
-        self.fs.create_dir("/foo/movie/Behind the Scenes")
-        self.fs.create_dir("/foo/movie/Deleted Scenes")
-        self.fs.create_dir("/foo/movie/Featurettes")
-        self.fs.create_dir("/foo/movie/Interviews")
-        self.fs.create_dir("/foo/movie/Scenes")
-        self.fs.create_dir("/foo/movie/Shorts")
-        self.fs.create_dir("/foo/movie/Other")
+        self.fs.create_file("/foo/The Legend of Zelda/The Legend of Zelda.mp4")
+        self.fs.create_dir("/foo/The Legend of Zelda/Trailers")
+        self.fs.create_dir("/foo/The Legend of Zelda/Behind the Scenes")
+        self.fs.create_dir("/foo/The Legend of Zelda/Deleted Scenes")
+        self.fs.create_dir("/foo/The Legend of Zelda/Featurettes")
+        self.fs.create_dir("/foo/The Legend of Zelda/Interviews")
+        self.fs.create_dir("/foo/The Legend of Zelda/Scenes")
+        self.fs.create_dir("/foo/The Legend of Zelda/Shorts")
+        self.fs.create_dir("/foo/The Legend of Zelda/Other")
 
         # test for non media folder
         self.fs.create_dir("/foo/misc")
@@ -38,9 +38,12 @@ class TestScanMediaFolder(TestCase):
         """
         Validate scan_media_folder returns correct media folder object for tv media folder.
         """
-        media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/tv show")
+        media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/Zenless Zone Zero/")
 
         assert folder_is_a_media_folder, "Failed to detect tv media folder"
+        assert media_folder_info.media_title == "Zenless Zone Zero", (
+            "Failed to grab name of media folder"
+        )
         assert media_folder_info.media_type == MediaCategory.TV, (
             "Failed to detect media folder is tv show"
         )
@@ -79,11 +82,14 @@ class TestScanMediaFolder(TestCase):
         """
         Validate scan_media_folder returns correct media folder object for movie media folder.
         """
-        media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/movie")
+        media_folder_info, folder_is_a_media_folder = scan_media_folder("/foo/The Legend of Zelda/")
 
         assert folder_is_a_media_folder, "Failed to detect movie media folder"
+        assert media_folder_info.media_title == "The Legend of Zelda", (
+            "Failed to grab name of media folder"
+        )
         assert media_folder_info.media_type == MediaCategory.MOVIE, (
-            "Failed to detect media folder is tv show"
+            "Failed to detect media folder is movie"
         )
         assert media_folder_info.extra_folders["trailers"] is True, (
             "Failed to detect extra folder - trailers"

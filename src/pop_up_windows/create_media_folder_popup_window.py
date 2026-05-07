@@ -29,34 +29,40 @@ class CreateMediaFolder(qtw.QDialog):
         self.btn_select_directory.setFocusPolicy(qtc.Qt.FocusPolicy.NoFocus)
         self.btn_select_directory.clicked.connect(self.select_directory_popup)
         self.le_selected_directory = qtw.QLineEdit(self)
+        self.le_selected_directory.setStyleSheet("""
+            QLineEdit {
+                border: 1px solid grey;
+                border-radius: 5px;
+            }
+        """)
+        self.le_selected_directory.textChanged.connect(self.enable_or_disable_create_btn)
         select_directory_layout.addWidget(self.btn_select_directory, 0, 0)
         select_directory_layout.addWidget(self.le_selected_directory, 0, 1, 0, 2)
 
         ## media information
+        self.le_media_title = qtw.QLineEdit(self)
+        self.le_media_title.textChanged.connect(self.enable_or_disable_create_btn)
+        self.le_edition_tag = qtw.QLineEdit(self)
+        media_title_layout = qtw.QGridLayout()
+        media_title_layout.addWidget(qtw.QLabel("Title:", self), 0, 0)
+        media_title_layout.addWidget(self.le_media_title, 0, 1)
+        media_title_layout.addWidget(qtw.QLabel("Edition:", self), 1, 0)
+        media_title_layout.addWidget(self.le_edition_tag, 1, 1)
+
         media_type_group = qtw.QGroupBox("Media Type")
         media_type_group.setObjectName("media_type_group")
         self.rb_media_type_movie_select = qtw.QRadioButton("Movie", self)
         self.rb_media_type_movie_select.setChecked(True)
-        self.rb_media_type_movie_select.toggled.connect(
-            self.enable_or_disable_season_number_line_edit
-        )
-        self.rb_media_type_movie_select.toggled.connect(
-            self.enable_or_disable_create_btn
+        self.rb_media_type_movie_select.clicked.connect(
+            self.enable_or_disable_tv_show_options
         )
         self.rb_media_type_tv_select = qtw.QRadioButton("TV Show", self)
-        self.rb_media_type_tv_select.toggled.connect(
-            self.enable_or_disable_season_number_line_edit
+        self.rb_media_type_tv_select.clicked.connect(
+            self.enable_or_disable_tv_show_options
         )
-        self.rb_media_type_tv_select.toggled.connect(self.enable_or_disable_create_btn)
         media_type_group.setLayout(qtw.QHBoxLayout())
         media_type_group.layout().addWidget(self.rb_media_type_movie_select)
         media_type_group.layout().addWidget(self.rb_media_type_tv_select)
-
-        self.le_media_title = qtw.QLineEdit(self)
-        self.le_media_title.textChanged.connect(self.enable_or_disable_create_btn)
-        media_title_layout = qtw.QHBoxLayout()
-        media_title_layout.addWidget(qtw.QLabel("Title:", self))
-        media_title_layout.addWidget(self.le_media_title)
 
         layout_media_information = qtw.QVBoxLayout()
         layout_media_information.setSpacing(20)
@@ -79,6 +85,10 @@ class CreateMediaFolder(qtw.QDialog):
             }
             QLabel {
                 text-decoration: underline;
+            }
+            QLineEdit {
+                border: 1px solid grey;
+                border-radius: 5px;
             }
         """)
 
@@ -166,15 +176,14 @@ class CreateMediaFolder(qtw.QDialog):
 
     @qtc.Slot()
     def enable_or_disable_create_btn(self) -> None:
-        if (len(self.le_media_title.text()) > 0) and (
-            self.le_selected_directory.text() != ""
-        ):
-            self.btn_create.setEnabled(True)
-        else:
-            self.btn_create.setEnabled(False)
+        enable_button = False
+        if self.le_selected_directory.text() != "":
+            if not self.le_media_title.text().isspace() and (len(self.le_media_title.text()) > 0):
+                enable_button = True
+        self.btn_create.setEnabled(enable_button)
 
     @qtc.Slot()
-    def enable_or_disable_season_number_line_edit(self) -> None:
+    def enable_or_disable_tv_show_options(self) -> None:
         if self.rb_media_type_movie_select.isChecked():
             self.groupbox_tv_show_options.setEnabled(False)
         elif self.rb_media_type_tv_select.isChecked():
@@ -202,6 +211,7 @@ class CreateMediaFolder(qtw.QDialog):
         new_media_folder_info = GenerateMediaFolder()
         new_media_folder_info.directory = self.le_selected_directory.text()
         new_media_folder_info.media_title = self.le_media_title.text()
+        new_media_folder_info.edition_tag = self.le_edition_tag.text()
         new_media_folder_info.media_type = (
             MediaCategory.MOVIE
             if self.rb_media_type_movie_select.isChecked()

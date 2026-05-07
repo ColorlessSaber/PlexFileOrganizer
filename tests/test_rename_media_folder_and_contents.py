@@ -1,0 +1,65 @@
+from src.functions import rename_media_folder_and_contents
+from pyfakefs.fake_filesystem_unittest import TestCase
+from pathlib import Path
+
+class TestRenameMediaFolderAndContents(TestCase):
+    def setUp(self):
+        self.setUpPyfakefs()
+
+        self.fs.create_file("/foo/ZZZ/ZZZ.mkv")
+        self.fs.create_file("/foo/Legend of Zelda/Season 1/Legend of Zelda - s01e01.mkv")
+        self.fs.create_file("/foo/Legend of Zelda/Season 1/Legend of Zelda - s01e02.mkv")
+        self.fs.create_file("/foo/Legend of Zelda/Season 1/Legend of Zelda - s01e03.mkv")
+
+        self.fs.create_file("/foo/case study vanitas/case study vanitas.mkv")
+        self.fs.create_file("/foo/kaiju girl/Season 1/kaiju girl - s01e01.mkv")
+        self.fs.create_file("/foo/kaiju girl/Season 1/kaiju girl - s01e02.mkv")
+        self.fs.create_file("/foo/kaiju girl/Season 1/kaiju girl - s01e03.mkv")
+
+    def test_rename_movie_media_folder(self):
+        """
+        Rename a media folder that is for a movie and its file
+        """
+        old_title = "ZZZ"
+        new_title = "Zenless Zone Zero"
+        directory = "/foo"
+        rename_media_folder_and_contents(old_title, new_title, directory)
+
+        assert Path("/foo/Zenless Zone Zero/Zenless Zone Zero.mkv").exists(), "Failed to rename file and folder"
+
+    def test_rename_tv_show_media_folder(self):
+        """
+        Rename a media folder that is for a TV show and files
+        """
+        old_title = "Legend of Zelda"
+        new_title = "The Legend of Zelda Twilight Princess"
+        directory = "/foo"
+        rename_media_folder_and_contents(old_title, new_title, directory)
+
+        assert Path("/foo/The Legend of Zelda Twilight Princess/Season 1/The Legend of Zelda Twilight Princess - s01e01.mkv").exists(), "Failed to rename file and folder"
+        assert Path("/foo/The Legend of Zelda Twilight Princess/Season 1/The Legend of Zelda Twilight Princess - s01e02.mkv").exists(), "Failed to rename file and folder"
+        assert Path("/foo/The Legend of Zelda Twilight Princess/Season 1/The Legend of Zelda Twilight Princess - s01e03.mkv").exists(), "Failed to rename file and folder"
+
+    def test_rename_movie_media_folder_with_edition_tag(self):
+        """
+        Rename a media folder that is for a movie and its file, and the new name has an edition tag
+        """
+        old_title = "case study vanitas"
+        new_title = "The Case Study of Vanitas {edition-full screen}"
+        directory = "/foo"
+        rename_media_folder_and_contents(old_title, new_title, directory)
+
+        assert Path("/foo/The Case Study of Vanitas {edition-full screen}/The Case Study of Vanitas {edition-full screen}.mkv").exists(), "Failed to rename file and folder"
+
+    def test_rename_tv_show_media_folder_with_edition_tag(self):
+        """
+        Rename a media folder that is for a TV show and files, and the new name has an edition tag
+        """
+        old_title = "kaiju girl"
+        new_title = "Kaiju Girl Caramelise {edition-japanese audio}"
+        directory = "/foo"
+        rename_media_folder_and_contents(old_title, new_title, directory)
+
+        assert Path("/foo/Kaiju Girl Caramelise {edition-japanese audio}/Season 1/Kaiju Girl Caramelise {edition-japanese audio} - s01e01.mkv").exists(), "Failed to rename file and folder"
+        assert Path("/foo/Kaiju Girl Caramelise {edition-japanese audio}/Season 1/Kaiju Girl Caramelise {edition-japanese audio} - s01e02.mkv").exists(), "Failed to rename file and folder"
+        assert Path("/foo/Kaiju Girl Caramelise {edition-japanese audio}/Season 1/Kaiju Girl Caramelise {edition-japanese audio} - s01e03.mkv").exists(), "Failed to rename file and folder"

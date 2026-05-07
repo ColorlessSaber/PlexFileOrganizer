@@ -5,7 +5,8 @@ from PySide6 import (
 )
 from .generic_pyside_objects import GenericTableView
 
-class MediaFileListTableView(GenericTableView):
+
+class MediaListTableView(GenericTableView):
     """
     The media file list table view
     """

@@ -8,6 +8,65 @@ class TestFolderAndFilePatterns:
     Contains only unit tests to test the basic functionality of the FolderAndFilePatterns class
     """
 
+    def test_media_folder_regex_check(self):
+        """
+        Validate that the regex pattern for media folder works correctly
+        """
+        media_folder_name = "Regular Expressions"
+        media_folder_regex = folder_and_file_patterns.media_folder_regex_pattern.match(media_folder_name)
+        assert (media_folder_regex.group("title") == "Regular Expressions")
+        assert (media_folder_regex.group("year") is None)
+        assert (media_folder_regex.group("edition") is None)
+
+    def test_media_folder_regex_check_with_year(self):
+        """
+        Validate that the regex pattern for media folder with year works correctly
+        """
+        media_folder_name = "Regular Expressions (1996)"
+        media_folder_regex = folder_and_file_patterns.media_folder_regex_pattern.match(media_folder_name)
+        assert (media_folder_regex.group("title") == "Regular Expressions")
+        assert (media_folder_regex.group("year") == "(1996)")
+        assert (media_folder_regex.group("edition") is None)
+
+    def test_media_folder_regex_check_with_year_and_edition_tag(self):
+        """
+        Validate that the regex pattern for media folder with year and edition tag works correctly
+        """
+        media_folder_name = "Regular Expressions (1996) {edition-old school}"
+        media_folder_regex = folder_and_file_patterns.media_folder_regex_pattern.match(media_folder_name)
+        assert (media_folder_regex.group("title") == "Regular Expressions")
+        assert (media_folder_regex.group("year") == "(1996)")
+        assert (media_folder_regex.group("edition") == "old school")
+
+    def test_media_folder_parse_func_check(self):
+        """
+        Validate that the media folder prase function is working correctly
+        """
+        media_folder_name = "Regular Expressions"
+        media_folder_parsed = folder_and_file_patterns.parse_media_folder_name(media_folder_name)
+        assert (media_folder_parsed["title"] == "Regular Expressions")
+        assert (media_folder_parsed["edition"] == "")
+
+    def test_media_folder_parse_func_with_year(self):
+        """
+        Validate that the media folder prase function is working correctly for a media folder
+        with year
+        """
+        media_folder_name = "Regular Expressions (1996)"
+        media_folder_parsed = folder_and_file_patterns.parse_media_folder_name(media_folder_name)
+        assert (media_folder_parsed["title"] == "Regular Expressions (1996)")
+        assert (media_folder_parsed["edition"] == "")
+
+    def test_media_folder_parse_func_with_year_and_edition_tag(self):
+        """
+        Validate that the media folder prase function is working correctly for a media folder
+        with year and edition tag
+        """
+        media_folder_name = "Regular Expressions (1996) {edition-old school}"
+        media_folder_parsed = folder_and_file_patterns.parse_media_folder_name(media_folder_name)
+        assert (media_folder_parsed["title"] == "Regular Expressions (1996)")
+        assert (media_folder_parsed["edition"] == "old school")
+
     def test_move_file_regex_check(self):
         """
         Validate that a regex pattern for movie file works correctly
@@ -21,45 +80,15 @@ class TestFolderAndFilePatterns:
             == movie_title
         )
 
-    def test_extra_file_regex_check(self):
+    def test_movie_file_func_check(self):
         """
-        Validate that the regex pattern for extra files works correctly
+        Validate that the movie file function that validates the movie file is formatted correctly
+        is working correctly
         """
+        movie_file = "test.mkv"
+        folder_name = "test"
 
-        errors = []
-        media_file_names = [
-            "trailers 01.mkv",
-            "behind the scenes 01.mkv",
-            "deleted scenes 01.mkv",
-            "featurettes 01.mkv",
-            "interviews 01.mkv",
-            "scenes 01.mkv",
-            "shorts 01.mkv",
-            "other 01.mkv",
-        ]
-
-        extra_folder_format = [
-            "trailers",
-            "behind the scenes",
-            "deleted scenes",
-            "featurettes",
-            "interviews",
-            "scenes",
-            "shorts",
-            "other",
-        ]
-
-        for i in zip(media_file_names, extra_folder_format):
-            file_name, folder_name = i
-            if (
-                not folder_and_file_patterns.extra_file_format_regex_pattern.match(
-                    file_name
-                ).group("title")
-                == folder_name
-            ):
-                errors.append(f"Error with folder '{folder_name}' pattern match")
-
-        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
+        assert folder_and_file_patterns.movie_media_file_check(movie_file, folder_name)
 
     def test_tv_episode_regex_check(self):
         """
@@ -108,15 +137,45 @@ class TestFolderAndFilePatterns:
 
         assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
-    def test_movie_file_func_check(self):
+    def test_extra_file_regex_check(self):
         """
-        Validate that the movie file function that validates the movie file is formatted correctly
-        is working correctly
+        Validate that the regex pattern for extra files works correctly
         """
-        movie_file = "test.mkv"
-        folder_name = "test"
 
-        assert folder_and_file_patterns.movie_media_file_check(movie_file, folder_name)
+        errors = []
+        media_file_names = [
+            "trailers 01.mkv",
+            "behind the scenes 01.mkv",
+            "deleted scenes 01.mkv",
+            "featurettes 01.mkv",
+            "interviews 01.mkv",
+            "scenes 01.mkv",
+            "shorts 01.mkv",
+            "other 01.mkv",
+        ]
+
+        extra_folder_format = [
+            "trailers",
+            "behind the scenes",
+            "deleted scenes",
+            "featurettes",
+            "interviews",
+            "scenes",
+            "shorts",
+            "other",
+        ]
+
+        for i in zip(media_file_names, extra_folder_format):
+            file_name, folder_name = i
+            if (
+                not folder_and_file_patterns.extra_file_format_regex_pattern.match(
+                    file_name
+                ).group("title")
+                == folder_name
+            ):
+                errors.append(f"Error with folder '{folder_name}' pattern match")
+
+        assert not errors, "errors occurred:\n{}".format("\n".join(errors))
 
     def test_extra_file_func_check(self):
         """
