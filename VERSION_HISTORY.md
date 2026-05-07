@@ -18,7 +18,7 @@
 **Features**
 - [x] Update existing media folder name and the folder contents to match new name.
 - [x] The ability to change the logging level.
-- [ ] Ability to add edition tag to new or existing media folders for movies. 
+- [x] Ability to add edition tag to new or existing media folders for movies. 
 
 **Bug Fixes**
 - Modified existing media folder pop-up wasn't displaying the name of the media folder

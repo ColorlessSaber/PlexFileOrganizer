@@ -22,10 +22,11 @@ def build_app_directory():
     data_dir.mkdir(parents=True, exist_ok=True)
     logs_dir.mkdir(exist_ok=True)
 
-def setup_app_logger() -> None:
+def setup_app_logger(logging_level: int = logging.ERROR) -> None:
     """
     Gets the logger all setup for use within the application
 
+    :param logging_level: The logging level to use
     :return: None
     """
     data_dir = Path(user_data_dir(APP_NAME, APP_AUTHOR))
@@ -33,7 +34,7 @@ def setup_app_logger() -> None:
 
     logging.basicConfig(
         filename=logs_dir / 'app.log',
-        level=logging.ERROR,
+        level=logging_level,
         format=LOGGER_FORMAT,
     )
 
