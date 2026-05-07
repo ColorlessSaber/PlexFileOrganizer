@@ -30,11 +30,21 @@
 
 <!--ABOUT THE PROJECT -->
 ## About The Project
-A program to help the user create folder for new movies/tv shows, properly name media file(s) to match the media they are in while following
-Plex approve file naming convention, and organize the media folder(s)--AKA your music folder--if it gets out of hand. Also, it will contain other handy futures:
-rename existing media file(s); and have a built-in media player so the user can see what the media file is, thus allowing them to name it properly.
-<br><br>
-This application also includes the ability to generate error logs when an error occurs.
+A program to help user organize and properly name file(s) in their Plex Media drive. At this time the program has the
+following features:
+* Create new media folder for a movie or TV show with optional edition tag.
+* Modify existing media folder--Add new season folder(s), Extra Folder, change name, etc.
+* Scan the Plex Media drive and update any files it finds (it follows the Plex approve file naming convention).
+* Manually name/rename media files.
+* Log errors when they occur.
+* Change what is logged while the application is running.
+<br>
+<br>
+More features are to be added in the future!
+* Create, organize, and modified music folder.
+* Update subtitle file(s) to have the same name as updated file that are associated with.
+* Use an SQLite database to quickly add/remove folders and content to existing media folders.
+
 <p align="right">(<a href="#readme-top">Back To Top</a>)</p>
 
 <!--BUILT WITH-->
